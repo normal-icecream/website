@@ -1,0 +1,19 @@
+{
+  "name": "normal-ice-cream-website",
+  "version": "2.0.0",
+  "main": "fstab.yaml",
+  "scripts": {
+    "compile:sass": "node-sass assets/styles/sass/main.scss assets/styles/style.css -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/normal-icecream/website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/normal-icecream/website/issues"
+  },
+  "homepage": "https://www.normal.club/",
+  "devDependencies": {
+    "node-sass": "^5.0.0"
+  }
+}
