@@ -1,32 +1,6 @@
 @import url("https://use.typekit.net/ysf7eux.css"); // ACUMIN
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap');
 
-@font-face {
-    font-family: "GT Walsheim";
-    src: url("/fonts/GT-Walsheim-Medium.otf") format("opentype");
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "GT Walsheim";
-    src: url("/fonts/GT-Walsheim-Bold.otf") format("opentype");
-    font-weight:600;
-    font-style: normal;
-}
-@font-face {
-    font-family: "GT Walsheim";
-    src: url("/fonts/GT-Walsheim-Black.otf") format("opentype");
-    font-weight: 700;
-    font-style: normal;
-}
-@font-face {
-    font-family: "GT Walsheim";
-    src: url("/fonts/GT-Walsheim-Ultra-Bold.otf") format("opentype");
-    font-weight: 800;
-    font-style: normal;
-}
-
 body {
     @include font-acumin-semibold;
     font-size: 2.4rem;
