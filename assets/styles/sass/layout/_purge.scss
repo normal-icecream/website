@@ -1,0 +1,40 @@
+
+#purge {
+    & p {
+        line-height: 1;
+        // margin-bottom: 0.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid currentColor;
+        max-width: 100%;
+    }
+    & a {
+        cursor: not-allowed;
+        text-decoration: none;
+        font-family: $font-mono;
+        font-size: 66%;
+        color: #666;
+        word-wrap: break-word;
+        &::before {
+            content: "⭕ ";
+            filter: grayscale(1);
+        }
+    }
+}
+
+.working {
+    cursor: wait !important;
+    background: $color-yellow;
+    &::before {
+        content: "⏳ " !important;
+        filter: hue-rotate(10deg) !important;
+    }
+}
+
+.done {
+    cursor: pointer !important;
+    color: $color-blue !important;
+    &::before {
+        content: "✔️ " !important;
+        filter: hue-rotate(125deg) !important;
+    }
+}

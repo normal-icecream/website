@@ -56,30 +56,6 @@
     font-style: normal;
 }
 
-@mixin font-gt-walsheim {
-    font-family: "GT Walsheim", sans-serif;
-    font-weight: 500;
-    font-style: normal;
-}
-
-@mixin font-gt-walsheim-bold {
-    font-family: "GT Walsheim", sans-serif;
-    font-weight: 600;
-    font-style: normal;
-}
-
-@mixin font-gt-walsheim-black {
-    font-family: "GT Walsheim", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-}
-
-@mixin font-gt-walsheim-ultrabold {
-    font-family: "GT Walsheim", sans-serif;
-    font-weight: 800;
-    font-style: normal;
-}
-
 @mixin font-poppins {
     font-family: "Poppins", sans-serif;
     font-weight: 500;

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url("https://use.typekit.net/ysf7eux.css");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap");
 :root {
@@ -1701,6 +1702,37 @@ h2#normal-pint-club-faq, h2#normal-pint-club-faqs, h2#normalreg-pint-club-faq, h
     flex-direction: column;
     justify-content: center;
     align-items: center; }
+
+#purge p {
+  line-height: 1;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid currentColor;
+  max-width: 100%; }
+
+#purge a {
+  cursor: not-allowed;
+  text-decoration: none;
+  font-family: monospace;
+  font-size: 66%;
+  color: #666;
+  word-wrap: break-word; }
+  #purge a::before {
+    content: "⭕ ";
+    filter: grayscale(1); }
+
+.working {
+  cursor: wait !important;
+  background: #FFFC92; }
+  .working::before {
+    content: "⏳ " !important;
+    filter: hue-rotate(10deg) !important; }
+
+.done {
+  cursor: pointer !important;
+  color: #0D26F9 !important; }
+  .done::before {
+    content: "✔️ " !important;
+    filter: hue-rotate(125deg) !important; }
 
 .theme-outline {
   border: 1px solid currentColor; }
