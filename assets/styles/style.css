@@ -82,30 +82,6 @@ textarea {
 input:focus {
   outline: 0; }
 
-@font-face {
-  font-family: "GT Walsheim";
-  src: url("/fonts/GT-Walsheim-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal; }
-
-@font-face {
-  font-family: "GT Walsheim";
-  src: url("/fonts/GT-Walsheim-Bold.otf") format("opentype");
-  font-weight: 600;
-  font-style: normal; }
-
-@font-face {
-  font-family: "GT Walsheim";
-  src: url("/fonts/GT-Walsheim-Black.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal; }
-
-@font-face {
-  font-family: "GT Walsheim";
-  src: url("/fonts/GT-Walsheim-Ultra-Bold.otf") format("opentype");
-  font-weight: 800;
-  font-style: normal; }
-
 body {
   font-family: acumin-pro-extra-condensed, sans-serif;
   font-weight: 600;
@@ -1116,7 +1092,7 @@ h2#nav + ul {
         border-width: 3px;
         letter-spacing: 1.5px; }
       h2#nav + ul li a::after {
-        content: url("./svg/arrow-right.svg");
+        content: url("../svg/arrow-right.svg");
         position: absolute;
         right: 0;
         height: 1;
@@ -1181,7 +1157,7 @@ div.embed-internal-indexcarousel + p {
     div.embed-internal-indexcarousel + p a:hover, div.embed-internal-indexcarousel + p a:focus {
       letter-spacing: 1.5px; }
     div.embed-internal-indexcarousel + p a::after {
-      content: url("./svg/arrow-right.svg");
+      content: url("../svg/arrow-right.svg");
       width: 3.5rem;
       position: absolute;
       right: 1.8rem; }

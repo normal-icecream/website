@@ -34,7 +34,7 @@ h2#nav + ul {
             }
 
             &::after {
-                content: url("./svg/arrow-right.svg");
+                content: url("../svg/arrow-right.svg");
                 position: absolute;
                 right: 0;
                 height: 1;
@@ -138,7 +138,7 @@ div.embed-internal-indexcarousel + p {
         }
 
         &::after {
-            content: url("./svg/arrow-right.svg");
+            content: url("../svg/arrow-right.svg");
             width: 3.5rem;
             position: absolute;
             right: 1.8rem;
