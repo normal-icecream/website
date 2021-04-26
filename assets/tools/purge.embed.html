@@ -1,0 +1,51 @@
+<button id="purge" class="btn-rect" onclick="purge()">Start Purge</button>
+
+<script>
+    const $div = document.getElementById("purge").closest("div");
+        $div.classList.add("purge-section");
+
+    async function sendPurge(path) {
+        const branch = "main";
+        const repo = "website";
+        const owner = "normal-icecream";
+        const resp = await fetch(
+            `https://adobeioruntime.net/api/v1/web/helix/helix-services/purge@v1?host=${branch}--${repo}--${owner}.hlx.page&xfh=${branch}--${repo}--${owner}.hlx.page%2C${repo}--${owner}.hlx.live%2Cwww.normal.club&path=${path}`, {
+            method: "POST"
+        });
+        const json = await resp.json();
+        console.log(JSON.stringify(json));
+        return (json);
+    }
+
+    async function purge() {
+        const $as = Array.from(document.querySelectorAll(".purge-section a"));
+        try {
+            for (let i = 0; i < $as.length; i++) {
+                const $a = $as[i];
+                const urlString = $a.getAttribute("href");
+                const url = new URL(urlString);
+                $a.classList.add("working");
+                if (url.host.includes("normal.club")) {
+                    let path = url.pathname;
+                    if (path.endsWith("/")) { path += "index" };
+                    if (!path.includes(".")) { path += ".html" };
+                    const status = await sendPurge(path + url.search);
+                    if (status[0].status != "ok") {
+                        throw ("Status not ok")
+                    }
+                } else {
+                    const resp = await fetch(urlString);
+                    const json = await resp.json();
+                    console.log(JSON.stringify(json));
+                }
+                $a.classList.remove("working");
+                $a.classList.add("done");
+            }
+
+        }
+        catch (e) {
+            alert(`something"s not looking good right now\ncowardly refusing to purge.`)
+            console.error(e.message ? e.message : e);
+        }
+    }
+</script>
