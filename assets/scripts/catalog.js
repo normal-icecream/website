@@ -134,7 +134,7 @@ const sqCatalog = [
     {
      "id": "6ZC4B6LPJLDQ4AALME6L3SRS",
      "modifier_data": {
-      "name": "Streusel crumble",
+      "name": "streusel crumble",
       "price_money": {
        "amount": 75
       }
@@ -9133,7 +9133,7 @@ const sqCatalog = [
  {
   "id": "6ZC4B6LPJLDQ4AALME6L3SRS",
   "modifier_data": {
-   "name": "Streusel crumble",
+   "name": "streusel crumble",
    "price_money": {
     "amount": 75
    }
