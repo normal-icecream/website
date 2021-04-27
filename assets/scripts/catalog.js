@@ -910,7 +910,7 @@ const sqCatalog = [
   "id": "G33PUKVQLLE23GVXJFNMUPC6",
   "type": "ITEM",
   "item_data": {
-   "name": "anti chocolate chip + milk chocolate sando",
+   "name": "the not sando",
    "variations": [
     {
      "id": "NV3SSZSZW7WGYABWPXNVGRSM",
