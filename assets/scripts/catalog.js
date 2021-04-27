@@ -130,6 +130,15 @@ const sqCatalog = [
        "amount": 75
       }
      }
+    },
+    {
+     "id": "6ZC4B6LPJLDQ4AALME6L3SRS",
+     "modifier_data": {
+      "name": "Streusel crumble",
+      "price_money": {
+       "amount": 75
+      }
+     }
     }
    ]
   }
@@ -9118,6 +9127,15 @@ const sqCatalog = [
    "name": "salted vanilla bean + berry sorbet TWIST (gf)",
    "price_money": {
     "amount": 300
+   }
+  }
+ },
+ {
+  "id": "6ZC4B6LPJLDQ4AALME6L3SRS",
+  "modifier_data": {
+   "name": "Streusel crumble",
+   "price_money": {
+    "amount": 75
    }
   }
  }
