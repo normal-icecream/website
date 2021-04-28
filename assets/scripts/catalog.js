@@ -1853,6 +1853,24 @@ const sqCatalog = [
        "amount": 0
       }
      }
+    },
+    {
+     "id": "L24PTO3B2TWSBJIJEZEEPAHX",
+     "modifier_data": {
+      "name": "salted vanilla bean (gf)",
+      "price_money": {
+       "amount": 0
+      }
+     }
+    },
+    {
+     "id": "FBVAX4PJARWR6OIGJII55YXB",
+     "modifier_data": {
+      "name": "salted vanilla bean + many-berry TWIST (gf)",
+      "price_money": {
+       "amount": 0
+      }
+     }
     }
    ]
   }
@@ -2311,6 +2329,24 @@ const sqCatalog = [
      "id": "BQ75KOYH53HQ3B4LHPOHYV7Q",
      "modifier_data": {
       "name": "guava + olive oil TWIST (gf)",
+      "price_money": {
+       "amount": 300
+      }
+     }
+    },
+    {
+     "id": "LZYCY6ZKOSIMCPGKBROF5PAJ",
+     "modifier_data": {
+      "name": "salted vanilla bean (gf)",
+      "price_money": {
+       "amount": 300
+      }
+     }
+    },
+    {
+     "id": "3R3F2TOXXSWV2TY6NJG7BCEI",
+     "modifier_data": {
+      "name": "salted vanilla bean + many-berry TWIST (gf)",
       "price_money": {
        "amount": 300
       }
@@ -3543,6 +3579,26 @@ const sqCatalog = [
      "item_variation_data": {
       "item_id": "CVMOVN75J6NADSS7GEG4WMFW",
       "name": "guava + olive oil TWIST (gf)",
+      "price_money": {
+       "amount": 0
+      }
+     }
+    },
+    {
+     "id": "XVLSJOIYH5Y3WF5RFJCKEA53",
+     "item_variation_data": {
+      "item_id": "CVMOVN75J6NADSS7GEG4WMFW",
+      "name": "salted vanilla bean (gf)",
+      "price_money": {
+       "amount": 0
+      }
+     }
+    },
+    {
+     "id": "2XYMKYWRZ2EVCGOB2IBIAH5R",
+     "item_variation_data": {
+      "item_id": "CVMOVN75J6NADSS7GEG4WMFW",
+      "name": "salted vanilla bean + many-berry TWIST (gf)",
       "price_money": {
        "amount": 0
       }
@@ -9062,6 +9118,42 @@ const sqCatalog = [
    "name": "normal sprinks (gf)",
    "price_money": {
     "amount": 75
+   }
+  }
+ },
+ {
+  "id": "L24PTO3B2TWSBJIJEZEEPAHX",
+  "modifier_data": {
+   "name": "salted vanilla bean (gf)",
+   "price_money": {
+    "amount": 0
+   }
+  }
+ },
+ {
+  "id": "FBVAX4PJARWR6OIGJII55YXB",
+  "modifier_data": {
+   "name": "salted vanilla bean + many-berry TWIST (gf)",
+   "price_money": {
+    "amount": 0
+   }
+  }
+ },
+ {
+  "id": "LZYCY6ZKOSIMCPGKBROF5PAJ",
+  "modifier_data": {
+   "name": "salted vanilla bean (gf)",
+   "price_money": {
+    "amount": 300
+   }
+  }
+ },
+ {
+  "id": "3R3F2TOXXSWV2TY6NJG7BCEI",
+  "modifier_data": {
+   "name": "salted vanilla bean + many-berry TWIST (gf)",
+   "price_money": {
+    "amount": 300
    }
   }
  }
