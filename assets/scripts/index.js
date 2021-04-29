@@ -424,6 +424,15 @@ const getAddressFromLocalStorage = () => {
 /*==========================================================
 FETCHING DATA
 ==========================================================*/
+const fetchCatalog = async () => {
+  if (!window.catalog) {
+    const resp = await fetch("https://www.normal.club/catalog.json", { cache: "reload" });
+    const json = await resp.json();
+    window.catalog = json;
+  }
+  return window.catalog;
+}
+
 const fetchLabels = async () => {
   const resp = await fetch("/_data/labels.json", { cache: "reload" });
   let json = await resp.json();
@@ -470,7 +479,6 @@ const fetchConeImages = async () => {
   const images = json.map((j) => {
     return { name: j.name, url: `https://normal.club/${j.path}`}
   })
-  console.log(images);
 }
 
 const fetchConeBuilderData = async () => {
@@ -4060,13 +4068,14 @@ var cart = {
   }
 };
 
-function indexCatalog() {
+function indexCatalog(sqCatalog) {
   catalog = {
     byId: {},
     items: [],
     categories: [],
     discounts: {},
   };
+
   sqCatalog.forEach((e) => {
     if (!catalog.byId[e.id]) catalog.byId[e.id] = e;
 
@@ -4588,7 +4597,8 @@ INIT
 window.onload = async (e) => {
 
   await fetchLabels();
-  await indexCatalog(); // legacy
+  const sqCatalog = await fetchCatalog();
+  await indexCatalog(sqCatalog); // legacy
 
   // make page useable
   await classify();
