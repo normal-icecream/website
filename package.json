@@ -3,7 +3,8 @@
   "version": "2.0.0",
   "main": "fstab.yaml",
   "scripts": {
-    "compile:sass": "node-sass assets/styles/sass/main.scss assets/styles/style.css -w"
+    "compile:sass": "node-sass assets/styles/sass/main.scss assets/styles/style.css -w",
+    "compile:scss": "node-sass assets/styles/scss/main.scss assets/styles/style.css -w"
   },
   "repository": {
     "type": "git",
