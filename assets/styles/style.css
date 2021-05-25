@@ -671,9 +671,9 @@ main > * {
   object-fit: cover !important; }
 
 .embed-internal-storemenus, .embed-internal-labmenus,
-.embed-internal-deliverymenus, .embed-internal-merchmenus,
-.embed-internal-cateringmenus, .embed-internal-wholesalemenus,
-.embed-internal-aboutmenus {
+.embed-internal-deliverymenus, .embed-internal-shippingmenus,
+.embed-internal-merchmenus, .embed-internal-cateringmenus,
+.embed-internal-wholesalemenus, .embed-internal-aboutmenus {
   width: 100%;
   padding-bottom: 1rem;
   display: flex;
@@ -683,26 +683,26 @@ main > * {
   -ms-overflow-style: none;
   scrollbar-width: none; }
   .embed-internal-storemenus::-webkit-scrollbar, .embed-internal-labmenus::-webkit-scrollbar,
-  .embed-internal-deliverymenus::-webkit-scrollbar, .embed-internal-merchmenus::-webkit-scrollbar,
-  .embed-internal-cateringmenus::-webkit-scrollbar, .embed-internal-wholesalemenus::-webkit-scrollbar,
-  .embed-internal-aboutmenus::-webkit-scrollbar {
+  .embed-internal-deliverymenus::-webkit-scrollbar, .embed-internal-shippingmenus::-webkit-scrollbar,
+  .embed-internal-merchmenus::-webkit-scrollbar, .embed-internal-cateringmenus::-webkit-scrollbar,
+  .embed-internal-wholesalemenus::-webkit-scrollbar, .embed-internal-aboutmenus::-webkit-scrollbar {
     display: none; }
   .embed-internal-storemenus div, .embed-internal-labmenus div,
-  .embed-internal-deliverymenus div, .embed-internal-merchmenus div,
-  .embed-internal-cateringmenus div, .embed-internal-wholesalemenus div,
-  .embed-internal-aboutmenus div {
+  .embed-internal-deliverymenus div, .embed-internal-shippingmenus div,
+  .embed-internal-merchmenus div, .embed-internal-cateringmenus div,
+  .embed-internal-wholesalemenus div, .embed-internal-aboutmenus div {
     min-width: calc(100% / 3);
     padding: 0 6rem; }
     .embed-internal-storemenus div h3, .embed-internal-labmenus div h3,
-    .embed-internal-deliverymenus div h3, .embed-internal-merchmenus div h3,
-    .embed-internal-cateringmenus div h3, .embed-internal-wholesalemenus div h3,
-    .embed-internal-aboutmenus div h3 {
+    .embed-internal-deliverymenus div h3, .embed-internal-shippingmenus div h3,
+    .embed-internal-merchmenus div h3, .embed-internal-cateringmenus div h3,
+    .embed-internal-wholesalemenus div h3, .embed-internal-aboutmenus div h3 {
       margin-top: 2rem;
       margin-bottom: 0.2rem; }
     .embed-internal-storemenus div p, .embed-internal-labmenus div p,
-    .embed-internal-deliverymenus div p, .embed-internal-merchmenus div p,
-    .embed-internal-cateringmenus div p, .embed-internal-wholesalemenus div p,
-    .embed-internal-aboutmenus div p {
+    .embed-internal-deliverymenus div p, .embed-internal-shippingmenus div p,
+    .embed-internal-merchmenus div p, .embed-internal-cateringmenus div p,
+    .embed-internal-wholesalemenus div p, .embed-internal-aboutmenus div p {
       font-family: "Poppins", sans-serif;
       font-weight: 500;
       font-style: normal;
@@ -710,9 +710,9 @@ main > * {
       line-height: 1.4;
       margin-top: 0.4rem; }
       .embed-internal-storemenus div p img, .embed-internal-labmenus div p img,
-      .embed-internal-deliverymenus div p img, .embed-internal-merchmenus div p img,
-      .embed-internal-cateringmenus div p img, .embed-internal-wholesalemenus div p img,
-      .embed-internal-aboutmenus div p img {
+      .embed-internal-deliverymenus div p img, .embed-internal-shippingmenus div p img,
+      .embed-internal-merchmenus div p img, .embed-internal-cateringmenus div p img,
+      .embed-internal-wholesalemenus div p img, .embed-internal-aboutmenus div p img {
         margin-top: 1rem;
         height: 20rem;
         transition: 0.2s all;
@@ -720,24 +720,24 @@ main > * {
         backface-visibility: hidden; }
         .embed-internal-storemenus div p img:hover, .embed-internal-storemenus div p img:focus, .embed-internal-labmenus div p img:hover, .embed-internal-labmenus div p img:focus,
         .embed-internal-deliverymenus div p img:hover,
-        .embed-internal-deliverymenus div p img:focus, .embed-internal-merchmenus div p img:hover, .embed-internal-merchmenus div p img:focus,
-        .embed-internal-cateringmenus div p img:hover,
-        .embed-internal-cateringmenus div p img:focus, .embed-internal-wholesalemenus div p img:hover, .embed-internal-wholesalemenus div p img:focus,
-        .embed-internal-aboutmenus div p img:hover,
-        .embed-internal-aboutmenus div p img:focus {
+        .embed-internal-deliverymenus div p img:focus, .embed-internal-shippingmenus div p img:hover, .embed-internal-shippingmenus div p img:focus,
+        .embed-internal-merchmenus div p img:hover,
+        .embed-internal-merchmenus div p img:focus, .embed-internal-cateringmenus div p img:hover, .embed-internal-cateringmenus div p img:focus,
+        .embed-internal-wholesalemenus div p img:hover,
+        .embed-internal-wholesalemenus div p img:focus, .embed-internal-aboutmenus div p img:hover, .embed-internal-aboutmenus div p img:focus {
           transform: translateY(0.5rem) scale(1.2) rotate(-3deg); }
       .embed-internal-storemenus div p strong, .embed-internal-labmenus div p strong,
-      .embed-internal-deliverymenus div p strong, .embed-internal-merchmenus div p strong,
-      .embed-internal-cateringmenus div p strong, .embed-internal-wholesalemenus div p strong,
-      .embed-internal-aboutmenus div p strong {
+      .embed-internal-deliverymenus div p strong, .embed-internal-shippingmenus div p strong,
+      .embed-internal-merchmenus div p strong, .embed-internal-cateringmenus div p strong,
+      .embed-internal-wholesalemenus div p strong, .embed-internal-aboutmenus div p strong {
         font-family: "Poppins", sans-serif;
         font-weight: 700;
         font-style: normal;
         font-size: 120%; }
       .embed-internal-storemenus div p a, .embed-internal-labmenus div p a,
-      .embed-internal-deliverymenus div p a, .embed-internal-merchmenus div p a,
-      .embed-internal-cateringmenus div p a, .embed-internal-wholesalemenus div p a,
-      .embed-internal-aboutmenus div p a {
+      .embed-internal-deliverymenus div p a, .embed-internal-shippingmenus div p a,
+      .embed-internal-merchmenus div p a, .embed-internal-cateringmenus div p a,
+      .embed-internal-wholesalemenus div p a, .embed-internal-aboutmenus div p a {
         font-family: acumin-pro-extra-condensed, sans-serif;
         font-weight: 600;
         font-style: normal;
@@ -1227,18 +1227,18 @@ main#order {
   main#order div.p-pickup, main#order div.p-shipping {
     display: none; }
 
-h2#soft-serve ~ h3, h2#drinks-drinks-drinks ~ h3, h2#pints ~ h3, h2#bars ~ h3, h2#sandos ~ h3, h2#composed-cones ~ h3, h2#pizza ~ h3, h2#choco-taco ~ h3, h2#specials ~ h3, h2#norm-cores ~ h3, h2#ice-cream-cake ~ h3, h2#ice-cream-pie ~ h3, h2#gift-cards ~ h3, h2#apparel ~ h3, h2#accessories ~ h3, h2#delivery-zips ~ h3, h2#more-stuff ~ h3 {
+h2#soft-serve ~ h3, h2#drinks-drinks-drinks ~ h3, h2#pints ~ h3, h2#bars ~ h3, h2#sandos ~ h3, h2#composed-cones ~ h3, h2#pizza ~ h3, h2#choco-taco ~ h3, h2#specials ~ h3, h2#norm-cores ~ h3, h2#ice-cream-cake ~ h3, h2#ice-cream-pie ~ h3, h2#gift-cards ~ h3, h2#apparel ~ h3, h2#accessories ~ h3, h2#delivery-zips ~ h3, h2#more-stuff ~ h3, h2#pick-your-pack ~ h3 {
   margin-top: 2rem;
   margin-bottom: 0.2rem; }
 
-h2#soft-serve ~ p, h2#drinks-drinks-drinks ~ p, h2#pints ~ p, h2#bars ~ p, h2#sandos ~ p, h2#composed-cones ~ p, h2#pizza ~ p, h2#choco-taco ~ p, h2#specials ~ p, h2#norm-cores ~ p, h2#ice-cream-cake ~ p, h2#ice-cream-pie ~ p, h2#gift-cards ~ p, h2#apparel ~ p, h2#accessories ~ p, h2#delivery-zips ~ p, h2#more-stuff ~ p {
+h2#soft-serve ~ p, h2#drinks-drinks-drinks ~ p, h2#pints ~ p, h2#bars ~ p, h2#sandos ~ p, h2#composed-cones ~ p, h2#pizza ~ p, h2#choco-taco ~ p, h2#specials ~ p, h2#norm-cores ~ p, h2#ice-cream-cake ~ p, h2#ice-cream-pie ~ p, h2#gift-cards ~ p, h2#apparel ~ p, h2#accessories ~ p, h2#delivery-zips ~ p, h2#more-stuff ~ p, h2#pick-your-pack ~ p {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-style: normal;
   font-size: 60%;
   line-height: 1.4;
   margin-top: 0.4rem; }
-  h2#soft-serve ~ p img, h2#drinks-drinks-drinks ~ p img, h2#pints ~ p img, h2#bars ~ p img, h2#sandos ~ p img, h2#composed-cones ~ p img, h2#pizza ~ p img, h2#choco-taco ~ p img, h2#specials ~ p img, h2#norm-cores ~ p img, h2#ice-cream-cake ~ p img, h2#ice-cream-pie ~ p img, h2#gift-cards ~ p img, h2#apparel ~ p img, h2#accessories ~ p img, h2#delivery-zips ~ p img, h2#more-stuff ~ p img {
+  h2#soft-serve ~ p img, h2#drinks-drinks-drinks ~ p img, h2#pints ~ p img, h2#bars ~ p img, h2#sandos ~ p img, h2#composed-cones ~ p img, h2#pizza ~ p img, h2#choco-taco ~ p img, h2#specials ~ p img, h2#norm-cores ~ p img, h2#ice-cream-cake ~ p img, h2#ice-cream-pie ~ p img, h2#gift-cards ~ p img, h2#apparel ~ p img, h2#accessories ~ p img, h2#delivery-zips ~ p img, h2#more-stuff ~ p img, h2#pick-your-pack ~ p img {
     margin-top: 1rem;
     height: 20rem;
     max-width: 100%;
@@ -1246,14 +1246,14 @@ h2#soft-serve ~ p, h2#drinks-drinks-drinks ~ p, h2#pints ~ p, h2#bars ~ p, h2#sa
     transition: 0.2s all;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden; }
-    h2#soft-serve ~ p img:hover, h2#soft-serve ~ p img:focus, h2#drinks-drinks-drinks ~ p img:hover, h2#drinks-drinks-drinks ~ p img:focus, h2#pints ~ p img:hover, h2#pints ~ p img:focus, h2#bars ~ p img:hover, h2#bars ~ p img:focus, h2#sandos ~ p img:hover, h2#sandos ~ p img:focus, h2#composed-cones ~ p img:hover, h2#composed-cones ~ p img:focus, h2#pizza ~ p img:hover, h2#pizza ~ p img:focus, h2#choco-taco ~ p img:hover, h2#choco-taco ~ p img:focus, h2#specials ~ p img:hover, h2#specials ~ p img:focus, h2#norm-cores ~ p img:hover, h2#norm-cores ~ p img:focus, h2#ice-cream-cake ~ p img:hover, h2#ice-cream-cake ~ p img:focus, h2#ice-cream-pie ~ p img:hover, h2#ice-cream-pie ~ p img:focus, h2#gift-cards ~ p img:hover, h2#gift-cards ~ p img:focus, h2#apparel ~ p img:hover, h2#apparel ~ p img:focus, h2#accessories ~ p img:hover, h2#accessories ~ p img:focus, h2#delivery-zips ~ p img:hover, h2#delivery-zips ~ p img:focus, h2#more-stuff ~ p img:hover, h2#more-stuff ~ p img:focus {
+    h2#soft-serve ~ p img:hover, h2#soft-serve ~ p img:focus, h2#drinks-drinks-drinks ~ p img:hover, h2#drinks-drinks-drinks ~ p img:focus, h2#pints ~ p img:hover, h2#pints ~ p img:focus, h2#bars ~ p img:hover, h2#bars ~ p img:focus, h2#sandos ~ p img:hover, h2#sandos ~ p img:focus, h2#composed-cones ~ p img:hover, h2#composed-cones ~ p img:focus, h2#pizza ~ p img:hover, h2#pizza ~ p img:focus, h2#choco-taco ~ p img:hover, h2#choco-taco ~ p img:focus, h2#specials ~ p img:hover, h2#specials ~ p img:focus, h2#norm-cores ~ p img:hover, h2#norm-cores ~ p img:focus, h2#ice-cream-cake ~ p img:hover, h2#ice-cream-cake ~ p img:focus, h2#ice-cream-pie ~ p img:hover, h2#ice-cream-pie ~ p img:focus, h2#gift-cards ~ p img:hover, h2#gift-cards ~ p img:focus, h2#apparel ~ p img:hover, h2#apparel ~ p img:focus, h2#accessories ~ p img:hover, h2#accessories ~ p img:focus, h2#delivery-zips ~ p img:hover, h2#delivery-zips ~ p img:focus, h2#more-stuff ~ p img:hover, h2#more-stuff ~ p img:focus, h2#pick-your-pack ~ p img:hover, h2#pick-your-pack ~ p img:focus {
       transform: translateY(0.5rem) scale(1.2) rotate(-3deg); }
-  h2#soft-serve ~ p strong, h2#drinks-drinks-drinks ~ p strong, h2#pints ~ p strong, h2#bars ~ p strong, h2#sandos ~ p strong, h2#composed-cones ~ p strong, h2#pizza ~ p strong, h2#choco-taco ~ p strong, h2#specials ~ p strong, h2#norm-cores ~ p strong, h2#ice-cream-cake ~ p strong, h2#ice-cream-pie ~ p strong, h2#gift-cards ~ p strong, h2#apparel ~ p strong, h2#accessories ~ p strong, h2#delivery-zips ~ p strong, h2#more-stuff ~ p strong {
+  h2#soft-serve ~ p strong, h2#drinks-drinks-drinks ~ p strong, h2#pints ~ p strong, h2#bars ~ p strong, h2#sandos ~ p strong, h2#composed-cones ~ p strong, h2#pizza ~ p strong, h2#choco-taco ~ p strong, h2#specials ~ p strong, h2#norm-cores ~ p strong, h2#ice-cream-cake ~ p strong, h2#ice-cream-pie ~ p strong, h2#gift-cards ~ p strong, h2#apparel ~ p strong, h2#accessories ~ p strong, h2#delivery-zips ~ p strong, h2#more-stuff ~ p strong, h2#pick-your-pack ~ p strong {
     font-family: "Poppins", sans-serif;
     font-weight: 700;
     font-style: normal;
     font-size: 120%; }
-  h2#soft-serve ~ p a, h2#drinks-drinks-drinks ~ p a, h2#pints ~ p a, h2#bars ~ p a, h2#sandos ~ p a, h2#composed-cones ~ p a, h2#pizza ~ p a, h2#choco-taco ~ p a, h2#specials ~ p a, h2#norm-cores ~ p a, h2#ice-cream-cake ~ p a, h2#ice-cream-pie ~ p a, h2#gift-cards ~ p a, h2#apparel ~ p a, h2#accessories ~ p a, h2#delivery-zips ~ p a, h2#more-stuff ~ p a {
+  h2#soft-serve ~ p a, h2#drinks-drinks-drinks ~ p a, h2#pints ~ p a, h2#bars ~ p a, h2#sandos ~ p a, h2#composed-cones ~ p a, h2#pizza ~ p a, h2#choco-taco ~ p a, h2#specials ~ p a, h2#norm-cores ~ p a, h2#ice-cream-cake ~ p a, h2#ice-cream-pie ~ p a, h2#gift-cards ~ p a, h2#apparel ~ p a, h2#accessories ~ p a, h2#delivery-zips ~ p a, h2#more-stuff ~ p a, h2#pick-your-pack ~ p a {
     font-family: acumin-pro-extra-condensed, sans-serif;
     font-weight: 600;
     font-style: normal;
@@ -1263,6 +1263,23 @@ h2#soft-serve ~ p, h2#drinks-drinks-drinks ~ p, h2#pints ~ p, h2#bars ~ p, h2#sa
 
 h2#soft-serve ~ h3 {
   margin: 0.2rem 0; }
+
+.shipping-how-it-works {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%; }
+  .shipping-how-it-works > div {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    width: calc(100% / 3);
+    padding: 4rem 6rem; }
+    .shipping-how-it-works > div svg {
+      display: block;
+      max-width: 100%;
+      margin-bottom: 4rem; }
 
 .menu {
   position: relative;
@@ -1311,6 +1328,12 @@ h2#soft-serve ~ h3 {
   font-style: normal;
   line-height: 1.2;
   margin-top: 0.8rem; }
+
+#shipping .p-howitworks {
+  margin-top: 5rem;
+  padding: 5rem 0;
+  background: #0D26F9;
+  color: #FFFCF3; }
 
 @media only screen and (max-width: 76.8rem) {
   .menu-filled > * {

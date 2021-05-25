@@ -2,10 +2,6 @@
 /*==========================================================
 UNIVERSAL SETUP
 ==========================================================*/
-const setupHead = () => {
-  const title = getPage();
-  document.title = `normal® ice cream ${title === "home" ? "" : ` ${title.split("-").join(" ")}`}`;
-}
 
 const lazyLoad = () => {
   const $main = document.querySelector("main");
@@ -27,6 +23,8 @@ const getPage = () => {
     return "lab";
   } else if (path.includes("delivery")) {
     return "delivery";
+  } else if (path.includes("shipping")) {
+    return "shipping";
   } else if (path.includes("about")) {
     return "about";
   } else if (path.includes("pint-club")) {
@@ -70,6 +68,14 @@ const setPage = () => {
       buildCustomizationTool();
       break;
     case "delivery":
+      setCurrentStore();
+      shopify();
+      styleMenus();
+      setupCarousels();
+      fixCart();
+      buildCustomizationTool();
+      break;
+    case "shipping":
       setCurrentStore();
       shopify();
       styleMenus();
@@ -633,7 +639,8 @@ const styleMenus = () => {
           d.firstElementChild.nodeName === "H2" && 
           d.firstElementChild.id !== "contact-us" && 
           d.firstElementChild.id !== "locations" &&
-          d.firstElementChild.id !== "where-can-i-find-normalreg"
+          d.firstElementChild.id !== "where-can-i-find-normalreg" &&
+          d.firstElementChild.id !== "how-it-works"
         ) {
         d.classList.add("menu");
         const $embed = d.querySelector(".embed");
@@ -4616,7 +4623,6 @@ window.onload = async (e) => {
   setCartTotal();
   makeCartClickable();
   
-  setupHead();
   buildBackToTopBtn();
   updateCopyright();
 };
