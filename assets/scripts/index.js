@@ -514,6 +514,29 @@ const fetchConeBuilderData = async () => {
   return coneData;
 }
 
+const fetchShippingCarousel = async (type) => {
+  const resp = await fetch("/shipping-menus/shipping-items.json", { cache: "reload" });
+  let json = await resp.json();
+  if (json.data) {
+    json = json.data; // helix quirk, difference between live and local
+  }
+
+  let inStock = {};
+
+  json.forEach((j) => {
+    if (j.stock && j.type === type) {
+      inStock[cleanName(j.name)] = j;
+    }
+  })
+
+  return inStock;
+
+  // const $div = document.createElement("div");
+  //   $div.innerHTML = json;
+  //   $returnDiv = $div.firstChild.firstChild; 
+  //   return $returnDiv;
+}
+
 /*==========================================================
 INDEX PAGE
 ==========================================================*/
@@ -710,6 +733,10 @@ const customizeToolforStore = (target) => {
 
     })
   }
+}
+
+const customizeToolforShipping = () => {
+  console.log(`awaiting instructions for shipping`);
 }
 
 const customizeCheckoutForStorefront = async () => {
@@ -1214,6 +1241,7 @@ const setupCarousels = () => {
 
   if ($carouselWrappers) {
     $carouselWrappers.forEach((w) => {
+
       const $carousel = w.querySelector(`div.embed-internal-${getPage()}menus`);
       if ($carousel) {
         // build btns
@@ -2390,6 +2418,150 @@ const populateCustomizationTool = (store, title, fields) => {
   showCustomizationTool();
 }
 
+const populateCustomizationToolShipping = async (title, item) => {
+  const itemData = item.item_data;
+  const itemVariations = itemData.variations;
+  const itemModifiers = itemData.modifier_list_info;
+
+  const $customTool = document.querySelector(".customize-table");
+
+  const $customHead = $customTool.querySelector(".customize-table-head");
+  $customHead.textContent = title;
+
+  const $customBody = $customTool.querySelector(".customize-table-body");
+  $customBody.innerHTML = ""; // clear on each populate
+
+  // MODIFIERS STUFF
+  if (itemModifiers) { // except for soft serve toppings, these are ALL RADIOS!
+
+    for (m of itemModifiers) {
+      const modCat = catalog.byId[m.modifier_list_id]; // this is a single modifier category (obj)
+      const modCatData = modCat.modifier_list_data; // this is a single modifer category WITH DATA I CARE ABOUT (obj)
+      const modCatName = modCatData.name.split(" ")[1].slice(0, -1); // this is the single modifier category NAME (str)
+      const modCatModifiers = modCatData.modifiers; // these are all the modifiers in a category (arr);
+
+      const $carousel = document.createElement("div");
+        $carousel.classList.add("menu", "menu-carousel", "theme-outline");
+
+      const carouselData = await fetchShippingCarousel(modCatName);
+      const $carouselItems = buildShippingCarousel(modCatName, modCatModifiers, carouselData);
+
+      $carousel.append($carouselItems);
+      $customBody.append($carousel);
+
+    }
+
+    setupCarousels();
+
+  }
+
+  const $customFoot = document.querySelector(".customize-foot");
+    $customFoot.innerHTML = ""; // clear on each populate
+
+  const $btn = document.createElement("a");
+    $btn.classList.add("btn-rect");
+    $btn.id = "customize-form";
+    $btn.textContent = "add to cart";
+    $btn.onclick = async (e) => {
+      const targetClass =  e.target.closest("a").id;
+      const $form = document.querySelector(`.${targetClass}`);
+      const valid = validateSubmission($form);
+      if (valid) {
+        buildScreensaver("customizing your item...");
+        const formData = await getSubmissionData($form);
+        await addConfigToCart(formData);
+        await clearCustomizationTool();
+        await hideCustomizationTool();
+        removeScreensaver();
+      } else {
+        console.error("please fill out all required fields!");
+      }
+    };
+
+  $customFoot.append($btn);
+  showCustomizationTool();
+
+}
+
+const buildShippingCarousel = (type, modifiers, inStock) => {
+  // console.log(modifiers);
+  // console.log(inStock);
+
+  let $container = document.createElement("div");
+    $container.classList.add("embed", "embed-internal", `embed-internal-shipping${type}s`,"embed-internal-shippingmenus");
+
+    const numInStock = Object.keys(inStock).length;
+
+    if (numInStock === 1) {
+      $container.classList.add("menu-carousel-one");
+    } else if (numInStock === 2) {
+      $container.classList.add("menu-carousel-two");
+    } else if (numInStock === 3) {
+      $container.classList.add("menu-carousel-three");
+    } else if (numInStock > 3) {
+      $container.classList.add("menu-carousel-full");
+    }
+
+  modifiers.forEach((m) => { 
+    const mData = m.modifier_data;
+    const cleanMod = cleanName(mData.name);
+
+    if (inStock[cleanMod]) {
+      // console.log(inStock[cleanMod]);
+      const thisItem = inStock[cleanMod];
+
+      const $menuItem = document.createElement("div");
+      const $title = document.createElement("h3");
+        $title.textContent = thisItem.name;
+
+      if (thisItem.allergy) {
+        const allergies = makeArr(thisItem.allergy);
+        allergies.forEach((a) => {
+          $title.innerHTML += ` <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${a}">
+          <use href="/icons.svg#${a}"></use>
+        </svg>`;
+        })
+      }
+      $menuItem.append($title);
+      
+      let $desc = document.createElement("p");
+      if (thisItem.description) {
+        $desc.textContent = thisItem.description;
+        $menuItem.append($desc);
+      }
+
+      const $menuFooter = document.createElement("div");
+        $menuFooter.classList.add("menu-footer");
+        $menuFooter.innerHTML = `<span onclick="minusShip(this)" class="quantity quantity-minus">-</span>
+        <span class="quantity-num">0</span>
+        <span onclick="plusShip(this)" class="quantity quantity-plus">+</span>`;
+
+      $menuItem.append($menuFooter);
+      $container.append($menuItem);
+
+    }
+  })
+
+  return $container;
+}
+
+const plusShip = (e) => {
+  console.log(e);
+  const $footer = e.closest(".menu-footer");
+  const $quantity = $footer.querySelector(".quantity-num");
+  const quantity = $quantity.textContent;
+  const num = parseInt(quantity);
+  $quantity.textContent = num + 1;
+}
+
+const minusShip = (e) => {
+  const $footer = e.closest(".menu-footer");
+  const $quantity = $footer.querySelector(".quantity-num");
+  const quantity = $quantity.textContent;
+  const num = parseInt(quantity);
+  $quantity.textContent = num - 1;
+}
+
 const populateCustomizationToolSquare = (title, item) => {
   const itemData = item.item_data;
   const itemVariations = itemData.variations;
@@ -2403,7 +2575,8 @@ const populateCustomizationToolSquare = (title, item) => {
   const $customBody = $customTool.querySelector(".customize-table-body");
   $customBody.innerHTML = ""; // clear on each populate
 
-  if (itemVariations) { // this is ALWAYS a radio, only one choice!
+  if (itemVariations && // this is ALWAYS a radio, only one choice!
+    itemData.category_id !== "5AIFY5WMTNJLS5RBZAPWL4YJ") { // don't display shipping variations
 
     const $field = document.createElement("div");
     $field.classList.add(`customize-table-body-radio`);
@@ -2500,6 +2673,7 @@ const populateCustomizationToolSquare = (title, item) => {
   }
 
   if (itemModifiers) { // except for soft serve toppings, these are ALL RADIOS!
+    console.log(`populateCustomizationToolSquare -> itemModifiers`, itemModifiers);
     itemModifiers.forEach((m) => {
       const modCat = catalog.byId[m.modifier_list_id]; // this is a single modifier category (obj)
       const modCatData = modCat.modifier_list_data; // this is a single modifer category WITH DATA I CARE ABOUT (obj)
@@ -3866,6 +4040,16 @@ const cleanName = (str) => {
   }
 };
 
+const makeArr = (str) => {
+  if (str) {
+    if (str.includes(",")) {
+      return str.split(",");
+    } else {
+      return [ str ];
+    }
+  }
+}
+
 const removeStorefrontName = (str) => {
   if (str) {
     const clean = str.toLowerCase().replace(/store|lab|delivery|merch/g, "");
@@ -4160,8 +4344,15 @@ function addConfigToCart(formData) {
 
 function configItem(item) {
   const itemName = item.item_data.name;
-  populateCustomizationToolSquare(`customize your ${removeStorefrontName(itemName).trim()}`, item);
-  customizeToolforStore();
+  const store = getCurrentStore();
+
+  if (store === "shipping") {
+    populateCustomizationToolShipping(`build your ${itemName.trim()} pack`, item);
+    customizeToolforShipping();
+  } else {
+    populateCustomizationToolSquare(`customize your ${removeStorefrontName(itemName).trim()}`, item);
+    customizeToolforStore();
+  }
 }
 
 function generateId() {
@@ -4227,6 +4418,7 @@ function initPaymentForm(paymentType, currentStore, recurring) {
         * Triggered when: SqPaymentForm completes a card nonce request
         */
         cardNonceResponseReceived: function (errors, nonce, cardData) {
+        console.log(`addToCart -> obj`, obj);
 
           if (errors) {
             // Log errors from nonce generation to the browser developer console.

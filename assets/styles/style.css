@@ -432,6 +432,23 @@ a {
   .checkout-form input#zip[data-fieldtype=address] {
     width: 50%; } }
 
+.quantity {
+  display: inline-block;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  margin: 0 0.5rem;
+  line-height: 1;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  cursor: pointer;
+  transition: 0.2s all;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; }
+  .quantity:hover, .quantity:focus {
+    transform: scale(1.3); }
+
 .embed-internal-contact {
   margin-top: 6rem; }
   .embed-internal-contact a {

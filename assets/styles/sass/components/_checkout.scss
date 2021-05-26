@@ -301,3 +301,20 @@
         }
     }
 }
+
+.quantity {
+    display: inline-block;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    margin: 0 0.5rem;
+    line-height: 1;
+    @include font-poppins-bold;
+    cursor: pointer;
+    transition: 0.2s all;
+    @include bfv;
+    
+    &:hover, &:focus {
+        transform: scale(1.3);
+    }
+}
