@@ -2673,7 +2673,7 @@ const populateCustomizationToolSquare = (title, item) => {
   }
 
   if (itemModifiers) { // except for soft serve toppings, these are ALL RADIOS!
-    console.log(`populateCustomizationToolSquare -> itemModifiers`, itemModifiers);
+    // console.log(`populateCustomizationToolSquare -> itemModifiers`, itemModifiers);
     itemModifiers.forEach((m) => {
       const modCat = catalog.byId[m.modifier_list_id]; // this is a single modifier category (obj)
       const modCatData = modCat.modifier_list_data; // this is a single modifer category WITH DATA I CARE ABOUT (obj)
@@ -3775,6 +3775,10 @@ const successfulOrderConfirmation = async (orderInfo) => {
           encodeURIComponent(formDate), // date
           encodeURIComponent(orderInfo.receipt_url) // receipt
         ); 
+        console.log(currentStore);
+        if (currentStore === "store") {
+          await sendStoreText(formData.cell);
+        }
       }
       // remove sq form
       await removeSqContainer();
@@ -3829,6 +3833,20 @@ const sendConfirmationEmail = async (store, name, email, address, comments, date
     console.error(`Email confirmation was NOT sent`);  
   }
   return data.sent;
+}
+
+const sendStoreText = async (num) => {
+  let params = `num=${num}`;
+  const url = `https://script.google.com/macros/s/AKfycbzQrt3vClzib9r0T686goOk-AHZijk31rTWozqYo2lV0jp8lr8lA8abezg0TcgzsAjH/exec?${params}`;
+  let resp = await fetch(url);
+  let data = await resp.json();
+  if (!data) {
+    console.error(`Message was not sent to ${num}`);
+  } else if (data.status === "failure") {
+    console.error(data.res);
+  } else {
+    return data.status;
+  }
 }
 
 const addClubToSheet = async () => {
