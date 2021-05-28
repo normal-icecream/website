@@ -3650,7 +3650,7 @@ const sendConfirmationEmail = async (store, name, email, address, comments, date
 
 const sendStoreText = async (num) => {
   let params = `num=${num}`;
-  const url = `https://script.google.com/macros/s/AKfycbzQrt3vClzib9r0T686goOk-AHZijk31rTWozqYo2lV0jp8lr8lA8abezg0TcgzsAjH/exec?${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbzJ_QArzPcLO6wsfhiIhX6lMpHU_Mo0XbyoQfvP4D8WZJ6X7rys6BfjMIuWmnO2JtWc/exec?${params}`;
   let resp = await fetch(url);
   let data = await resp.json();
   if (!data) {
