@@ -2,11 +2,6 @@
 /*==========================================================
 UNIVERSAL SETUP
 ==========================================================*/
-const setupHead = () => {
-  const title = getPage();
-  document.title = `normal® ice cream ${title === "home" ? "" : ` ${title.split("-").join(" ")}`}`;
-}
-
 const lazyLoad = () => {
   const $main = document.querySelector("main");
   const $childrenArr = [ ...$main.children ];
@@ -3580,10 +3575,13 @@ const successfulOrderConfirmation = async (orderInfo) => {
         let formDate;
 
         if (currentStore === "delivery") {
-          // get delivery date
+          // TODO: get delivery date
           formDate = null;
         } else {
           formDate = prettyPrintDate(formData.pickuptime);
+        }
+        if (currentStore === "store") {
+          await sendStoreText(formData.cell);
         }
         await sendConfirmationEmail(
           encodeURIComponent(currentStore), // store
@@ -3648,6 +3646,20 @@ const sendConfirmationEmail = async (store, name, email, address, comments, date
     console.error(`Email confirmation was NOT sent`);  
   }
   return data.sent;
+}
+
+const sendStoreText = async (num) => {
+  let params = `num=${num}`;
+  const url = `https://script.google.com/macros/s/AKfycbzQrt3vClzib9r0T686goOk-AHZijk31rTWozqYo2lV0jp8lr8lA8abezg0TcgzsAjH/exec?${params}`;
+  let resp = await fetch(url);
+  let data = await resp.json();
+  if (!data) {
+    console.error(`Message was not sent to ${num}`);
+  } else if (data.status === "failure") {
+    console.error(data.res);
+  } else {
+    return data.status;
+  }
 }
 
 const addClubToSheet = async () => {
@@ -4616,7 +4628,6 @@ window.onload = async (e) => {
   setCartTotal();
   makeCartClickable();
   
-  setupHead();
   buildBackToTopBtn();
   updateCopyright();
 };
