@@ -3639,7 +3639,7 @@ const createCustomer = async (formData) => {
 const sendConfirmationEmail = async (store, name, email, address, comments, date, receipt) => {
   let params = `type=${store}&name=${name}&email=${email}&address=${address}&date=${date}&receipt=${receipt}`;
   if (comments) { params += `&comments=${comments}` };
-  const url = `https://script.google.com/macros/s/AKfycbyh32OeH9OZevQS-T1dK8tT1z-1je4cSgcQ9vdPrZ0KggGIUafHefn6gzoS81vk9VpUhQ/exec?${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbwMgFthLp3VO29MhT1zFaRWF1QRMw-2xI3d44u51ZyCMLyxJlEswNcSIY9m-YoY6YAE8A/exec?${params}`;
   let resp = await fetch(url);
   let data = await resp.json();
   if (!data.sent) {
