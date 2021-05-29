@@ -2,7 +2,6 @@
 /*==========================================================
 UNIVERSAL SETUP
 ==========================================================*/
-
 const lazyLoad = () => {
   const $main = document.querySelector("main");
   const $childrenArr = [ ...$main.children ];
@@ -3761,10 +3760,13 @@ const successfulOrderConfirmation = async (orderInfo) => {
         let formDate;
 
         if (currentStore === "delivery") {
-          // get delivery date
+          // TODO: get delivery date
           formDate = null;
         } else {
           formDate = prettyPrintDate(formData.pickuptime);
+        }
+        if (currentStore === "store") {
+          await sendStoreText(formData.cell);
         }
         await sendConfirmationEmail(
           encodeURIComponent(currentStore), // store
@@ -3826,7 +3828,7 @@ const createCustomer = async (formData) => {
 const sendConfirmationEmail = async (store, name, email, address, comments, date, receipt) => {
   let params = `type=${store}&name=${name}&email=${email}&address=${address}&date=${date}&receipt=${receipt}`;
   if (comments) { params += `&comments=${comments}` };
-  const url = `https://script.google.com/macros/s/AKfycbyh32OeH9OZevQS-T1dK8tT1z-1je4cSgcQ9vdPrZ0KggGIUafHefn6gzoS81vk9VpUhQ/exec?${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbwMgFthLp3VO29MhT1zFaRWF1QRMw-2xI3d44u51ZyCMLyxJlEswNcSIY9m-YoY6YAE8A/exec?${params}`;
   let resp = await fetch(url);
   let data = await resp.json();
   if (!data.sent) {
@@ -3837,7 +3839,7 @@ const sendConfirmationEmail = async (store, name, email, address, comments, date
 
 const sendStoreText = async (num) => {
   let params = `num=${num}`;
-  const url = `https://script.google.com/macros/s/AKfycbzQrt3vClzib9r0T686goOk-AHZijk31rTWozqYo2lV0jp8lr8lA8abezg0TcgzsAjH/exec?${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbzJ_QArzPcLO6wsfhiIhX6lMpHU_Mo0XbyoQfvP4D8WZJ6X7rys6BfjMIuWmnO2JtWc/exec?${params}`;
   let resp = await fetch(url);
   let data = await resp.json();
   if (!data) {
