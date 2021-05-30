@@ -446,6 +446,11 @@ a {
   transition: 0.2s all;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden; }
+  .quantity-disabled {
+    background: #dfdfdf !important; }
+    .quantity-disabled:hover, .quantity-disabled:focus {
+      transform: scale(1) !important;
+      cursor: not-allowed; }
   .quantity:hover, .quantity:focus {
     transform: scale(1.3); }
 
@@ -502,6 +507,15 @@ a {
       width: 100%; }
       .customize-table-body-field::placeholder, .customize-table-body-selectwrapper::placeholder, .customize-table-body-radio::placeholder, .customize-table-body-checkbox::placeholder {
         color: currentColor; }
+    .customize-table-body-carousel-head {
+      padding: 2rem 4rem;
+      margin-bottom: 0;
+      text-align: left; }
+    .customize-table-body-carousel .menu-carousel {
+      border: 0;
+      margin-top: 0; }
+      .customize-table-body-carousel .menu-carousel h4 {
+        font-size: 3.3rem; }
     .customize-table-body-field, .customize-table-body-select {
       padding: 1rem 4rem;
       text-overflow: ellipsis;
@@ -1924,6 +1938,9 @@ h2#normal-pint-club-faq, h2#normal-pint-club-faqs, h2#normalreg-pint-club-faq, h
       background: #FFFCF3; }
       .theme-bluewhite .menu-carousel-btn:hover svg.icon, .theme-bluewhite .menu-carousel-btn:focus svg.icon {
         color: #0D26F9; }
+  .theme-bluewhite .menu-carousel .quantity {
+    background: #0D26F9;
+    color: #FFFCF3; }
   .theme-bluewhite #back-to-top {
     background: #0D26F9; }
 
@@ -2050,6 +2067,9 @@ h2#normal-pint-club-faq, h2#normal-pint-club-faqs, h2#normalreg-pint-club-faq, h
     .theme-white .customize-table-body-radio-container, .theme-white .customize-table-body-checkbox-container {
       background: #FFFCF3;
       color: #0D26F9; }
+  .theme-white .customize-table-body-carousel-head {
+    background: #0D26F9;
+    color: #FFFCF3; }
   .theme-white .checkout::-webkit-scrollbar-thumb {
     background: #0D26F9; }
   .theme-white .checkout .invalid-field {
@@ -2088,6 +2108,9 @@ h2#normal-pint-club-faq, h2#normal-pint-club-faqs, h2#normalreg-pint-club-faq, h
       background: #0D26F9; }
       .theme-white .menu-carousel-btn:hover svg.icon, .theme-white .menu-carousel-btn:focus svg.icon {
         color: #FFFCF3; }
+  .theme-white .menu-carousel .quantity {
+    background: #0D26F9;
+    color: #FFFCF3; }
   .theme-white .sq-form-btn {
     background: #0D26F9;
     color: #FFFCF3; }

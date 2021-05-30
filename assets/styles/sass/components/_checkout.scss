@@ -313,6 +313,15 @@
     cursor: pointer;
     transition: 0.2s all;
     @include bfv;
+
+    &-disabled {
+        background: #dfdfdf !important;
+        // border: 1px solid #eee !important;
+        &:hover, &:focus {
+            transform: scale(1) !important;
+            cursor: not-allowed;
+        }
+    }
     
     &:hover, &:focus {
         transform: scale(1.3);

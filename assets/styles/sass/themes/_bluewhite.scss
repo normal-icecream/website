@@ -109,6 +109,10 @@
                     }
                 }
             }
+            & .quantity {
+                    background: $color-blue;
+                    color: $color-white;
+            }
         }
     }
 

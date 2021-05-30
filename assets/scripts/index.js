@@ -536,6 +536,14 @@ const fetchShippingCarousel = async (type) => {
   //   return $returnDiv;
 }
 
+const fetchShippingPacks = async () => {
+  const url = "https://script.google.com/macros/s/AKfycbzCP0bu1FDM6jnN4e9ybN4Z93jG2QlMpUAOLneP5rbGgJdHBNm9dLDV85_egu_ix2BE/exec";
+  const resp = await fetch(url);
+  const json = await resp.json();
+  console.log(json);
+  return json;
+}
+
 /*==========================================================
 INDEX PAGE
 ==========================================================*/
@@ -2418,9 +2426,14 @@ const populateCustomizationTool = (store, title, fields) => {
 }
 
 const populateCustomizationToolShipping = async (title, item) => {
+  buildScreensaver("populating your pack options...");
   const itemData = item.item_data;
+  const itemId = item.id;
   const itemVariations = itemData.variations;
   const itemModifiers = itemData.modifier_list_info;
+  const shippingData = await fetchShippingPacks();
+  console.log(`populate customization tool for shipping`, itemId);
+  const packLimit = shippingData[itemId];
 
   const $customTool = document.querySelector(".customize-table");
 
@@ -2431,26 +2444,42 @@ const populateCustomizationToolShipping = async (title, item) => {
   $customBody.innerHTML = ""; // clear on each populate
 
   // MODIFIERS STUFF
-  if (itemModifiers) { // except for soft serve toppings, these are ALL RADIOS!
+  if (itemModifiers) { 
 
     for (m of itemModifiers) {
       const modCat = catalog.byId[m.modifier_list_id]; // this is a single modifier category (obj)
       const modCatData = modCat.modifier_list_data; // this is a single modifer category WITH DATA I CARE ABOUT (obj)
+      const modId = modCat.id; // this is the id for the ENTIRE modifier category (str)
       const modCatName = modCatData.name.split(" ")[1].slice(0, -1); // this is the single modifier category NAME (str)
       const modCatModifiers = modCatData.modifiers; // these are all the modifiers in a category (arr);
+
+      const modQuantity = packLimit.quantities[modCatName + "s"];
+      console.log(modCat);
+      console.log(modCatData);
+
+      const $carouselContainer = document.createElement("div");
+        $carouselContainer.setAttribute("data-mod-id", modId);
+        $carouselContainer.setAttribute("data-type", modCatName);
+        $carouselContainer.classList.add("customize-table-body-carousel");
+
+      const $heading = document.createElement("h3");
+        $heading.classList.add("customize-table-body-carousel-head");
+        $heading.innerHTML = `choose <span data-limit-id="${modId}" data-limit=${modQuantity} data-limit-type="${modCatName}">${modQuantity}</span> ${modCatName}s`;
 
       const $carousel = document.createElement("div");
         $carousel.classList.add("menu", "menu-carousel", "theme-outline");
 
       const carouselData = await fetchShippingCarousel(modCatName);
-      const $carouselItems = buildShippingCarousel(modCatName, modCatModifiers, carouselData);
+      const $carouselItems = buildShippingCarousel(modId, modCatName, modCatModifiers, carouselData);
 
       $carousel.append($carouselItems);
-      $customBody.append($carousel);
+      $carouselContainer.append($heading, $carousel);
+      $customBody.append($carouselContainer);
 
     }
 
     setupCarousels();
+    removeScreensaver();
 
   }
 
@@ -2482,7 +2511,7 @@ const populateCustomizationToolShipping = async (title, item) => {
 
 }
 
-const buildShippingCarousel = (type, modifiers, inStock) => {
+const buildShippingCarousel = (id, type, modifiers, inStock) => {
   // console.log(modifiers);
   // console.log(inStock);
 
@@ -2506,11 +2535,11 @@ const buildShippingCarousel = (type, modifiers, inStock) => {
     const cleanMod = cleanName(mData.name);
 
     if (inStock[cleanMod]) {
-      // console.log(inStock[cleanMod]);
       const thisItem = inStock[cleanMod];
 
       const $menuItem = document.createElement("div");
-      const $title = document.createElement("h3");
+        $menuItem.classList.add("menu-item");
+      const $title = document.createElement("h4");
         $title.textContent = thisItem.name;
 
       if (thisItem.allergy) {
@@ -2529,11 +2558,13 @@ const buildShippingCarousel = (type, modifiers, inStock) => {
         $menuItem.append($desc);
       }
 
-      const $menuFooter = document.createElement("div");
-        $menuFooter.classList.add("menu-footer");
+      const $menuFooter = document.createElement("aside");
+        
         $menuFooter.innerHTML = `<span onclick="minusShip(this)" class="quantity quantity-minus">-</span>
-        <span class="quantity-num">0</span>
+        <span class="quantity-num" data-item-type="${type}">0</span>
         <span onclick="plusShip(this)" class="quantity quantity-plus">+</span>`;
+        $menuFooter.classList.add("menu-footer", cleanName(thisItem.name));
+        $menuFooter.setAttribute(`data-quantity-type`, type);
 
       $menuItem.append($menuFooter);
       $container.append($menuItem);
@@ -2545,20 +2576,73 @@ const buildShippingCarousel = (type, modifiers, inStock) => {
 }
 
 const plusShip = (e) => {
-  console.log(e);
   const $footer = e.closest(".menu-footer");
   const $quantity = $footer.querySelector(".quantity-num");
+  const type = $quantity.getAttribute("data-item-type");
   const quantity = $quantity.textContent;
   const num = parseInt(quantity);
-  $quantity.textContent = num + 1;
+  const catQuantity = checkShipCatQuantity(type);
+  const catLimit = checkShipCatLimit(type);
+  console.log(`current quantity:`, catQuantity);
+  console.log(`current limit:`, catLimit);
+  if (catQuantity < catLimit) {
+    $quantity.textContent = num + 1;
+    const newQuantity = checkShipCatQuantity(type);
+    if (newQuantity >= catLimit) {
+      disableShipPlus(type);
+    }
+  } else {
+    // deactivate plus buttons
+    disableShipPlus(type);
+  }
 }
 
 const minusShip = (e) => {
   const $footer = e.closest(".menu-footer");
   const $quantity = $footer.querySelector(".quantity-num");
+  const type = $quantity.getAttribute("data-item-type");
   const quantity = $quantity.textContent;
   const num = parseInt(quantity);
-  $quantity.textContent = num - 1;
+  if (num > 0) {
+    $quantity.textContent = num - 1;
+    enableShipPlus(type);
+  }
+}
+
+const checkShipCatQuantity = (type) => {
+  const $allQuantities = document.querySelectorAll(`[data-item-type=${type}`);
+  const $allQuantitiesArr = [ ...$allQuantities ];
+  const catQuantity = $allQuantitiesArr.reduce((a, b) => {
+    return a + parseInt(b.textContent);
+  }, 0)
+  return catQuantity;
+}
+
+const checkShipCatLimit = (type) => {
+  const $limit = document.querySelector(`[data-limit-type=${type}]`);
+  const limit = $limit.getAttribute("data-limit");
+  const num = parseInt(limit);
+  return num;
+}
+
+const disableShipPlus = (type) => {
+  console.log(`disable ship plus running`, type);
+  const $menuFooters = document.querySelectorAll(`[data-quantity-type=${type}]`);
+  const $menuFootersArr = [ ...$menuFooters ];
+  console.log($menuFootersArr);
+  $menuFootersArr.forEach((f) => {
+    const $plus = f.querySelector(".quantity-plus");
+    $plus.classList.add("quantity-disabled");
+  })
+}
+
+const enableShipPlus = (type) => { 
+  const $menuFooters = document.querySelectorAll(`[data-quantity-type=${type}]`);
+  const $menuFootersArr = [ ...$menuFooters ];
+  $menuFootersArr.forEach((f) => {
+    const $plus = f.querySelector(".quantity-plus");
+    $plus.classList.remove("quantity-disabled");
+  })
 }
 
 const populateCustomizationToolSquare = (title, item) => {
