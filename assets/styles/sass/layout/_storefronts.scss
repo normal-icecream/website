@@ -6,7 +6,8 @@ h2 {
     &#norm-cores, &#ice-cream-cake,
     &#ice-cream-pie,
     &#gift-cards, &#apparel, &#accessories,
-    &#delivery-zips, &#more-stuff { // STORE HEADINGS
+    &#delivery-zips, &#more-stuff,
+    &#pick-your-pack { // STORE HEADINGS
         // color: red;
         & ~ h3 {
             // color: red;
@@ -46,6 +47,26 @@ h2 {
     &#soft-serve { // soft-serve heading
         & ~ h3 {
             margin: 0.2rem 0;
+        }
+    }
+}
+
+// SHIPPING PAGE
+.shipping-how-it-works {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    & > div {
+        @include font-poppins-bold;
+        font-size: 1.6rem;
+        line-height: 1.2;
+        width: calc(100% / 3);
+        padding: 4rem 6rem;
+        & svg {
+            display: block;
+            // border: red;
+            max-width: 100%;
+            margin-bottom: 4rem;
         }
     }
 }
@@ -120,6 +141,14 @@ h2 {
     }
 }
 
+#shipping {
+    & .p-howitworks {
+        margin-top: 5rem;
+        padding: 5rem 0;
+        background: $color-blue;
+        color: $color-white;
+    }
+}
 
 @media only screen and (max-width: $tablet) {
     .menu {

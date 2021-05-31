@@ -301,3 +301,29 @@
         }
     }
 }
+
+.quantity {
+    display: inline-block;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    margin: 0 0.5rem;
+    line-height: 1;
+    @include font-poppins-bold;
+    cursor: pointer;
+    transition: 0.2s all;
+    @include bfv;
+
+    &-disabled {
+        background: #dfdfdf !important;
+        // border: 1px solid #eee !important;
+        &:hover, &:focus {
+            transform: scale(1) !important;
+            cursor: not-allowed;
+        }
+    }
+    
+    &:hover, &:focus {
+        transform: scale(1.3);
+    }
+}

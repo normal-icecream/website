@@ -22,6 +22,8 @@ const getPage = () => {
     return "lab";
   } else if (path.includes("delivery")) {
     return "delivery";
+  } else if (path.includes("shipping")) {
+    return "shipping";
   } else if (path.includes("about")) {
     return "about";
   } else if (path.includes("pint-club")) {
@@ -47,6 +49,7 @@ const setPage = () => {
     case "order":
       hideCart();
       buildOrderPage();
+      buildOrderNav();
       break;
     case "store":
       setCurrentStore();
@@ -65,6 +68,14 @@ const setPage = () => {
       buildCustomizationTool();
       break;
     case "delivery":
+      setCurrentStore();
+      shopify();
+      styleMenus();
+      setupCarousels();
+      fixCart();
+      buildCustomizationTool();
+      break;
+    case "shipping":
       setCurrentStore();
       shopify();
       styleMenus();
@@ -503,6 +514,36 @@ const fetchConeBuilderData = async () => {
   return coneData;
 }
 
+const fetchShippingCarousel = async (type) => {
+  const resp = await fetch("/shipping-menus/shipping-items.json", { cache: "reload" });
+  let json = await resp.json();
+  if (json.data) {
+    json = json.data; // helix quirk, difference between live and local
+  }
+
+  let inStock = {};
+
+  json.forEach((j) => {
+    if (j.stock && j.type === type) {
+      inStock[cleanName(j.name)] = j;
+    }
+  })
+
+  return inStock;
+
+  // const $div = document.createElement("div");
+  //   $div.innerHTML = json;
+  //   $returnDiv = $div.firstChild.firstChild; 
+  //   return $returnDiv;
+}
+
+const fetchShippingPacks = async () => {
+  const url = "https://script.google.com/macros/s/AKfycbzCP0bu1FDM6jnN4e9ybN4Z93jG2QlMpUAOLneP5rbGgJdHBNm9dLDV85_egu_ix2BE/exec";
+  const resp = await fetch(url);
+  const json = await resp.json();
+  return json;
+}
+
 /*==========================================================
 INDEX PAGE
 ==========================================================*/
@@ -583,12 +624,95 @@ const buildOrderPage = () => {
   });
 };
 
+const buildOrderNav = () => {
+  const $orderBlock = document.querySelector(".order");
+  const $parent = $orderBlock.parentNode;
+
+  const $backBtn = document.createElement("aside");
+    $backBtn.classList.add("btn-back", "hide");
+    $backBtn.setAttribute("data-theme", "bluepink");
+    $backBtn.textContent = "back to options";
+    $backBtn.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-arrow-left"><use href="/icons.svg#arrow-left"></use></svg>`;
+    $backBtn.onclick = (e) => {
+      // replace all classes on main (theme, theme-color);
+      const $body = document.querySelector("body");
+      $body.classList = "";
+      $body.classList.add("theme", "theme-bluepink");
+      // hide this nav, show order nav
+      const $current = document.querySelector("[data-visible=true]");
+        $current.classList.add("hide");
+        $current.removeAttribute("data-visible");
+      const $order = document.querySelector(".order");
+        $order.classList.remove("hide");
+      // hide back button
+      const $btn = e.target.closest(".btn-back");
+      $btn.classList.add("hide");
+
+    };
+    $parent.insertBefore($backBtn, $orderBlock);
+
+  const orderBtnMain = (e) => {
+    const $clicked = e.target.closest(".order-btn");
+    const clicked = $clicked.textContent.trim().split(" ").join("");
+    const $orderBlock = document.querySelector(".order");
+    $orderBlock.classList.add("hide");
+    const $target = document.querySelector(`.order-${clicked}`);
+    const theme = $target.getAttribute("data-theme");
+    $target.classList.remove("hide");
+    $target.setAttribute("data-visible", true);
+    const $body = document.querySelector("body");
+      $body.classList.add(`theme-${theme}`);
+    const $backBtn = document.querySelector(".btn-back");
+      $backBtn.classList.remove("hide");
+  }
+
+  const $pickupBtn = $orderBlock.firstChild;
+    $pickupBtn.classList.add("order-btn");
+    $pickupBtn.onclick = orderBtnMain;
+    
+  const $shippingBtn = $orderBlock.lastChild;
+    $shippingBtn.classList.add("order-btn");
+    $shippingBtn.onclick = orderBtnMain;
+
+  const $pickupBlock = document.querySelector(".order-pickup");
+    $pickupBlock.classList.add("hide");
+    $pickupBlock.setAttribute("data-theme", "yellow");
+    $pickupBlock.firstChild.classList.add("order-btn");
+    $pickupBlock.lastChild.classList.add("order-btn");
+    
+  const $shippingBlock = document.querySelector(".order-shipping");
+    $shippingBlock.classList.add("hide");
+    $shippingBlock.setAttribute("data-theme", "pink");
+    $shippingBlock.firstChild.classList.add("order-btn");
+    $shippingBlock.lastChild.classList.add("order-btn");
+    buildShippingStarburst($shippingBlock.lastChild);
+  
+}
+
+const buildShippingStarburst = ($el) => {
+  console.log($el);
+  $el.classList.add("ship-starburst-container");
+
+  const $starburst = document.createElement("aside");
+    $starburst.classList.add("starburst", "ship-starbust");
+    $starburst.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-starburst">
+      <use href="/icons.svg#starburst"></use>
+    </svg>`;
+
+  const $starburstText = document.createElement("span");
+    $starburstText.classList.add("starburst-text");
+    $starburstText.textContent = "national shipping available now!";
+  $starburst.append($starburstText);
+
+  $el.prepend($starburst);
+}
+
 /*==========================================================
 STOREFRONT PAGES
 ==========================================================*/
 const getCurrentStore = () => {
   const page = getPage();
-  const configuredStores = [ "store", "lab", "delivery", "pint club", "merch" ];
+  const configuredStores = [ "store", "lab", "delivery", "pint club", "merch", "shipping" ];
 
   if (configuredStores.includes(page)) {
     return page;
@@ -628,7 +752,8 @@ const styleMenus = () => {
           d.firstElementChild.nodeName === "H2" && 
           d.firstElementChild.id !== "contact-us" && 
           d.firstElementChild.id !== "locations" &&
-          d.firstElementChild.id !== "where-can-i-find-normalreg"
+          d.firstElementChild.id !== "where-can-i-find-normalreg" &&
+          d.firstElementChild.id !== "how-it-works"
         ) {
         d.classList.add("menu");
         const $embed = d.querySelector(".embed");
@@ -729,7 +854,7 @@ const customizeCheckoutForStorefront = async () => {
   const storeOpen = labels[`${currentStore}_open`];
   let storeOpenByTime;
 
-  if (currentStore === "pint-club" || currentStore === "delivery" || currentStore === "merch") {
+  if (currentStore === "pint-club" || currentStore === "delivery" || currentStore === "merch" || currentStore === "shipping") {
     storeOpenByTime = true; // pint club & delivery are always accepting orders
   } else {
     storeOpenByTime = checkIfStorefrontOpen(); 
@@ -832,6 +957,7 @@ const updateCart = () => {
 
   if (cart.line_items.length > 0) {
     cart.line_items.forEach((i) => {
+      const fp = i.fp;
       const variation = catalog.byId[i.variation];
       const variationName = variation.item_variation_data.name; // for use with mods
       const item = catalog.byId[variation.item_variation_data.item_id];
@@ -851,9 +977,23 @@ const updateCart = () => {
         $item.classList.add("checkout-table-body-item");
         if (mods.length >= 1) {
           $item.textContent = `${variationName} ${removeStorefrontName(itemName)}, ${mods.join(", ")}`;
-        } else {
+        }
+        else {
           $item.textContent = itemName;
         }
+
+      if (getCurrentStore() === "shipping") {
+        const thisList = cart.shipping_quantities.find((q) => {
+          if (q.fp === fp) {
+            return q;
+          }
+        })
+        $item.textContent = removeStorefrontName(itemName);
+        const fullList = getReadableModList(thisList);
+        fullList.forEach((l) => {
+          $item.textContent += `, ${l.name} (${l.quantity})`;
+        })
+      }
   
       const $price = document.createElement("td");
         $price.classList.add("checkout-table-body-price");
@@ -941,7 +1081,10 @@ const minus = (e) => {
   const fp = e.closest("tr").getAttribute("data-id");
   const item = cart.line_items.find((i) => fp === i.fp );
   cart.setQuantity(fp, item.quantity - 1);
-  if (item.quantity < 1) { cart.remove(fp) };
+  if (item.quantity < 1) { 
+    cart.remove(fp);
+    cart.removeShippingQuantity(fp);
+  };
   updateCart();
 }
 
@@ -968,6 +1111,10 @@ const getHoursOfOp = (store, type) => {
 
   if (store === "pint-club") {
     return "pint-club";
+  }
+
+  if (store === "shipping") {
+    return "shipping";
   }
 
   if (store === "delivery") {
@@ -1092,6 +1239,21 @@ const submitOrder = async (store, formData) => {
     qs += `locationId=${credentials.locationId}`;
   }
 
+  if (store === "shipping") {
+    // add quantity for all items in packs over 1
+    qs += `qs=`;
+    cart.shipping_quantities.forEach((q) => {
+      const readable = getReadableModList(q);
+      readable.forEach((r) => {
+        if (r.quantity > 1) {
+          let text = `${r.quantity} ${r.name}, `
+          qs += encodeURIComponent(text);
+        } 
+      })
+    })
+  
+  }
+
   const orderObj = await fetch(credentials.endpoint + "?" + qs, {
     method: "GET",
     headers: {
@@ -1138,6 +1300,12 @@ const getStorefrontCheckoutCred = (storefront) => {
       return {
         name: storefront,
         endpoint: "https://script.google.com/macros/s/AKfycbwXsVa_i4JBUjyH7DyWVizeU3h5Rg5efYTtf4pcF4FXxy6zJOU/exec",
+        locationId: "WPBKJEG0HRQ9F"
+      };
+    case "shipping":
+      return {
+        name: storefront,
+        endpoint: "https://script.google.com/macros/s/AKfycbwyNjfGbBg0MBVfmTaIx4Mi5n-b3SfZ59J8n-YAFVEEXbo84qAM2mxC8gi0d8CXq_br/exec",
         locationId: "WPBKJEG0HRQ9F"
       };
     case "pint-club":
@@ -1202,6 +1370,7 @@ const setupCarousels = () => {
 
   if ($carouselWrappers) {
     $carouselWrappers.forEach((w) => {
+
       const $carousel = w.querySelector(`div.embed-internal-${getPage()}menus`);
       if ($carousel) {
         // build btns
@@ -1597,7 +1766,6 @@ const customizeToolforClub = (target) => {
 }
 
 const addClubToCart = (formData) => {
-  // console.log("add club to cart");
   const paymentOption = formData["payment-option"];
   const monthsToPay = formData["prepay-months"] || "1";
 
@@ -2134,7 +2302,6 @@ const buildConeBuilderSubmit = (formData) => {
         const formData = await getSubmissionData($form);
         await submitCone(formData);
         await coneSubmissionConfirmation(formData.title);
-        console.log(`build submission confirmation`);
         removeScreensaver();
       } else {
         console.error("please fill out all required fields!");
@@ -2378,6 +2545,280 @@ const populateCustomizationTool = (store, title, fields) => {
   showCustomizationTool();
 }
 
+const populateCustomizationToolShipping = async (title, item) => {
+  buildScreensaver("populating your pack options...");
+  const itemData = item.item_data;
+  const itemId = item.id;
+  const itemVariations = itemData.variations;
+  const itemModifiers = itemData.modifier_list_info;
+  const shippingData = await fetchShippingPacks();
+  const packLimit = shippingData[itemId];
+
+  const $customTool = document.querySelector(".customize-table");
+
+  const $customHead = $customTool.querySelector(".customize-table-head");
+  $customHead.textContent = title;
+
+  const $customBody = $customTool.querySelector(".customize-table-body");
+  $customBody.innerHTML = ""; // clear on each populate
+
+  // MODIFIERS STUFF
+  if (itemModifiers) { 
+
+    for (m of itemModifiers) {
+      const modCat = catalog.byId[m.modifier_list_id]; // this is a single modifier category (obj)
+      const modCatData = modCat.modifier_list_data; // this is a single modifer category WITH DATA I CARE ABOUT (obj)
+      const modId = modCat.id; // this is the id for the ENTIRE modifier category (str)
+      const modCatName = modCatData.name.split(" ")[1].slice(0, -1); // this is the single modifier category NAME (str)
+      const modCatModifiers = modCatData.modifiers; // these are all the modifiers in a category (arr);
+
+      const modQuantity = packLimit.quantities[modCatName + "s"];
+
+      const $carouselContainer = document.createElement("div");
+        $carouselContainer.setAttribute("data-item-id", itemId);
+        $carouselContainer.setAttribute("data-type", modCatName);
+        $carouselContainer.classList.add("customize-table-body-carousel");
+
+      const $heading = document.createElement("h3");
+        $heading.classList.add("customize-table-body-carousel-head");
+        $heading.innerHTML = `choose <span data-limit-id="${modId}" data-limit=${modQuantity} data-limit-type="${modCatName}">${modQuantity}</span> ${modCatName}s`;
+
+      const $carousel = document.createElement("div");
+        $carousel.classList.add("menu", "menu-carousel", "theme-outline");
+
+      const carouselData = await fetchShippingCarousel(modCatName);
+      const $carouselItems = buildShippingCarousel(modId, modCatName, modCatModifiers, carouselData);
+
+      $carousel.append($carouselItems);
+      $carouselContainer.append($heading, $carousel);
+      $customBody.append($carouselContainer);
+
+    }
+
+    setupCarousels();
+    removeScreensaver();
+
+  }
+
+  const $customFoot = document.querySelector(".customize-foot");
+    $customFoot.innerHTML = ""; // clear on each populate
+
+  const $btn = document.createElement("a");
+    $btn.classList.add("btn-rect");
+    $btn.id = "customize-form";
+    $btn.textContent = "add to cart";
+    $btn.onclick = async (e) => {
+      const targetClass =  e.target.closest("a").id;
+      const $form = document.querySelector(`.${targetClass}`);
+      const valid = validateShippingSubmission($form);
+      if (valid) {
+        buildScreensaver("customizing your pack...");
+        await addShipConfigToCart();
+        await clearCustomizationTool();
+        await hideCustomizationTool();
+        removeScreensaver();
+      } else {
+        console.error("please fill out all required fields!");
+      }
+    };
+
+  $customFoot.append($btn);
+  showCustomizationTool();
+
+}
+
+const buildShippingCarousel = (id, type, modifiers, inStock) => {
+
+  let $container = document.createElement("div");
+    $container.classList.add("embed", "embed-internal", `embed-internal-shipping${type}s`,"embed-internal-shippingmenus");
+
+    const numInStock = Object.keys(inStock).length;
+
+    if (numInStock === 1) {
+      $container.classList.add("menu-carousel-one");
+    } else if (numInStock === 2) {
+      $container.classList.add("menu-carousel-two");
+    } else if (numInStock === 3) {
+      $container.classList.add("menu-carousel-three");
+    } else if (numInStock > 3) {
+      $container.classList.add("menu-carousel-full");
+    }
+
+  modifiers.forEach((m) => { 
+    const mId = m.id;
+    const mData = m.modifier_data;
+    const cleanMod = cleanName(mData.name);
+
+    if (inStock[cleanMod]) {
+      const thisItem = inStock[cleanMod];
+
+      const $menuItem = document.createElement("div");
+        $menuItem.classList.add("menu-item");
+
+      const $img = document.createElement("img");
+        $img.setAttribute("src", `/assets/images/${type}-${cleanName(thisItem.name)}.webp`);
+        $img.setAttribute("alt", `${thisItem.name} ${type}`);
+        console.log($img);
+
+      const $src = document.createElement("source");
+        $src.setAttribute("srcset", `/assets/images/${type}-${cleanName(thisItem.name)}.webp`);
+
+      const $picture = document.createElement("picture");
+        $picture.append($src, $img);
+
+      const $p = document.createElement("p");
+        $p.append($picture);
+
+      const $title = document.createElement("h4");
+        $title.textContent = thisItem.name;
+
+      if (thisItem.allergy) {
+        const allergies = makeArr(thisItem.allergy);
+        allergies.forEach((a) => {
+          $title.innerHTML += ` <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${a}">
+          <use href="/icons.svg#${a}"></use>
+        </svg>`;
+        })
+      }
+      $menuItem.append($p, $title);
+      
+      let $desc = document.createElement("p");
+      if (thisItem.description) {
+        $desc.textContent = thisItem.description;
+        $menuItem.append($desc);
+      }
+
+      const $menuFooter = document.createElement("aside");
+        
+        $menuFooter.innerHTML = `<span onclick="minusShip(this)" class="quantity quantity-minus">-</span>
+        <span class="quantity-num" data-item-type="${type}" data-mod-id="${mId}">0</span>
+        <span onclick="plusShip(this)" class="quantity quantity-plus">+</span>`;
+        $menuFooter.classList.add("menu-footer", cleanName(thisItem.name));
+        $menuFooter.setAttribute(`data-quantity-type`, type);
+
+      $menuItem.append($menuFooter);
+      $container.append($menuItem);
+
+    }
+  })
+
+  return $container;
+}
+
+const plusShip = (e) => {
+  const $footer = e.closest(".menu-footer");
+  const $quantity = $footer.querySelector(".quantity-num");
+  const type = $quantity.getAttribute("data-item-type");
+  const quantity = $quantity.textContent;
+  const num = parseInt(quantity);
+  const catQuantity = checkShipCatQuantity(type);
+  const catLimit = checkShipCatLimit(type);
+  if (catQuantity < catLimit) {
+    $quantity.textContent = num + 1;
+    const newQuantity = checkShipCatQuantity(type);
+    if (newQuantity >= catLimit) {
+      disableShipPlus(type);
+    }
+  } else {
+    disableShipPlus(type);
+  }
+}
+
+const minusShip = (e) => {
+  const $footer = e.closest(".menu-footer");
+  const $quantity = $footer.querySelector(".quantity-num");
+  const type = $quantity.getAttribute("data-item-type");
+  const quantity = $quantity.textContent;
+  const num = parseInt(quantity);
+  if (num > 0) {
+    $quantity.textContent = num - 1;
+    enableShipPlus(type);
+  }
+}
+
+const checkShipCatQuantity = (type) => {
+  const $allQuantities = document.querySelectorAll(`[data-item-type=${type}`);
+  const $allQuantitiesArr = [ ...$allQuantities ];
+  const catQuantity = $allQuantitiesArr.reduce((a, b) => {
+    return a + parseInt(b.textContent);
+  }, 0)
+  return catQuantity;
+}
+
+const checkShipCatLimit = (type) => {
+  const $limit = document.querySelector(`[data-limit-type=${type}]`);
+  const limit = $limit.getAttribute("data-limit");
+  const num = parseInt(limit);
+  return num;
+}
+
+const disableShipPlus = (type) => {
+  const $menuFooters = document.querySelectorAll(`[data-quantity-type=${type}]`);
+  const $menuFootersArr = [ ...$menuFooters ];
+  $menuFootersArr.forEach((f) => {
+    const $plus = f.querySelector(".quantity-plus");
+    $plus.classList.add("quantity-disabled");
+  })
+}
+
+const enableShipPlus = (type) => { 
+  const $menuFooters = document.querySelectorAll(`[data-quantity-type=${type}]`);
+  const $menuFootersArr = [ ...$menuFooters ];
+  $menuFootersArr.forEach((f) => {
+    const $plus = f.querySelector(".quantity-plus");
+    $plus.classList.remove("quantity-disabled");
+  })
+}
+
+const addShipConfigToCart = () => {
+  const $itemId = document.querySelector("[data-item-id]");
+  const itemId = $itemId.getAttribute("data-item-id");
+  const $modIds = document.querySelectorAll("[data-mod-id]");
+  const $modIdsArr = [ ...$modIds ];
+  let selectedMods = [];
+  const $selectedMods = $modIdsArr.filter((m) => {
+    const quantity = m.textContent;
+    const num = parseInt(quantity);
+    if (num > 0) { 
+      const modId = m.getAttribute("data-mod-id");
+      selectedMods.push({ id: modId, quantity: num});
+      return m;
+    };
+  });
+  const mods = selectedMods.map((m) => {
+    return m.id;
+  })
+  
+  const obj = catalog.byId[itemId];
+  const varId = obj.item_data.variations[0].id;
+  const fp = [ varId, ...mods ].join("-");
+  
+  cart.addShippingQuantities({
+    fp: fp,
+    mods: selectedMods
+  });
+  cart.add(varId, mods);
+
+  updateCart();
+}
+
+const getReadableModList = (item) => {
+  const readableModList = [];
+  if (item) {
+    item.mods.forEach((i) => {
+      const mod = catalog.byId[i.id];
+      const modName = mod.modifier_data.name;
+      const quantity = i.quantity;
+      readableModList.push({
+        id: i.id,
+        name: modName,
+        quantity: quantity
+      })
+    })
+    return readableModList;
+  }
+}
+
 const populateCustomizationToolSquare = (title, item) => {
   const itemData = item.item_data;
   const itemVariations = itemData.variations;
@@ -2391,7 +2832,8 @@ const populateCustomizationToolSquare = (title, item) => {
   const $customBody = $customTool.querySelector(".customize-table-body");
   $customBody.innerHTML = ""; // clear on each populate
 
-  if (itemVariations) { // this is ALWAYS a radio, only one choice!
+  if (itemVariations && // this is ALWAYS a radio, only one choice!
+    itemData.category_id !== "5AIFY5WMTNJLS5RBZAPWL4YJ") { // don't display shipping variations
 
     const $field = document.createElement("div");
     $field.classList.add(`customize-table-body-radio`);
@@ -2765,6 +3207,45 @@ const validateSubmission = ($form) => {
   }
 };
 
+const validateShippingSubmission = ($form) => {
+  const $carousels = $form.querySelectorAll(".customize-table-body-carousel");
+  let allInvalidIds = [];
+
+  if ($carousels) {
+    $carousels.forEach((c) => {
+      const type = c.getAttribute("data-type");
+      const catQuantity = checkShipCatQuantity(type);
+      const catLimit = checkShipCatLimit(type);
+      
+      if (catQuantity < catLimit) {
+        const $head = c.querySelector("h3 > span");
+          const invalidId = $head.getAttribute("data-limit-id");
+        allInvalidIds.push(invalidId);
+      }      
+    });
+  }
+
+  if (allInvalidIds.length === 0) {
+    return true;
+  } else {
+    allInvalidIds.forEach((i) => {
+      const $field = $form.querySelector(`[data-limit-id="${i}"]`).parentNode.parentNode;
+      $field.classList.add("invalid-field");
+    });
+  }
+
+  setTimeout(() => {
+    const $invalidFields = document.querySelectorAll(".invalid-field");
+    if ($invalidFields) {
+      $invalidFields.forEach((f) => {
+        f.classList.remove("invalid-field");
+      });
+    }
+  }, 1000);
+
+  return false;
+};
+
 const getSubmissionData = ($form) => {
   const $fields = $form.querySelectorAll("[name]"); // all named fields
   let data = {};
@@ -2823,7 +3304,7 @@ const getFields = (fields) => {
           { data: { fieldtype: "address", store: true }, title: "addr2", type: "text", placeholder: "apt # or building code? add here!" },
           { data: { fieldtype: "address", store: true }, title: "city", type: "text", placeholder: "your city", required: true },
           { data: { fieldtype: "address", store: true }, title: "state", type: "text", placeholder: "your state", required: true },
-          { data: { fieldtype: "address" }, title: "zip", type: "text", placeholder: "your zip code", required: true }
+          { data: { fieldtype: "address", store: true }, title: "zip", type: "text", placeholder: "your zip code", required: true }
         )
         break;
       case "pint-club":
@@ -3096,6 +3577,8 @@ const buildCheckoutTool = () => {
     fieldsArr.push("pick-up");
   } else if (currentStore === "delivery") {
     fieldsArr.push("address");
+  } else if (currentStore === "shipping") {
+    fieldsArr.push("address-national");
   }
   
   fieldsArr.push("discount-code");
@@ -3422,10 +3905,12 @@ const buildSquarePaymentForm = () => {
     $sqContainer.append($tipWrapper, $giftcardWrapper, $sqForm);
     $checkoutContainer.append($sqContainer);
 
-    setDefaultTip();
-
     let currentStore = getCurrentStore();
     const recurring = checkRecurringClubInCart();
+    
+    if (currentStore !== "shipping") {
+      setDefaultTip();
+    }
 
     if (currentStore === "merch") {
       const $checkoutTable = document.querySelector(".checkout-table-body");
@@ -3511,7 +3996,7 @@ const resetSqForm = (type, currentStore, recurring) => {
   const $sqContainer = document.querySelector(".sq-container");
   const $newSqForm = buildSqForm(type);
   $sqContainer.append($newSqForm);
-  initPaymentForm(type, currentStore, recurring)
+  initPaymentForm(type, currentStore, recurring);
 }
 
 const removeSqContainer = () => {
@@ -3570,6 +4055,10 @@ const successfulOrderConfirmation = async (orderInfo) => {
           null, // date
           encodeURIComponent(orderInfo.receipt_url) // receipt
         ); 
+        if (currentStore === "shipping") {
+          // add to vndr sheet
+          await addShippingToSheet();
+        }
       } else { // form data does not have address
         // TODO: add pickup date to pickup orders
         let formDate;
@@ -3639,7 +4128,7 @@ const createCustomer = async (formData) => {
 const sendConfirmationEmail = async (store, name, email, address, comments, date, receipt) => {
   let params = `type=${store}&name=${name}&email=${email}&address=${address}&date=${date}&receipt=${receipt}`;
   if (comments) { params += `&comments=${comments}` };
-  const url = `https://script.google.com/macros/s/AKfycbxBPuZElxtmBYriyublnmvlHHu8OtUWpOpjiD2LVbFfSb7ZCvaiI6CuCJZy68ks_oq-Bg/exec?${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbyKNrADv1OBA3jNhu_aqz_zXFxu2CLPpy3FCr6YHhb86C1luHNH7i2d8d97W3jD8dHL4A/exec?${params}`;
   let resp = await fetch(url);
   let data = await resp.json();
   if (!data.sent) {
@@ -3682,6 +4171,32 @@ const addClubToSheet = async () => {
     }
   }
   const url = `https://script.google.com/macros/s/AKfycbzkPtpjiyo-AQcSTqSs1kj2kF83Pv5NdQvAZk4fd5g_hM2WSnlY3XFkXA/exec${params}`;
+  let resp = await fetch(url, { method: "POST", mode: "no-cors" });
+  // let data = await resp.json();
+  // console.log(data);
+  return resp;
+}
+
+const addShippingToSheet = async () => {
+  const $checkoutForm = document.querySelector(".checkout-form");
+  let formData = getSubmissionData($checkoutForm);
+  let packInfo = "";
+  cart.shipping_quantities.forEach((q) => {
+    const readable = getReadableModList(q);
+    readable.forEach((r) => {
+      packInfo += `${r.quantity} ${r.name}, `; 
+    })
+  });
+  formData.packInfo = packInfo.slice(0, -2);
+  formData.quantity = cart.totalItems();
+
+  let params = "?";
+  for (prop in formData) {
+    if (formData[prop]) {
+      params += `${prop}=${encodeURIComponent(formData[prop])}&`;
+    }
+  }
+  const url = `https://script.google.com/macros/s/AKfycbw2hxnOxw7J5oCwnRYDK2zSJVZRKlEed279NtfflnArDCcQmZHvMJ3rJh3Biwa6VHxu/exec${params}`;
   let resp = await fetch(url, { method: "POST", mode: "no-cors" });
   // let data = await resp.json();
   // console.log(data);
@@ -3871,6 +4386,16 @@ const cleanName = (str) => {
   }
 };
 
+const makeArr = (str) => {
+  if (str) {
+    if (str.includes(",")) {
+      return str.split(",");
+    } else {
+      return [ str ];
+    }
+  }
+}
+
 const removeStorefrontName = (str) => {
   if (str) {
     const clean = str.toLowerCase().replace(/store|lab|delivery|merch/g, "");
@@ -3966,6 +4491,7 @@ LEGACY
 
 var cart = {
   line_items: [],
+  shipping_quantities: [],
   shipping_item: {},
   remove: (fp) => {
     var index = cart.line_items.findIndex((li) => fp == li.fp);
@@ -3974,6 +4500,11 @@ var cart = {
   },
   removeShipping: () => {
     cart.shipping_item = {};
+  },
+  removeShippingQuantity: (fp) => {
+    var index = cart.shipping_quantities.findIndex((sq) => fp === sq.fp);
+    cart.shipping_quantities.splice(index, 1);
+    cart.store();
   },
   add: (variation, mods) => {
     if (!mods) { mods = []; }
@@ -4008,6 +4539,10 @@ var cart = {
       quantity: 1,
       price: price,
     };
+  },
+  addShippingQuantities: (obj) => {
+    cart.shipping_quantities.push(obj);
+    cart.store();
   },
   find: (variation, mods) => {
     var fp = variation;
@@ -4050,19 +4585,26 @@ var cart = {
   },
   clear: () => {
     cart.line_items = [];
+    cart.shipping_quantities = [];
     cart.shipping_item = {};
     cart.store();
   },
   store: () => {
-    localStorage.setItem(
-      "cart-" + getCurrentStore(),
-      JSON.stringify({ lastUpdate: new Date(), line_items: cart.line_items })
-    );
+    const currentStore = getCurrentStore();
+    let cartObj = {
+      lastUpdate: new Date(),
+      line_items: cart.line_items
+    };
+    if (cart.shipping_quantities && currentStore === "shipping") {
+      cartObj.shipping_quantities = cart.shipping_quantities
+    }
+    localStorage.setItem("cart-" + currentStore, JSON.stringify(cartObj));
   },
   load: () => {
     
     var cartObj = JSON.parse(localStorage.getItem("cart-" + getLastStore()));
     cart.line_items = [];
+    cart.shipping_quantities = [];
 
     if (cartObj && cartObj.line_items) {
       // validate
@@ -4075,6 +4617,12 @@ var cart = {
           if (push) { cart.line_items.push(li) };
         }
       });
+    }
+
+    if (cartObj && cartObj.shipping_quantities) {
+      cartObj.shipping_quantities.forEach((sq) => {
+        cart.shipping_quantities.push(sq);
+      })
     }
 
   }
@@ -4165,8 +4713,14 @@ function addConfigToCart(formData) {
 
 function configItem(item) {
   const itemName = item.item_data.name;
-  populateCustomizationToolSquare(`customize your ${removeStorefrontName(itemName).trim()}`, item);
-  customizeToolforStore();
+  const store = getCurrentStore();
+
+  if (store === "shipping") {
+    populateCustomizationToolShipping(`build your ${itemName.trim()} pack`, item);
+  } else {
+    populateCustomizationToolSquare(`customize your ${removeStorefrontName(itemName).trim()}`, item);
+    customizeToolforStore();
+  }
 }
 
 function generateId() {

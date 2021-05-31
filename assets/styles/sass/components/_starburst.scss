@@ -72,6 +72,21 @@
     
 }
 
+.ship-starbust {
+    // color: red;
+    position: absolute;
+    top: -10rem;
+    right: 0;
+    cursor: initial;
+    & span {
+        color: $color-pink;
+        margin-top: 0.2rem;
+    }
+    &-container {
+        position: relative;
+    }
+}
+
 @media only screen and (max-width: $mobile) {
     .starburst, .starburst[data-link=lab] {
         float: none;
