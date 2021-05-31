@@ -741,10 +741,6 @@ const customizeToolforStore = (target) => {
   }
 }
 
-const customizeToolforShipping = () => {
-  console.log(`awaiting instructions for shipping`);
-}
-
 const customizeCheckoutForStorefront = async () => {
 
   // this is setting the pickup times
@@ -1159,6 +1155,21 @@ const submitOrder = async (store, formData) => {
     qs += `locationId=${credentials.locationId}`;
   }
 
+  if (store === "shipping") {
+    // add quantity for all items in packs over 1
+    qs += `qs=`;
+    cart.shipping_quantities.forEach((q) => {
+      const readable = getReadableModList(q);
+      readable.forEach((r) => {
+        if (r.quantity > 1) {
+          let text = `${r.quantity} ${r.name}, `
+          qs += encodeURIComponent(text);
+        } 
+      })
+    })
+  
+  }
+
   const orderObj = await fetch(credentials.endpoint + "?" + qs, {
     method: "GET",
     headers: {
@@ -1205,6 +1216,12 @@ const getStorefrontCheckoutCred = (storefront) => {
       return {
         name: storefront,
         endpoint: "https://script.google.com/macros/s/AKfycbwXsVa_i4JBUjyH7DyWVizeU3h5Rg5efYTtf4pcF4FXxy6zJOU/exec",
+        locationId: "WPBKJEG0HRQ9F"
+      };
+    case "shipping":
+      return {
+        name: storefront,
+        endpoint: "https://script.google.com/macros/s/AKfycbwyNjfGbBg0MBVfmTaIx4Mi5n-b3SfZ59J8n-YAFVEEXbo84qAM2mxC8gi0d8CXq_br/exec",
         locationId: "WPBKJEG0HRQ9F"
       };
     case "pint-club":
@@ -3465,6 +3482,8 @@ const buildCheckoutTool = () => {
     fieldsArr.push("pick-up");
   } else if (currentStore === "delivery") {
     fieldsArr.push("address");
+  } else if (currentStore === "shipping") {
+    fieldsArr.push("address-national");
   }
   
   fieldsArr.push("discount-code");
@@ -3791,10 +3810,12 @@ const buildSquarePaymentForm = () => {
     $sqContainer.append($tipWrapper, $giftcardWrapper, $sqForm);
     $checkoutContainer.append($sqContainer);
 
-    setDefaultTip();
-
     let currentStore = getCurrentStore();
     const recurring = checkRecurringClubInCart();
+    
+    if (currentStore !== "shipping") {
+      setDefaultTip();
+    }
 
     if (currentStore === "merch") {
       const $checkoutTable = document.querySelector(".checkout-table-body");
@@ -3880,7 +3901,7 @@ const resetSqForm = (type, currentStore, recurring) => {
   const $sqContainer = document.querySelector(".sq-container");
   const $newSqForm = buildSqForm(type);
   $sqContainer.append($newSqForm);
-  initPaymentForm(type, currentStore, recurring)
+  initPaymentForm(type, currentStore, recurring);
 }
 
 const removeSqContainer = () => {
@@ -3939,6 +3960,10 @@ const successfulOrderConfirmation = async (orderInfo) => {
           null, // date
           encodeURIComponent(orderInfo.receipt_url) // receipt
         ); 
+        if (currentStore === "shipping") {
+          // add to vndr sheet
+          await addShippingToSheet();
+        }
       } else { // form data does not have address
         // TODO: add pickup date to pickup orders
         let formDate;
@@ -3961,10 +3986,6 @@ const successfulOrderConfirmation = async (orderInfo) => {
           encodeURIComponent(formDate), // date
           encodeURIComponent(orderInfo.receipt_url) // receipt
         ); 
-        console.log(currentStore);
-        if (currentStore === "store") {
-          await sendStoreText(formData.cell);
-        }
       }
       // remove sq form
       await removeSqContainer();
@@ -4059,6 +4080,15 @@ const addClubToSheet = async () => {
   // let data = await resp.json();
   // console.log(data);
   return resp;
+}
+
+const addShippingToSheet = async () => {
+  cart.shipping_quantities.forEach((q) => {
+    const readable = getReadableModList(q);
+    readable.forEach((r) => {
+      console.log(r); 
+    })
+  })
 }
 
 const createConfirmationMsg = (store, receiptUrl) => {
@@ -4575,7 +4605,6 @@ function configItem(item) {
 
   if (store === "shipping") {
     populateCustomizationToolShipping(`build your ${itemName.trim()} pack`, item);
-    customizeToolforShipping();
   } else {
     populateCustomizationToolSquare(`customize your ${removeStorefrontName(itemName).trim()}`, item);
     customizeToolforStore();
