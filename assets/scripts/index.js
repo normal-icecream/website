@@ -540,7 +540,6 @@ const fetchShippingPacks = async () => {
   const url = "https://script.google.com/macros/s/AKfycbzCP0bu1FDM6jnN4e9ybN4Z93jG2QlMpUAOLneP5rbGgJdHBNm9dLDV85_egu_ix2BE/exec";
   const resp = await fetch(url);
   const json = await resp.json();
-  console.log(json);
   return json;
 }
 
@@ -878,6 +877,7 @@ const updateCart = () => {
 
   if (cart.line_items.length > 0) {
     cart.line_items.forEach((i) => {
+      const fp = i.fp;
       const variation = catalog.byId[i.variation];
       const variationName = variation.item_variation_data.name; // for use with mods
       const item = catalog.byId[variation.item_variation_data.item_id];
@@ -895,11 +895,27 @@ const updateCart = () => {
   
       const $item = document.createElement("td");
         $item.classList.add("checkout-table-body-item");
-        if (mods.length >= 1) {
+        if (mods.length >= 1 && variationName === "Regular") {
+          $item.textContent = `${removeStorefrontName(itemName)}, ${mods.join(", ")}`;
+        } else if (mods.length >= 1) {
           $item.textContent = `${variationName} ${removeStorefrontName(itemName)}, ${mods.join(", ")}`;
-        } else {
+        }
+        else {
           $item.textContent = itemName;
         }
+
+      if (getCurrentStore() === "shipping") {
+        const thisList = cart.shipping_quantities.find((q) => {
+          if (q.fp === fp) {
+            return q;
+          }
+        })
+        $item.textContent = removeStorefrontName(itemName);
+        const fullList = getReadableModList(thisList);
+        fullList.forEach((l) => {
+          $item.textContent += `, ${l.name} (${l.quantity})`;
+        })
+      }
   
       const $price = document.createElement("td");
         $price.classList.add("checkout-table-body-price");
@@ -987,7 +1003,10 @@ const minus = (e) => {
   const fp = e.closest("tr").getAttribute("data-id");
   const item = cart.line_items.find((i) => fp === i.fp );
   cart.setQuantity(fp, item.quantity - 1);
-  if (item.quantity < 1) { cart.remove(fp) };
+  if (item.quantity < 1) { 
+    cart.remove(fp);
+    cart.removeShippingQuantity(fp);
+  };
   updateCart();
 }
 
@@ -1014,6 +1033,10 @@ const getHoursOfOp = (store, type) => {
 
   if (store === "pint-club") {
     return "pint-club";
+  }
+
+  if (store === "shipping") {
+    return "shipping";
   }
 
   if (store === "delivery") {
@@ -2432,7 +2455,6 @@ const populateCustomizationToolShipping = async (title, item) => {
   const itemVariations = itemData.variations;
   const itemModifiers = itemData.modifier_list_info;
   const shippingData = await fetchShippingPacks();
-  console.log(`populate customization tool for shipping`, itemId);
   const packLimit = shippingData[itemId];
 
   const $customTool = document.querySelector(".customize-table");
@@ -2454,11 +2476,9 @@ const populateCustomizationToolShipping = async (title, item) => {
       const modCatModifiers = modCatData.modifiers; // these are all the modifiers in a category (arr);
 
       const modQuantity = packLimit.quantities[modCatName + "s"];
-      console.log(modCat);
-      console.log(modCatData);
 
       const $carouselContainer = document.createElement("div");
-        $carouselContainer.setAttribute("data-mod-id", modId);
+        $carouselContainer.setAttribute("data-item-id", itemId);
         $carouselContainer.setAttribute("data-type", modCatName);
         $carouselContainer.classList.add("customize-table-body-carousel");
 
@@ -2493,11 +2513,10 @@ const populateCustomizationToolShipping = async (title, item) => {
     $btn.onclick = async (e) => {
       const targetClass =  e.target.closest("a").id;
       const $form = document.querySelector(`.${targetClass}`);
-      const valid = validateSubmission($form);
+      const valid = validateShippingSubmission($form);
       if (valid) {
-        buildScreensaver("customizing your item...");
-        const formData = await getSubmissionData($form);
-        await addConfigToCart(formData);
+        buildScreensaver("customizing your pack...");
+        await addShipConfigToCart();
         await clearCustomizationTool();
         await hideCustomizationTool();
         removeScreensaver();
@@ -2512,8 +2531,6 @@ const populateCustomizationToolShipping = async (title, item) => {
 }
 
 const buildShippingCarousel = (id, type, modifiers, inStock) => {
-  // console.log(modifiers);
-  // console.log(inStock);
 
   let $container = document.createElement("div");
     $container.classList.add("embed", "embed-internal", `embed-internal-shipping${type}s`,"embed-internal-shippingmenus");
@@ -2531,6 +2548,7 @@ const buildShippingCarousel = (id, type, modifiers, inStock) => {
     }
 
   modifiers.forEach((m) => { 
+    const mId = m.id;
     const mData = m.modifier_data;
     const cleanMod = cleanName(mData.name);
 
@@ -2561,7 +2579,7 @@ const buildShippingCarousel = (id, type, modifiers, inStock) => {
       const $menuFooter = document.createElement("aside");
         
         $menuFooter.innerHTML = `<span onclick="minusShip(this)" class="quantity quantity-minus">-</span>
-        <span class="quantity-num" data-item-type="${type}">0</span>
+        <span class="quantity-num" data-item-type="${type}" data-mod-id="${mId}">0</span>
         <span onclick="plusShip(this)" class="quantity quantity-plus">+</span>`;
         $menuFooter.classList.add("menu-footer", cleanName(thisItem.name));
         $menuFooter.setAttribute(`data-quantity-type`, type);
@@ -2583,8 +2601,6 @@ const plusShip = (e) => {
   const num = parseInt(quantity);
   const catQuantity = checkShipCatQuantity(type);
   const catLimit = checkShipCatLimit(type);
-  console.log(`current quantity:`, catQuantity);
-  console.log(`current limit:`, catLimit);
   if (catQuantity < catLimit) {
     $quantity.textContent = num + 1;
     const newQuantity = checkShipCatQuantity(type);
@@ -2592,7 +2608,6 @@ const plusShip = (e) => {
       disableShipPlus(type);
     }
   } else {
-    // deactivate plus buttons
     disableShipPlus(type);
   }
 }
@@ -2626,10 +2641,8 @@ const checkShipCatLimit = (type) => {
 }
 
 const disableShipPlus = (type) => {
-  console.log(`disable ship plus running`, type);
   const $menuFooters = document.querySelectorAll(`[data-quantity-type=${type}]`);
   const $menuFootersArr = [ ...$menuFooters ];
-  console.log($menuFootersArr);
   $menuFootersArr.forEach((f) => {
     const $plus = f.querySelector(".quantity-plus");
     $plus.classList.add("quantity-disabled");
@@ -2643,6 +2656,56 @@ const enableShipPlus = (type) => {
     const $plus = f.querySelector(".quantity-plus");
     $plus.classList.remove("quantity-disabled");
   })
+}
+
+const addShipConfigToCart = () => {
+  const $itemId = document.querySelector("[data-item-id]");
+  const itemId = $itemId.getAttribute("data-item-id");
+  const $modIds = document.querySelectorAll("[data-mod-id]");
+  const $modIdsArr = [ ...$modIds ];
+  let selectedMods = [];
+  const $selectedMods = $modIdsArr.filter((m) => {
+    const quantity = m.textContent;
+    const num = parseInt(quantity);
+    if (num > 0) { 
+      const modId = m.getAttribute("data-mod-id");
+      selectedMods.push({ id: modId, quantity: num});
+      return m;
+    };
+  });
+  console.log(selectedMods);
+  const mods = selectedMods.map((m) => {
+    return m.id;
+  })
+  
+  const obj = catalog.byId[itemId];
+  const varId = obj.item_data.variations[0].id;
+  const fp = [ varId, ...mods ].join("-");
+  
+  cart.addShippingQuantities({
+    fp: fp,
+    mods: selectedMods
+  });
+  cart.add(varId, mods);
+
+  updateCart();
+}
+
+const getReadableModList = (item) => {
+  const readableModList = [];
+  if (item) {
+    item.mods.forEach((i) => {
+      const mod = catalog.byId[i.id];
+      const modName = mod.modifier_data.name;
+      const quantity = i.quantity;
+      readableModList.push({
+        id: i.id,
+        name: modName,
+        quantity: quantity
+      })
+    })
+    return readableModList;
+  }
 }
 
 const populateCustomizationToolSquare = (title, item) => {
@@ -3032,6 +3095,45 @@ const validateSubmission = ($form) => {
 
     return false;
   }
+};
+
+const validateShippingSubmission = ($form) => {
+  const $carousels = $form.querySelectorAll(".customize-table-body-carousel");
+  let allInvalidIds = [];
+
+  if ($carousels) {
+    $carousels.forEach((c) => {
+      const type = c.getAttribute("data-type");
+      const catQuantity = checkShipCatQuantity(type);
+      const catLimit = checkShipCatLimit(type);
+      
+      if (catQuantity < catLimit) {
+        const $head = c.querySelector("h3 > span");
+          const invalidId = $head.getAttribute("data-limit-id");
+        allInvalidIds.push(invalidId);
+      }      
+    });
+  }
+
+  if (allInvalidIds.length === 0) {
+    return true;
+  } else {
+    allInvalidIds.forEach((i) => {
+      const $field = $form.querySelector(`[data-limit-id="${i}"]`).parentNode.parentNode;
+      $field.classList.add("invalid-field");
+    });
+  }
+
+  setTimeout(() => {
+    const $invalidFields = document.querySelectorAll(".invalid-field");
+    if ($invalidFields) {
+      $invalidFields.forEach((f) => {
+        f.classList.remove("invalid-field");
+      });
+    }
+  }, 1000);
+
+  return false;
 };
 
 const getSubmissionData = ($form) => {
@@ -4249,6 +4351,7 @@ LEGACY
 
 var cart = {
   line_items: [],
+  shipping_quantities: [],
   shipping_item: {},
   remove: (fp) => {
     var index = cart.line_items.findIndex((li) => fp == li.fp);
@@ -4257,6 +4360,11 @@ var cart = {
   },
   removeShipping: () => {
     cart.shipping_item = {};
+  },
+  removeShippingQuantity: (fp) => {
+    var index = cart.shipping_quantities.findIndex((sq) => fp === sq.fp);
+    cart.shipping_quantities.splice(index, 1);
+    cart.store();
   },
   add: (variation, mods) => {
     if (!mods) { mods = []; }
@@ -4291,6 +4399,10 @@ var cart = {
       quantity: 1,
       price: price,
     };
+  },
+  addShippingQuantities: (obj) => {
+    cart.shipping_quantities.push(obj);
+    cart.store();
   },
   find: (variation, mods) => {
     var fp = variation;
@@ -4333,19 +4445,26 @@ var cart = {
   },
   clear: () => {
     cart.line_items = [];
+    cart.shipping_quantities = [];
     cart.shipping_item = {};
     cart.store();
   },
   store: () => {
-    localStorage.setItem(
-      "cart-" + getCurrentStore(),
-      JSON.stringify({ lastUpdate: new Date(), line_items: cart.line_items })
-    );
+    const currentStore = getCurrentStore();
+    let cartObj = {
+      lastUpdate: new Date(),
+      line_items: cart.line_items
+    };
+    if (cart.shipping_quantities && currentStore === "shipping") {
+      cartObj.shipping_quantities = cart.shipping_quantities
+    }
+    localStorage.setItem("cart-" + currentStore, JSON.stringify(cartObj));
   },
   load: () => {
     
     var cartObj = JSON.parse(localStorage.getItem("cart-" + getLastStore()));
     cart.line_items = [];
+    cart.shipping_quantities = [];
 
     if (cartObj && cartObj.line_items) {
       // validate
@@ -4358,6 +4477,12 @@ var cart = {
           if (push) { cart.line_items.push(li) };
         }
       });
+    }
+
+    if (cartObj && cartObj.shipping_quantities) {
+      cartObj.shipping_quantities.forEach((sq) => {
+        cart.shipping_quantities.push(sq);
+      })
     }
 
   }
@@ -4522,7 +4647,6 @@ function initPaymentForm(paymentType, currentStore, recurring) {
         * Triggered when: SqPaymentForm completes a card nonce request
         */
         cardNonceResponseReceived: function (errors, nonce, cardData) {
-        console.log(`addToCart -> obj`, obj);
 
           if (errors) {
             // Log errors from nonce generation to the browser developer console.
