@@ -943,6 +943,17 @@ main > * {
   .starburst.starburst-static svg.icon-starburst {
     fill: #F94F0D; }
 
+.ship-starbust {
+  position: absolute;
+  top: -10rem;
+  right: 0;
+  cursor: initial; }
+  .ship-starbust span {
+    color: #FFD4CC;
+    margin-top: 0.2rem; }
+  .ship-starbust-container {
+    position: relative; }
+
 @media only screen and (max-width: 46.4rem) {
   .starburst, .starburst[data-link=lab] {
     float: none;
@@ -1242,21 +1253,48 @@ h2#order ~ *, h2#pick-up ~ *, h2#shipping ~ * {
 h2#pick-up ~ *, h2#shipping ~ * {
   margin-top: -16%; }
 
-main#order {
+main#order, main#ordertest {
   display: flex;
   flex-direction: column; }
-  main#order div {
+  main#order div, main#ordertest div {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     transition: 0.2s; }
-    main#order div h1, main#order div h2 {
+    main#order div h1, main#order div h2, main#ordertest div h1, main#ordertest div h2 {
       flex: 0 0 100%; }
-  main#order div:not(.p-normal) {
+  main#order div:not(.p-normal), main#ordertest div:not(.p-normal) {
     flex: 1 1 auto;
     position: relative; }
-  main#order div.p-pickup, main#order div.p-shipping {
+  main#order div.p-pickup, main#order div.p-shipping, main#ordertest div.p-pickup, main#ordertest div.p-shipping {
     display: none; }
+  main#order .btn-back, main#ordertest .btn-back {
+    top: 30rem;
+    left: 10%; }
+
+.order, .order-pickup, .order-shipping {
+  margin-top: 12rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; }
+  .order a, .order-pickup a, .order-shipping a {
+    text-decoration: none; }
+  .order-btn, .order-pickup-btn, .order-shipping-btn {
+    width: 50%;
+    min-width: 26rem; }
+    .order-btn div, .order-pickup-btn div, .order-shipping-btn div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 3.3rem;
+      cursor: pointer;
+      transition: 0.2s; }
+      .order-btn div:hover, .order-btn div:focus, .order-pickup-btn div:hover, .order-pickup-btn div:focus, .order-shipping-btn div:hover, .order-shipping-btn div:focus {
+        transform: rotate(-2deg) scale(1.2); }
+
+@media only screen and (max-width: 46.4rem) {
+  .order, .order-pickup, .order-shipping {
+    margin-top: 2rem; } }
 
 h2#soft-serve ~ h3, h2#drinks-drinks-drinks ~ h3, h2#pints ~ h3, h2#bars ~ h3, h2#sandos ~ h3, h2#composed-cones ~ h3, h2#pizza ~ h3, h2#choco-taco ~ h3, h2#specials ~ h3, h2#norm-cores ~ h3, h2#ice-cream-cake ~ h3, h2#ice-cream-pie ~ h3, h2#gift-cards ~ h3, h2#apparel ~ h3, h2#accessories ~ h3, h2#delivery-zips ~ h3, h2#more-stuff ~ h3, h2#pick-your-pack ~ h3 {
   margin-top: 2rem;

@@ -49,6 +49,7 @@ const setPage = () => {
     case "order":
       hideCart();
       buildOrderPage();
+      buildOrderNav();
       break;
     case "store":
       setCurrentStore();
@@ -623,12 +624,95 @@ const buildOrderPage = () => {
   });
 };
 
+const buildOrderNav = () => {
+  const $orderBlock = document.querySelector(".order");
+  const $parent = $orderBlock.parentNode;
+
+  const $backBtn = document.createElement("aside");
+    $backBtn.classList.add("btn-back", "hide");
+    $backBtn.setAttribute("data-theme", "bluepink");
+    $backBtn.textContent = "back to options";
+    $backBtn.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-arrow-left"><use href="/icons.svg#arrow-left"></use></svg>`;
+    $backBtn.onclick = (e) => {
+      // replace all classes on main (theme, theme-color);
+      const $body = document.querySelector("body");
+      $body.classList = "";
+      $body.classList.add("theme", "theme-bluepink");
+      // hide this nav, show order nav
+      const $current = document.querySelector("[data-visible=true]");
+        $current.classList.add("hide");
+        $current.removeAttribute("data-visible");
+      const $order = document.querySelector(".order");
+        $order.classList.remove("hide");
+      // hide back button
+      const $btn = e.target.closest(".btn-back");
+      $btn.classList.add("hide");
+
+    };
+    $parent.insertBefore($backBtn, $orderBlock);
+
+  const orderBtnMain = (e) => {
+    const $clicked = e.target.closest(".order-btn");
+    const clicked = $clicked.textContent.trim().split(" ").join("");
+    const $orderBlock = document.querySelector(".order");
+    $orderBlock.classList.add("hide");
+    const $target = document.querySelector(`.order-${clicked}`);
+    const theme = $target.getAttribute("data-theme");
+    $target.classList.remove("hide");
+    $target.setAttribute("data-visible", true);
+    const $body = document.querySelector("body");
+      $body.classList.add(`theme-${theme}`);
+    const $backBtn = document.querySelector(".btn-back");
+      $backBtn.classList.remove("hide");
+  }
+
+  const $pickupBtn = $orderBlock.firstChild;
+    $pickupBtn.classList.add("order-btn");
+    $pickupBtn.onclick = orderBtnMain;
+    
+  const $shippingBtn = $orderBlock.lastChild;
+    $shippingBtn.classList.add("order-btn");
+    $shippingBtn.onclick = orderBtnMain;
+
+  const $pickupBlock = document.querySelector(".order-pickup");
+    $pickupBlock.classList.add("hide");
+    $pickupBlock.setAttribute("data-theme", "yellow");
+    $pickupBlock.firstChild.classList.add("order-btn");
+    $pickupBlock.lastChild.classList.add("order-btn");
+    
+  const $shippingBlock = document.querySelector(".order-shipping");
+    $shippingBlock.classList.add("hide");
+    $shippingBlock.setAttribute("data-theme", "pink");
+    $shippingBlock.firstChild.classList.add("order-btn");
+    $shippingBlock.lastChild.classList.add("order-btn");
+    buildShippingStarburst($shippingBlock.lastChild);
+  
+}
+
+const buildShippingStarburst = ($el) => {
+  console.log($el);
+  $el.classList.add("ship-starburst-container");
+
+  const $starburst = document.createElement("aside");
+    $starburst.classList.add("starburst", "ship-starbust");
+    $starburst.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-starburst">
+      <use href="/icons.svg#starburst"></use>
+    </svg>`;
+
+  const $starburstText = document.createElement("span");
+    $starburstText.classList.add("starburst-text");
+    $starburstText.textContent = "national shipping available now!";
+  $starburst.append($starburstText);
+
+  $el.prepend($starburst);
+}
+
 /*==========================================================
 STOREFRONT PAGES
 ==========================================================*/
 const getCurrentStore = () => {
   const page = getPage();
-  const configuredStores = [ "store", "lab", "delivery", "pint club", "merch" ];
+  const configuredStores = [ "store", "lab", "delivery", "pint club", "merch", "shipping" ];
 
   if (configuredStores.includes(page)) {
     return page;
