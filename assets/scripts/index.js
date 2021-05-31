@@ -1682,7 +1682,6 @@ const customizeToolforClub = (target) => {
 }
 
 const addClubToCart = (formData) => {
-  // console.log("add club to cart");
   const paymentOption = formData["payment-option"];
   const monthsToPay = formData["prepay-months"] || "1";
 
@@ -2219,7 +2218,6 @@ const buildConeBuilderSubmit = (formData) => {
         const formData = await getSubmissionData($form);
         await submitCone(formData);
         await coneSubmissionConfirmation(formData.title);
-        console.log(`build submission confirmation`);
         removeScreensaver();
       } else {
         console.error("please fill out all required fields!");
@@ -2688,7 +2686,6 @@ const addShipConfigToCart = () => {
       return m;
     };
   });
-  console.log(selectedMods);
   const mods = selectedMods.map((m) => {
     return m.id;
   })
@@ -2834,7 +2831,6 @@ const populateCustomizationToolSquare = (title, item) => {
   }
 
   if (itemModifiers) { // except for soft serve toppings, these are ALL RADIOS!
-    // console.log(`populateCustomizationToolSquare -> itemModifiers`, itemModifiers);
     itemModifiers.forEach((m) => {
       const modCat = catalog.byId[m.modifier_list_id]; // this is a single modifier category (obj)
       const modCatData = modCat.modifier_list_data; // this is a single modifer category WITH DATA I CARE ABOUT (obj)
@@ -3209,7 +3205,7 @@ const getFields = (fields) => {
           { data: { fieldtype: "address", store: true }, title: "addr2", type: "text", placeholder: "apt # or building code? add here!" },
           { data: { fieldtype: "address", store: true }, title: "city", type: "text", placeholder: "your city", required: true },
           { data: { fieldtype: "address", store: true }, title: "state", type: "text", placeholder: "your state", required: true },
-          { data: { fieldtype: "address" }, title: "zip", type: "text", placeholder: "your zip code", required: true }
+          { data: { fieldtype: "address", store: true }, title: "zip", type: "text", placeholder: "your zip code", required: true }
         )
         break;
       case "pint-club":
@@ -4033,7 +4029,7 @@ const createCustomer = async (formData) => {
 const sendConfirmationEmail = async (store, name, email, address, comments, date, receipt) => {
   let params = `type=${store}&name=${name}&email=${email}&address=${address}&date=${date}&receipt=${receipt}`;
   if (comments) { params += `&comments=${comments}` };
-  const url = `https://script.google.com/macros/s/AKfycbwMgFthLp3VO29MhT1zFaRWF1QRMw-2xI3d44u51ZyCMLyxJlEswNcSIY9m-YoY6YAE8A/exec?${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbwIz-6xGzdRs4R4vSS95R3YNdWG3Qnd78KcOW3rjz4f5V9QVdc_eXNRG5DPxrk165L1iA/exec?${params}`;
   let resp = await fetch(url);
   let data = await resp.json();
   if (!data.sent) {
@@ -4083,12 +4079,29 @@ const addClubToSheet = async () => {
 }
 
 const addShippingToSheet = async () => {
+  const $checkoutForm = document.querySelector(".checkout-form");
+  let formData = getSubmissionData($checkoutForm);
+  let packInfo = "";
   cart.shipping_quantities.forEach((q) => {
     const readable = getReadableModList(q);
     readable.forEach((r) => {
-      console.log(r); 
+      packInfo += `${r.quantity} ${r.name}, `; 
     })
-  })
+  });
+  formData.packInfo = packInfo.slice(0, -2);
+  formData.quantity = cart.totalItems();
+
+  let params = "?";
+  for (prop in formData) {
+    if (formData[prop]) {
+      params += `${prop}=${encodeURIComponent(formData[prop])}&`;
+    }
+  }
+  const url = `https://script.google.com/macros/s/AKfycbw2hxnOxw7J5oCwnRYDK2zSJVZRKlEed279NtfflnArDCcQmZHvMJ3rJh3Biwa6VHxu/exec${params}`;
+  let resp = await fetch(url, { method: "POST", mode: "no-cors" });
+  // let data = await resp.json();
+  // console.log(data);
+  return resp;
 }
 
 const createConfirmationMsg = (store, receiptUrl) => {
