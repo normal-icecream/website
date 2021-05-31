@@ -2654,6 +2654,21 @@ const buildShippingCarousel = (id, type, modifiers, inStock) => {
 
       const $menuItem = document.createElement("div");
         $menuItem.classList.add("menu-item");
+
+      const $img = document.createElement("img");
+        $img.setAttribute("src", `/assets/images/${type}-${cleanName(thisItem.name)}.webp`);
+        $img.setAttribute("alt", `${thisItem.name} ${type}`);
+        console.log($img);
+
+      const $src = document.createElement("source");
+        $src.setAttribute("srcset", `/assets/images/${type}-${cleanName(thisItem.name)}.webp`);
+
+      const $picture = document.createElement("picture");
+        $picture.append($src, $img);
+
+      const $p = document.createElement("p");
+        $p.append($picture);
+
       const $title = document.createElement("h4");
         $title.textContent = thisItem.name;
 
@@ -2665,7 +2680,7 @@ const buildShippingCarousel = (id, type, modifiers, inStock) => {
         </svg>`;
         })
       }
-      $menuItem.append($title);
+      $menuItem.append($p, $title);
       
       let $desc = document.createElement("p");
       if (thisItem.description) {
