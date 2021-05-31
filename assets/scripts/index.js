@@ -774,7 +774,7 @@ const customizeCheckoutForStorefront = async () => {
   const storeOpen = labels[`${currentStore}_open`];
   let storeOpenByTime;
 
-  if (currentStore === "pint-club" || currentStore === "delivery" || currentStore === "merch") {
+  if (currentStore === "pint-club" || currentStore === "delivery" || currentStore === "merch" || currentStore === "shipping") {
     storeOpenByTime = true; // pint club & delivery are always accepting orders
   } else {
     storeOpenByTime = checkIfStorefrontOpen(); 
@@ -895,9 +895,7 @@ const updateCart = () => {
   
       const $item = document.createElement("td");
         $item.classList.add("checkout-table-body-item");
-        if (mods.length >= 1 && variationName === "Regular") {
-          $item.textContent = `${removeStorefrontName(itemName)}, ${mods.join(", ")}`;
-        } else if (mods.length >= 1) {
+        if (mods.length >= 1) {
           $item.textContent = `${variationName} ${removeStorefrontName(itemName)}, ${mods.join(", ")}`;
         }
         else {
