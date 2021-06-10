@@ -653,7 +653,7 @@ const buildOrderNav = () => {
 
   const orderBtnMain = (e) => {
     const $clicked = e.target.closest(".order-btn");
-    const clicked = 'pickup'; //$clicked.textContent.trim().split(" ").join("");
+    const clicked = $clicked.textContent.trim().split(" ").join("");
     const $orderBlock = document.querySelector(".order");
     $orderBlock.classList.add("hide");
     const $target = document.querySelector(`.order-${clicked}`);
@@ -669,28 +669,50 @@ const buildOrderNav = () => {
   const $pickupBtn = $orderBlock.firstChild;
     $pickupBtn.classList.add("order-btn");
     $pickupBtn.onclick = orderBtnMain;
+    polyfillSvg($pickupBtn);
     
   const $shippingBtn = $orderBlock.lastChild;
     $shippingBtn.classList.add("order-btn");
     $shippingBtn.onclick = orderBtnMain;
+    polyfillSvg($shippingBtn);
 
   const $pickupBlock = document.querySelector(".order-pickup");
     $pickupBlock.classList.add("hide");
     $pickupBlock.setAttribute("data-theme", "yellow");
     $pickupBlock.firstChild.classList.add("order-btn");
+    polyfillSvg($pickupBlock.firstChild, "link");
     $pickupBlock.lastChild.classList.add("order-btn");
+    polyfillSvg($pickupBlock.lastChild, "link");
     
   const $shippingBlock = document.querySelector(".order-shipping");
     $shippingBlock.classList.add("hide");
     $shippingBlock.setAttribute("data-theme", "pink");
     $shippingBlock.firstChild.classList.add("order-btn");
+    polyfillSvg($shippingBlock.firstChild, "link");
     $shippingBlock.lastChild.classList.add("order-btn");
+    polyfillSvg($shippingBlock.lastChild, "link");
     buildShippingStarburst($shippingBlock.lastChild);
   
 }
 
+const polyfillSvg = ($el, type) => {
+  const $p = $el.querySelector("p");
+  const svgName = $p.textContent.substring(2, $p.textContent.length-1);
+
+  if (type === "link") {
+    const $a = $p.querySelector("a");
+    $a.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${svgName}">
+        <use href="/icons.svg#${svgName}"></use>
+      </svg>`
+
+  } else {
+    $p.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${svgName}">
+        <use href="/icons.svg#${svgName}"></use>
+      </svg>`
+  }
+}
+
 const buildShippingStarburst = ($el) => {
-  console.log($el);
   $el.classList.add("ship-starburst-container");
 
   const $starburst = document.createElement("aside");
