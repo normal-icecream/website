@@ -653,7 +653,7 @@ const buildOrderNav = () => {
 
   const orderBtnMain = (e) => {
     const $clicked = e.target.closest(".order-btn");
-    const clicked = $clicked.textContent.trim().split(" ").join("");
+    const clicked = 'pickup'; //$clicked.textContent.trim().split(" ").join("");
     const $orderBlock = document.querySelector(".order");
     $orderBlock.classList.add("hide");
     const $target = document.querySelector(`.order-${clicked}`);
