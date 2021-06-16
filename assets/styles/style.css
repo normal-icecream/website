@@ -1019,6 +1019,154 @@ h1#normalreg {
   h1#normalreg {
     font-size: 7.3rem; } }
 
+.messages-container, .messages-thread {
+  opacity: 1; }
+
+.admin-login {
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column; }
+
+.admin-name, .admin-password {
+  border: 1px solid currentColor;
+  border-bottom: 0;
+  text-align: center;
+  transition: 0.2s; }
+  .admin-name:hover, .admin-name:focus, .admin-password:hover, .admin-password:focus {
+    background: #F7FF25; }
+
+.admin-btn {
+  background: #0D26F9;
+  color: #FFFCF3;
+  cursor: pointer;
+  transition: 0.2s; }
+  .admin-btn:hover, .admin-btn:focus {
+    letter-spacing: 0.4rem; }
+
+.messages-preview {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 1.6rem;
+  border-collapse: collapse; }
+  .messages-preview-row {
+    border-bottom: 1px solid #ececec;
+    cursor: pointer;
+    transition: 0.2s; }
+    .messages-preview-row:hover, .messages-preview-row:focus {
+      background: #ececec; }
+  .messages-preview-data {
+    text-align: left;
+    padding: 1rem; }
+  .messages-preview-recipient {
+    font-weight: bold; }
+  .messages-preview-body, .messages-preview-date {
+    font-size: 1.2rem;
+    color: #666; }
+  .messages-preview-date {
+    width: 6rem;
+    text-align: right;
+    padding: 1rem; }
+
+.messages-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  min-height: 100vh;
+  width: calc(100vw - (100vw - 100%));
+  overflow: none;
+  z-index: 9;
+  background: #FFFCF3;
+  display: flex;
+  flex-direction: column; }
+
+.messages-boundingbox {
+  width: 1200px;
+  max-width: 90%;
+  margin: 0 auto; }
+
+.messages-thread {
+  padding: 0 10%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  flex-grow: 1; }
+  .messages-thread > * {
+    width: 80%;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 1.6rem;
+    padding-bottom: 1rem;
+    text-align: left; }
+  .messages-thread-inbound {
+    align-self: flex-start; }
+    .messages-thread-inbound .text-body {
+      background: #ececec;
+      color: #111; }
+  .messages-thread-outbound-api {
+    align-self: flex-end; }
+    .messages-thread-outbound-api .text-body {
+      background: #0D26F9;
+      color: #FFFCF3; }
+  .messages-thread-close:hover, .messages-thread-close:focus {
+    background: #0D26F9;
+    color: #FFFCF3;
+    border-radius: 50%; }
+
+.messages-header {
+  padding: 1rem;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ececec; }
+  .messages-header aside {
+    float: left;
+    transition: 0.2s all;
+    border-radius: 50%;
+    cursor: pointer; }
+    .messages-header aside svg {
+      margin: 0;
+      padding: 0.6rem; }
+
+.messages-footer {
+  padding: 0.6rem 0;
+  background: #FFFCF3; }
+  .messages-footer form {
+    display: flex; }
+  .messages-footer textarea {
+    background: #FFFCF3;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 1.6rem;
+    border: 1px solid #ececec;
+    border-radius: 3rem;
+    padding: 1rem 3rem;
+    flex-grow: 1; }
+  .messages-footer button {
+    background: #d3d3d3;
+    color: #111;
+    border-radius: 50%;
+    margin-left: 0.6rem;
+    transition: 0.2s;
+    cursor: pointer; }
+    .messages-footer button svg {
+      margin: 0;
+      padding: 0.6rem; }
+    .messages-footer button:hover, .messages-footer button:focus {
+      background: #0D26F9;
+      color: #FFFCF3; }
+
+.text-body {
+  padding: 2rem 1.6rem;
+  border-radius: 1rem; }
+
+.text-date {
+  font-size: 1rem;
+  color: #666;
+  padding-left: 1.6rem;
+  padding-top: 0.5rem; }
+
 header {
   flex-shrink: 0;
   font-family: acumin-pro-extra-condensed, sans-serif;
