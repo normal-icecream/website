@@ -4150,7 +4150,7 @@ const createCustomer = async (formData) => {
 const sendConfirmationEmail = async (store, name, email, address, comments, date, receipt) => {
   let params = `type=${store}&name=${name}&email=${email}&address=${address}&date=${date}&receipt=${receipt}`;
   if (comments) { params += `&comments=${comments}` };
-  const url = `https://script.google.com/macros/s/AKfycbyKNrADv1OBA3jNhu_aqz_zXFxu2CLPpy3FCr6YHhb86C1luHNH7i2d8d97W3jD8dHL4A/exec?${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbxySiDaofIxsWDesKaC0SMkSukoLTWrQi5bCJhqQWrMhIy8dyv8QdEEhCwq3c1laCoiCw/exec?${params}`;
   let resp = await fetch(url);
   let data = await resp.json();
   if (!data.sent) {
