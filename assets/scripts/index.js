@@ -669,35 +669,36 @@ const buildOrderNav = () => {
   const $pickupBtn = $orderBlock.firstChild;
     $pickupBtn.classList.add("order-btn");
     $pickupBtn.onclick = orderBtnMain;
-    polyfillSvg($pickupBtn);
+    // polyfillSvg($pickupBtn);
     
   const $shippingBtn = $orderBlock.lastChild;
     $shippingBtn.classList.add("order-btn");
     $shippingBtn.onclick = orderBtnMain;
-    polyfillSvg($shippingBtn);
+    // polyfillSvg($shippingBtn);
 
   const $pickupBlock = document.querySelector(".order-pickup");
     $pickupBlock.classList.add("hide");
     $pickupBlock.setAttribute("data-theme", "yellow");
     $pickupBlock.firstChild.classList.add("order-btn");
-    polyfillSvg($pickupBlock.firstChild, "link");
+    // polyfillSvg($pickupBlock.firstChild, "link");
     $pickupBlock.lastChild.classList.add("order-btn");
-    polyfillSvg($pickupBlock.lastChild, "link");
+    // polyfillSvg($pickupBlock.lastChild, "link");
     
   const $shippingBlock = document.querySelector(".order-shipping");
     $shippingBlock.classList.add("hide");
     $shippingBlock.setAttribute("data-theme", "pink");
     $shippingBlock.firstChild.classList.add("order-btn");
-    polyfillSvg($shippingBlock.firstChild, "link");
+    // polyfillSvg($shippingBlock.firstChild, "link");
     $shippingBlock.lastChild.classList.add("order-btn");
-    polyfillSvg($shippingBlock.lastChild, "link");
+    // polyfillSvg($shippingBlock.lastChild, "link");
     buildShippingStarburst($shippingBlock.lastChild);
   
 }
 
 const polyfillSvg = ($el, type) => {
-  const $p = $el.querySelector("p");
-  const svgName = $p.textContent.substring(2, $p.textContent.length-1);
+  const $p = $el.querySelectorAll("p")[0];
+  const $pName = $el.querySelectorAll("p")[1];
+  const svgName = $p.textContent.substring(2, $pName.textContent.length-1);
 
   if (type === "link") {
     const $a = $p.querySelector("a");
@@ -1333,7 +1334,7 @@ const getStorefrontCheckoutCred = (storefront) => {
     case "pint-club":
       return {
         name: storefront,
-        endpoint: "https://script.google.com/macros/s/AKfycbwXsVa_i4JBUjyH7DyWVizeU3h5Rg5efYTtf4pcF4FXxy6zJOU/exec",
+        endpoint: "https://script.google.com/macros/s/AKfycbwFL62Dr7SaWDlq8nezAJbRRxsmN1uSlA_nqkQ6lzmtcBUzFwTn1GO7Jo0wCb1s6rtv/exec",
         locationId: "WPBKJEG0HRQ9F"
       };
     case "merch-pickup":
@@ -3930,7 +3931,7 @@ const buildSquarePaymentForm = () => {
     let currentStore = getCurrentStore();
     const recurring = checkRecurringClubInCart();
     
-    if (currentStore !== "shipping") {
+    if (currentStore !== "shipping" && currentStore !== "pint-club") {
       setDefaultTip();
     }
 
@@ -5081,7 +5082,6 @@ function initPaymentForm(paymentType, currentStore, recurring) {
               }
               removeScreensaver();
             } else {
-              addClubToSheet();
               successfulClubSubscription();
             }
           })
@@ -5167,7 +5167,6 @@ function initPaymentForm(paymentType, currentStore, recurring) {
               alert("gift card declined. please try a different card.");
               removeScreensaver();
             } else {
-              addClubToSheet();
               successfulClubSubscription();
             }
           })
