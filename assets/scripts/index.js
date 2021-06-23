@@ -1334,7 +1334,7 @@ const getStorefrontCheckoutCred = (storefront) => {
     case "pint-club":
       return {
         name: storefront,
-        endpoint: "https://script.google.com/macros/s/AKfycbwXsVa_i4JBUjyH7DyWVizeU3h5Rg5efYTtf4pcF4FXxy6zJOU/exec",
+        endpoint: "https://script.google.com/macros/s/AKfycbwFL62Dr7SaWDlq8nezAJbRRxsmN1uSlA_nqkQ6lzmtcBUzFwTn1GO7Jo0wCb1s6rtv/exec",
         locationId: "WPBKJEG0HRQ9F"
       };
     case "merch-pickup":
@@ -3931,7 +3931,7 @@ const buildSquarePaymentForm = () => {
     let currentStore = getCurrentStore();
     const recurring = checkRecurringClubInCart();
     
-    if (currentStore !== "shipping") {
+    if (currentStore !== "shipping" && currentStore !== "pint-club") {
       setDefaultTip();
     }
 
@@ -5082,7 +5082,6 @@ function initPaymentForm(paymentType, currentStore, recurring) {
               }
               removeScreensaver();
             } else {
-              addClubToSheet();
               successfulClubSubscription();
             }
           })
@@ -5168,7 +5167,6 @@ function initPaymentForm(paymentType, currentStore, recurring) {
               alert("gift card declined. please try a different card.");
               removeScreensaver();
             } else {
-              addClubToSheet();
               successfulClubSubscription();
             }
           })
