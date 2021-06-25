@@ -850,12 +850,14 @@ const customizeToolforStore = (target) => {
 
 const customizeCheckoutForStorefront = async () => {
 
+  const currentStore = getCurrentStore();
+
   // this is setting the pickup times
   const $pickupTimeDropdown = document.getElementById("pickuptime");
 
   if ($pickupTimeDropdown) {
     $pickupTimeDropdown.innerHTML = ""; // clear on each customize
-    const pickupTimes = getPickupTimes();
+    const pickupTimes = getOrderHours(currentStore);
     populateDynamicOptions($pickupTimeDropdown, pickupTimes);
   }
 
@@ -873,7 +875,6 @@ const customizeCheckoutForStorefront = async () => {
 
   // decide whether or not to show checkout form
   const labels = window.labels;
-  const currentStore = getCurrentStore();
   const storeOpen = labels[`${currentStore}_open`];
   let storeOpenByTime;
 
@@ -917,6 +918,96 @@ const customizeCheckoutForStorefront = async () => {
   }
 }
 
+const getOrderHours = (store) => {
+  const labels = window.labels;
+  // TODO: cleanup after purge
+  let open = labels[`${store}_hoursopen`] || labels[`${store}_orderhoursopen`];
+  open = open.split(", ");
+  let close = labels[`${store}_hoursclose`] || labels[`${store}_orderhoursclose`] || labels[`${store}_orderhoursclosed`];
+  close = close.split(", ");
+  
+  // temp purge fix
+  if (close[0] < open[0]) {
+    const openCopy = open;
+    const closeCopy = close;
+    open = closeCopy;
+    close = openCopy;
+  }
+  
+  const days = [ "mon", "tue", "wed", "thu", "fri", "sat", "sun" ];
+
+  const date = new Date();
+  const today = date.toString().substring(0,3).toLowerCase();
+  const todayIndex = days.indexOf(today);
+  const now = parseInt(`${date.getHours()}${date.getMinutes().toString().padStart(2, "0")}`);
+
+  const openHour = open[todayIndex];
+  const openObj = convertHour(openHour);
+  const closeHour = close[todayIndex];
+  const closeObj = convertHour(closeHour);
+
+  let pickupTimes = [];
+  let startTimeObj;
+
+  if (now < openObj.string) { // BEFORE OPENING
+    startTimeObj = new Date(date.setHours(openObj.hour, openObj.minute, 0));
+  } else { // AFTER OPENING
+    const currentMinutes = date.getMinutes();
+    const startMinutes = Math.ceil(currentMinutes / 10) * 10;
+    const diff = startMinutes - currentMinutes;
+    startTimeObj = new Date(date.getTime() + diff * 60000);
+  }
+
+  const closeTimeObj = new Date(date.setHours(closeObj.hour, closeObj.minute, 0));
+  let currentTimeObj = new Date(startTimeObj.setSeconds(0, 0));
+
+  while (currentTimeObj <= closeTimeObj) {
+    const currentTimeHourFull = currentTimeObj.getHours(); // 24 hr time
+    const currentTimeHour = currentTimeHourFull > 12 ? currentTimeHourFull - 12 : currentTimeHourFull; // 12 hr time
+    const currentTimeMinutes = currentTimeObj.getMinutes().toString().padStart(2, "0");
+    const currentTimePeriod = currentTimeHourFull < 12 ? "am" : "pm";
+    const currentTimePrint = `${currentTimeHour}:${currentTimeMinutes}${currentTimePeriod}`;
+    pickupTimes.push({ text: currentTimePrint, value: currentTimeObj.toISOString() });
+    currentTimeObj = new Date(currentTimeObj.getTime() + 10 * 60000); // add ten minutes
+  } 
+
+  return pickupTimes;
+
+}
+
+const convertHour = (timestamp) => {
+  if (timestamp.includes(".")) {
+    let [ hour, minute ] = timestamp.split(".");
+    switch (minute) {
+      case "25":
+      case 25:
+        minute = 15;
+        break;
+      case "5":
+      case 5:
+        minute = 30;
+        break;
+      case "75":
+      case 75:
+        minute = 45;
+        break;
+      default:
+        break;
+    }
+    return {
+      hour: parseInt(hour),
+      minute: minute,
+      string: `${hour}${minute}`
+    };
+  } else {
+    return {
+      hour: parseInt(timestamp),
+      minute: 0,
+      string: `${parseInt(timestamp) * 100}`
+    };
+  }
+}
+
 const getPickupTimes = (setStore) => {
   let store;
   if (setStore) {
@@ -928,7 +1019,6 @@ const getPickupTimes = (setStore) => {
   const now = parseInt(`${date.getHours()}${date.getMinutes().toString().padStart(2, "0")}`);
   
   const { open, close } = getHoursOfOp(store);
-
   let pickupTimes = [];
   let startTimeObj;
 
@@ -1173,6 +1263,8 @@ const getHoursOfOp = (store, type) => {
   }
   
 }
+
+
 
 /*==========================================================
 CHECKOUT FUNCTIONALITY
@@ -2550,7 +2642,7 @@ const populateCustomizationTool = (store, title, fields) => {
           const $pickupTimeDropdown = document.getElementById("pickuptime");
           if ($pickupTimeDropdown) {
             $pickupTimeDropdown.innerHTML = ""; // clear on each customize
-            const pickupTimes = getPickupTimes("store");
+            const pickupTimes = getOrderHours("store");
             populateDynamicOptions($pickupTimeDropdown, pickupTimes);
           }
           getContactFromLocalStorage();
