@@ -920,11 +920,12 @@ const customizeCheckoutForStorefront = async () => {
 
 const getOrderHours = (store) => {
   const labels = window.labels;
+  // TODO: cleanup after purge
   let open = labels[`${store}_hoursopen`] || labels[`${store}_orderhoursopen`];
   open = open.split(", ");
   let close = labels[`${store}_hoursclose`] || labels[`${store}_orderhoursclose`] || labels[`${store}_orderhoursclosed`];
   close = close.split(", ");
-
+  
   // temp purge fix
   if (close[0] < open[0]) {
     const openCopy = open;
@@ -932,7 +933,10 @@ const getOrderHours = (store) => {
     open = closeCopy;
     close = openCopy;
   }
-
+  
+  console.log(`getOrderHours -> open`, open);
+  console.log(`getOrderHours -> close`, close);
+  
   const days = [ "mon", "tue", "wed", "thu", "fri", "sat", "sun" ];
 
   const date = new Date();
