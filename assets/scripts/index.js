@@ -934,9 +934,6 @@ const getOrderHours = (store) => {
     close = openCopy;
   }
   
-  console.log(`getOrderHours -> open`, open);
-  console.log(`getOrderHours -> close`, close);
-  
   const days = [ "mon", "tue", "wed", "thu", "fri", "sat", "sun" ];
 
   const date = new Date();
