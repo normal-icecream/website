@@ -1043,11 +1043,37 @@ h1#normalreg {
   .admin-btn:hover, .admin-btn:focus {
     letter-spacing: 0.4rem; }
 
+.messages-normessage {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem; }
+  .messages-normessage h2 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    text-align: left;
+    font-size: 3rem; }
+
+.messages-btn {
+  background: #0D26F9;
+  color: #FFFCF3;
+  border-radius: 3rem; }
+
+.messages-disabled-text {
+  background: #ececec !important; }
+
+.messages-disabled-btn {
+  cursor: not-allowed !important; }
+  .messages-disabled-btn:hover, .messages-disabled-btn:focus {
+    background: #d3d3d3 !important;
+    color: #111 !important; }
+
 .messages-preview {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-style: normal;
   font-size: 1.6rem;
+  width: 100%;
   border-collapse: collapse; }
   .messages-preview-row {
     border-bottom: 1px solid #ececec;
@@ -1064,7 +1090,7 @@ h1#normalreg {
     font-size: 1.2rem;
     color: #666; }
   .messages-preview-date {
-    width: 6rem;
+    width: 7rem;
     text-align: right;
     padding: 1rem; }
 
@@ -1088,6 +1114,7 @@ h1#normalreg {
 
 .messages-thread {
   padding: 0 10%;
+  padding-top: 1rem;
   display: flex;
   flex-direction: column;
   overflow: auto;
