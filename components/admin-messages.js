@@ -28,33 +28,52 @@ const getMessages = async () => {
 // source: https://stackoverflow.com/a/3177838/10402278
 const calcTimeAgo = (date) => {
     const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-    var int = seconds / 31536000; // one year
+    let int = seconds / 31536000; // one year
 
     if (int > 1) {
-        return Math.floor(int) + " yrs";
+        return Math.floor(int) === 1 ? Math.floor(int) + " yr" : Math.floor(int) + " yrs";
     }
     int = seconds / 2592000;
     if (int > 1) {
-        return Math.floor(int) + " mons";
+        return Math.floor(int) === 1 ? Math.floor(int) + " mon" : Math.floor(int) + " mons";;
     }
     int = seconds / 86400;
     if (int > 1) {
-        return Math.floor(int) + " days";
+        return Math.floor(int) === 1 ? Math.floor(int) + " day" : Math.floor(int) + " days";;
     }
     int = seconds / 3600;
     if (int > 1) {
-        return Math.floor(int) + " hrs";
+        return Math.floor(int) === 1 ? Math.floor(int) + " hr" : Math.floor(int) + " hrs";;
     }
     int = seconds / 60;
     if (int > 1) {
-        return Math.floor(int) + " mins";
+        return Math.floor(int) === 1 ? Math.floor(int) + " min" : Math.floor(int) + " mins";
     }
-    return Math.floor(seconds) + " secs";
+    return Math.floor(int) === 1 ? Math.floor(int) + " sec" : Math.floor(int) + " secs";;
 }
 
 const buildDashboard = (messages) => {
 
+    storeInSession(messages[0]);
+
     const $messages = document.getElementById("messages");
+
+    const $container = document.createElement("div");
+        $container.classList.add("messages-normessage");
+
+    const $title = document.createElement("h2");
+        $title.textContent = "norMessage";
+
+    const $newBtn = document.createElement("a");
+            $newBtn.classList.add("btn-rect", "messages-btn");
+            $newBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-plus">
+        <use href="/icons.svg#plus"></use>
+      </svg> start a conversation`;
+            $newBtn.onclick = (e) => {
+                buildEmptyThread();
+            }
+
+    $container.append($title, $newBtn);
 
     const $table = document.createElement("table");
         $table.classList.add("messages-preview");
@@ -64,7 +83,7 @@ const buildDashboard = (messages) => {
         $table.append($row);
     });
 
-    $messages.append($table);
+    $messages.append($container, $table);
 }
 
 const buildPreview = (message) => {
@@ -111,15 +130,50 @@ const buildPreview = (message) => {
 
 const refreshPreview = async () => {
     const $table = document.querySelector(".messages-preview");
-    $table.innerHTML = "";
-
     const msgs = await getMessages();
+    // console.log(`refreshPreview -> msgs`, msgs);
 
+    checkSession(msgs[0]);
+    
+    $table.innerHTML = "";
+    
     msgs.forEach((m) => {
         const $row = buildPreview(m);
         $table.append($row);
     });
 
+}
+
+const storeInSession = (data) => {
+    sessionStorage.setItem("normal-last-msg", JSON.stringify(data));
+}
+
+const checkSession = (data) => {
+    const lastMsg = sessionStorage.getItem("normal-last-msg");
+
+    if (JSON.stringify(data) !== lastMsg) {
+        const audio = new Audio("../assets/audio/textNotification.mp3");
+        audio.play();
+        storeInSession(data);
+    }
+}
+
+const buildEmptyThread = () => {
+    const $threadContainer = document.createElement("section");
+        $threadContainer.classList.add("messages-container");
+
+    const $thread = document.createElement("div");
+        $thread.classList.add("messages-thread");
+
+    const $header = buildEmptyThreadHeader();
+    const $footer = buildThreadFooterPlaceholder();
+
+    $threadContainer.append($header, $thread, $footer);
+
+    const $main = document.querySelector("main");
+
+    $main.append($threadContainer);
+    $thread.scrollTop = $thread.scrollHeight;
 }
 
 const buildThread = (messages) => {
@@ -130,7 +184,9 @@ const buildThread = (messages) => {
         $thread.classList.add("messages-thread");
 
     const firstMessage = messages[0];
-    const recipient = firstMessage.from === "+18012441991" ? firstMessage.to : firstMessage.from;
+    const recipient = (firstMessage.from === "+18012441991" || firstMessage.from === "+12153984647") ? firstMessage.to : firstMessage.from;
+
+    // storeInSession(messages[0]);
     
     messages.forEach((m) => {
         const $message = buildMessage(m);
@@ -151,12 +207,14 @@ const buildThread = (messages) => {
 
 const refreshThread = async () => {
     const $thread = document.querySelector(".messages-thread");
-    $thread.innerHTML = "";
 
     const $text = document.getElementById("outgoing-message");
     const recipient = $text.getAttribute("data-recipient");
 
     const msgs = await getMessagesByNum(recipient);
+    // console.log(`refreshThread -> msgs`, msgs);
+
+    $thread.innerHTML = "";
 
     msgs.forEach((m) => {
         const $message = buildMessage(m);
@@ -164,6 +222,121 @@ const refreshThread = async () => {
     })
     $thread.scrollTop = $thread.scrollHeight;
 
+}
+
+const buildEmptyThreadHeader = () => {
+    const $threadHeader = document.createElement("div");
+        $threadHeader.classList.add("messages-header");
+
+    const $container = document.createElement("div");
+        $container.classList.add("messages-boundingbox");
+
+    const $btn = document.createElement("aside");
+        $btn.classList.add("messages-thread-close");
+        $btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-arrow-left">
+        <use href="/icons.svg#arrow-left"></use>
+      </svg>`;
+        $btn.onclick = (e) => {
+            refreshPreview();
+            const $thread = document.querySelector(".messages-container");
+            $thread.remove();
+        }
+
+    const $number = document.createElement("input");
+        // $number.textContent = num;
+        $number.id = "message-recipient";
+        $number.setAttribute("placeholder", "new message");
+        $number.pattern = "[0-9]{10,11}";
+
+    $number.onkeyup = async (e) => {
+        const num = checkNum(e.target.value);
+        if (num) {
+            buildScreensaver("checking for texts...");
+            const msgs = await getMessagesByNum(num);
+
+            if (msgs.length) {
+                const $thread = document.querySelector(".messages-container");
+                $thread.remove();
+                buildThread(msgs);
+                removeScreensaver();
+            } else {
+                setFooterRecipient(num);
+                disableHeaderEdits(num);
+                removeScreensaver();
+            }
+
+        } 
+    }
+
+    $container.append($btn, $number);
+    $threadHeader.append($container);
+    return $threadHeader;
+}
+
+const buildThreadFooterPlaceholder = () => {
+    const $threadFooter = document.createElement("div");
+        $threadFooter.classList.add("messages-footer");
+
+    const $form = document.createElement("form");
+        $form.classList.add("messages-boundingbox");
+    
+    const $textArea = document.createElement("textarea");
+        $textArea.id = "outgoing-message";
+        $textArea.name = "outgoing-message";
+        $textArea.setAttribute("placeholder", "enter recipient number first!");
+        // $textArea.setAttribute("data-recipient", num);
+        $textArea.disabled = true;
+        $textArea.classList.add("messages-disabled-text");
+
+    const $btn = document.createElement("button");
+        $btn.innerHTML =  `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-arrow-right">
+        <use href="/icons.svg#arrow-right"></use>
+      </svg>`;
+        $btn.classList.add("messages-disabled-btn");
+    
+    $form.append($textArea, $btn);
+    $threadFooter.append($form);
+    
+    return $threadFooter;
+}
+
+const setFooterRecipient = (num) => {
+    const $textArea = document.getElementById("outgoing-message");
+        $textArea.setAttribute("placeholder", "text message");
+        $textArea.setAttribute("data-recipient", num);
+        $textArea.classList.remove("messages-disabled-text");
+        $textArea.disabled = false;
+
+    const $btn = document.querySelector(".messages-disabled-btn");
+        $btn.onclick = async (e) => {
+            e.preventDefault();
+            const $text = document.getElementById("outgoing-message");
+            const message = $text.value;
+            const recipient = $text.getAttribute("data-recipient");
+            await sendMessage(recipient, message);
+            $text.value = "";
+            refreshThread();
+        }
+        $btn.classList.remove("messages-disabled-btn");
+}
+
+const disableHeaderEdits = (num) => {
+    const $numberInput = document.getElementById("message-recipient");
+
+    const $number = document.createElement("span");
+        $number.textContent = num;
+
+    $numberInput.parentNode.replaceChild($number, $numberInput);
+}
+
+const checkNum = (num) => {
+    if (num.length === 10) {
+        return `+1${num}`;
+    } else if (num[0] === 1 && num.length === 11) {
+        return `+${num}`
+    } else {
+        return false;
+    }
 }
 
 const buildThreadHeader = (num) => {
@@ -319,7 +492,7 @@ const removeAuth = () => {
 
 const checkPw = async (pw, user) => {
     let params = `pw=${encodeURIComponent(pw)}&name=${encodeURIComponent(user)}`;
-    const url = `https://script.google.com/macros/s/AKfycbwiFd8X0UGEDkXppGZHHrY7uJsubJ8eG_OUwfbgPJ0OWABqO-Oha2uIoQYi7g0Q0GJVYw/exec?${params}`;
+    const url = `https://script.google.com/macros/s/AKfycbzVA9WRPY286tq__0xjU349qoJjAw7EoRKx67lGBhHqO2bFAjsdFPrY1tbWMbQXZzaJmQ/exec?${params}`;
     let resp = await fetch(url);
     let data = await resp.json();
     sessionStorage.setItem("normal-admin-key", data.key);
@@ -329,7 +502,7 @@ const checkPw = async (pw, user) => {
 const checkKey = async () => {
     const key = sessionStorage.getItem("normal-admin-key");
     let params = `key=${encodeURIComponent(key)}`;
-    const url = `https://script.google.com/macros/s/AKfycbwiFd8X0UGEDkXppGZHHrY7uJsubJ8eG_OUwfbgPJ0OWABqO-Oha2uIoQYi7g0Q0GJVYw/exec?${params}`;
+    const url = `https://script.google.com/macros/s/AKfycbzVA9WRPY286tq__0xjU349qoJjAw7EoRKx67lGBhHqO2bFAjsdFPrY1tbWMbQXZzaJmQ/exec?${params}`;
     let resp = await fetch(url);
     let data = await resp.json();
 
@@ -343,8 +516,11 @@ window.onload = async (e) => {
 
     const keyCheck = await checkKey();
     if (keyCheck.status === "success") {
+        buildScreensaver("getting texts...");
         const msgs = await getMessages();
+        checkSession(msgs[0]);
         buildDashboard(msgs);
+        removeScreensaver();
     } else {
         auth();
     }

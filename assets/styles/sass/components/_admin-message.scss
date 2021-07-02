@@ -29,10 +29,39 @@
 }
 
 .messages {
+    &-normessage {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        
+        & h2 {
+            @include font-poppins-black;
+            text-align: left;
+            font-size: 3rem;
+        }
+    }
+    &-btn {
+        background: $color-blue;
+        color: $color-white;
+        border-radius: 3rem;
+    }
+    &-disabled {
+        &-text {
+            background: $color-md-gray !important;
+        }
+        &-btn {
+            cursor: not-allowed !important;
+            &:hover, &:focus {
+                background: $color-dk-gray !important;
+                color: #111 !important;
+            }
+        }
+    }
     &-preview {
         // border: 2px solid red;
         @include font-poppins;
         font-size: 1.6rem;
+        width: 100%;
         border-collapse: collapse;
         &-row {
             border-bottom: 1px solid $color-md-gray;
@@ -54,7 +83,7 @@
             color: #666;
         }
         &-date {
-            width: 6rem;
+            width: 7rem;
             text-align: right;
             padding: 1rem;
         }
@@ -80,6 +109,7 @@
     }
     &-thread {
         padding: 0 10%;
+        padding-top: 1rem;
         display: flex;
         flex-direction: column;
         overflow: auto;
