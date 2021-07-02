@@ -213,6 +213,7 @@
     .messages {
         &-footer > * > * {
             padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+            margin-bottom: calc(4.8rem + env(safe-area-inset-bottom));
         }
     }
 }
