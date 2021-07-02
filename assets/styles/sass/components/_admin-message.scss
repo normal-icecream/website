@@ -208,3 +208,20 @@
         padding-top: 0.5rem;
     }
 }
+
+@media only screen and (max-width: $tablet) {
+    .messages {
+        &-footer > * > * {
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+        }
+    }
+}
+
+@media only screen and (max-width: $mobile) {
+    .messages {
+        &-normessage {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+}
