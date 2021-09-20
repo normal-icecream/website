@@ -2666,8 +2666,10 @@ const populateCustomizationToolShipping = async (title, item) => {
   const itemId = item.id;
   const itemVariations = itemData.variations;
   const itemModifiers = itemData.modifier_list_info;
-  const shippingData = await fetchShippingPacks();
-  const packLimit = shippingData[itemId];
+  const quantities = document
+    .querySelector(`a[data-id=${itemId}]`)
+    .parentElement.previousElementSibling
+    .textContent.replace("select ", "").split(",");
 
   const $customTool = document.querySelector(".customize-table");
 
@@ -2687,7 +2689,14 @@ const populateCustomizationToolShipping = async (title, item) => {
       const modCatName = modCatData.name.split(" ")[1].slice(0, -1); // this is the single modifier category NAME (str)
       const modCatModifiers = modCatData.modifiers; // these are all the modifiers in a category (arr);
 
-      const modQuantity = packLimit.quantities[modCatName + "s"];
+      let modQuantity;
+
+      quantities.forEach((quantity) => {
+        if (quantity.includes(modCatName)) {
+          const limit = quantity.match(/\d+/)[0];
+          modQuantity = limit;
+        }
+      })
 
       const $carouselContainer = document.createElement("div");
         $carouselContainer.setAttribute("data-item-id", itemId);
@@ -2773,7 +2782,6 @@ const buildShippingCarousel = (id, type, modifiers, inStock) => {
       const $img = document.createElement("img");
         $img.setAttribute("src", `/assets/images/${type}-${cleanName(thisItem.name)}.webp`);
         $img.setAttribute("alt", `${thisItem.name} ${type}`);
-        console.log($img);
 
       const $src = document.createElement("source");
         $src.setAttribute("srcset", `/assets/images/${type}-${cleanName(thisItem.name)}.webp`);
