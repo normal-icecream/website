@@ -4321,7 +4321,7 @@ const addShippingToSheet = async () => {
       params += `${prop}=${encodeURIComponent(formData[prop])}&`;
     }
   }
-  const url = `https://script.google.com/macros/s/AKfycbw2hxnOxw7J5oCwnRYDK2zSJVZRKlEed279NtfflnArDCcQmZHvMJ3rJh3Biwa6VHxu/exec${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbxcOA8EIp9uIyaPhxJvboStlYAEPUG7RQwWEdMxJe6SgOjBDJU_0JW5aasafreE6Bu4/exec${params}`;
   let resp = await fetch(url, { method: "POST", mode: "no-cors" });
   // let data = await resp.json();
   // console.log(data);
