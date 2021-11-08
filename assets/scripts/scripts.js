@@ -141,7 +141,7 @@ function decorateBlock(block) {
 }
 
 window.onload = async(e) => {
-  const main = doc.querySelector('main');
+  const main = document.querySelector('main');
   if (main) {
     decorateBlocks(main);
   }
