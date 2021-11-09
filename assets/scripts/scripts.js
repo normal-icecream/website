@@ -101,9 +101,11 @@ export function readBlockConfig(block) {
  */
  async function loadBlocks() {
   document
-    .querySelectorAll('main > div > div.block')
+    .querySelectorAll('div.block')
     .forEach(async(block) => {
-      loadBlock(block);
+      if ([...block.classList].includes('popup')) {
+        loadBlock(block);
+      }
     });
 }
 
@@ -134,16 +136,24 @@ export function readBlockConfig(block) {
  */
 function decorateBlock(block) {
   const name = block.classList[0];
-  block.parentElement
-    .classList.add(`${name}-container`.replace(/--/g, '-'));
-  block.classList.add('block');
-  block.setAttribute('data-block-name', name);
+  if (name === 'popup') {
+    block.classList.add('block');
+    block.setAttribute('data-block-name', name);
+    const clone = block.cloneNode(true)
+    const parent = createEl('div', {
+      class: `${name}-container`.replace(/--/g, '-')
+    });
+    parent.append(clone);
+    block.replaceWith(parent);
+  }
 }
 
-window.onload = async(e) => {
+async function init() {
   const main = document.querySelector('main');
   if (main) {
     decorateBlocks(main);
   }
   await loadBlocks();
 };
+
+init();
