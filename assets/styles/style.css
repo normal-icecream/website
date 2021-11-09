@@ -2,12 +2,130 @@
 @import url("https://use.typekit.net/ysf7eux.css");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap");
 :root {
-  --white: #FFFCF3;
-  --red: #F94F0D;
-  --yellow: #FFFC92;
-  --green: #00C1C6;
-  --blue: #0D26F9;
-  --pink: #FFD4CC; }
+  --color-white: #FFFCF3;
+  --color-lt-gray: #f9f9f9;
+  --color-md-gray: #ececec;
+  --color-dk-gray: #d3d3d3;
+  --color-black: #140F00;
+  --color-red: #F94F0D;
+  --color-yellow: #FFFC92;
+  --color-yellow-alt: #F7FF25;
+  --color-green: #00C1C6;
+  --color-blue: #0D26F9;
+  --color-pink: #FFD4CC; 
+
+  --body-font-size: 2.4rem;
+  --body-line-height: 2.8rem;
+
+  --weight-normal: 400;
+  --weight-bold: 600;
+  --weight-black: 800;
+
+  --font-mono: monospace;
+
+  --desktop: 120rem;
+  --tablet: 76.8rem;
+  --mobile: 46.4rem;
+}
+
+a.btn {
+  display: inline-block;
+  padding: 0.6rem 1.6rem;
+  font-family: Impact, sans-serif;
+  font-family: acumin-pro-extra-condensed, sans-serif;
+  font-weight: var(--weight-bold);
+  font-size: 133%;
+  text-decoration: none;
+  cursor: pointer;
+  transition: letter-spacing 0.2s;
+}
+
+a.btn:hover,
+a.btn:focus {
+  letter-spacing: 1px;
+}
+
+.icon-container {
+  text-align: right;
+}
+
+:not(svg).icon {
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  width: calc(var(--body-line-height) * 2);
+  height: calc(var(--body-line-height) * 2);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button.icon:hover,
+button.icon:focus {
+  transform: scale(1.2);
+}
+
+:not(svg).icon:after,
+:not(svg).icon:before {
+  content: '';
+  position: absolute;
+  border: 1px solid;
+}
+
+/* CLOSE */
+
+:not(svg).close:after {
+  height: 0;
+  left: 8px;
+  top: 2.8rem;
+  width: 4rem;
+  transform: rotate(45deg);
+}
+
+:not(svg).close:before {
+  height: 0;
+  left: 8px;
+  top: 2.8rem;
+  width: 4rem;
+  transform: rotate(-45deg);
+}
+
+/* LEFT and RIGHT ARROWS */
+
+:not(svg).left:after,
+:not(svg).right:after { /* ARROW */
+  height: 2rem;
+  width: 2rem;
+  top: 1.8rem;
+  border-width: 2px;
+  background: transparent !important;
+  transform: rotate(45deg);
+}
+
+:not(svg).left:after {
+  left: 1.6rem;
+  border-top: 0;
+  border-right: 0;
+}
+
+:not(svg).right:after {
+  right: 1.6rem;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+:not(svg).left:before,
+:not(svg).right:before { /* STEM */
+  height: 0;
+  width: 2.8rem;
+  top: 2.7rem;
+  left: 1.4rem;
+}
+
+.index-carousel-container,
+.popup-container {
+  visibility: hidden;
+}
 
 *, *::before, *::after {
   margin: 0;
