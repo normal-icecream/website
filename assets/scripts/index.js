@@ -4633,10 +4633,6 @@ var cart = {
       li.quantity++;
     } else {
       var fp = variation;
-      console.log(catalog);
-      console.log(catalog.byId);
-      console.log(catalog.byId[variation]);
-      console.log(catalog.byId[variation].item_variation_data);
       var price =
         catalog.byId[variation].item_variation_data.price_money.amount;
       mods.forEach((m) => {
