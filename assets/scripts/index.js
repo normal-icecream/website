@@ -4296,8 +4296,6 @@ const addClubToSheet = async () => {
   }
   const url = `https://script.google.com/macros/s/AKfycbzkPtpjiyo-AQcSTqSs1kj2kF83Pv5NdQvAZk4fd5g_hM2WSnlY3XFkXA/exec${params}`;
   let resp = await fetch(url, { method: "POST", mode: "no-cors" });
-  // let data = await resp.json();
-  // console.log(data);
   return resp;
 }
 
@@ -4322,8 +4320,6 @@ const addShippingToSheet = async () => {
   }
   const url = `https://script.google.com/macros/s/AKfycbxcOA8EIp9uIyaPhxJvboStlYAEPUG7RQwWEdMxJe6SgOjBDJU_0JW5aasafreE6Bu4/exec${params}`;
   let resp = await fetch(url, { method: "POST", mode: "no-cors" });
-  // let data = await resp.json();
-  // console.log(data);
   return resp;
 }
 
@@ -4637,6 +4633,10 @@ var cart = {
       li.quantity++;
     } else {
       var fp = variation;
+      console.log(catalog);
+      console.log(catalog.byId);
+      console.log(catalog.byId[variation]);
+      console.log(catalog.byId[variation].item_variation_data);
       var price =
         catalog.byId[variation].item_variation_data.price_money.amount;
       mods.forEach((m) => {
@@ -4881,8 +4881,7 @@ function initPaymentForm(paymentType, currentStore, recurring) {
           fontSize: "20px",
           lineHeight: "40px",
           padding: "10px 40px",
-          placeholderColor: getComplementHex(),
-          color: getComplementHex(),
+          color: "blue",
           backgroundColor: "transparent",
         },
       ],
@@ -5004,8 +5003,7 @@ function initPaymentForm(paymentType, currentStore, recurring) {
           fontSize: "20px",
           lineHeight: "40px",
           padding: "10px 40px",
-          placeholderColor: getComplementHex(),
-          color: getComplementHex(),
+          color: "blue",
           backgroundColor: "transparent",
         },
       ],
@@ -5091,8 +5089,7 @@ function initPaymentForm(paymentType, currentStore, recurring) {
           fontSize: "20px",
           lineHeight: "40px",
           padding: "10px 40px",
-          placeholderColor: getComplementHex(),
-          color: getComplementHex(),
+          color: "blue",
           backgroundColor: "transparent",
         },
       ],
@@ -5211,8 +5208,7 @@ function initPaymentForm(paymentType, currentStore, recurring) {
           fontSize: "20px",
           lineHeight: "40px",
           padding: "10px 40px",
-          placeholderColor: getComplementHex(),
-          color: getComplementHex(),
+          color: "blue",
           backgroundColor: "transparent",
         },
       ],
