@@ -1135,7 +1135,7 @@ const updateCart = () => {
   const currentStore = getCurrentStore();
   let isShipped = false;
 
-  if (currentStore === "merch") {
+  if (currentStore === "merch" || currentStore === "pint-club") {
     if (cart.shipping_item.price > 0) {
       isShipped = true;
     } 
@@ -1209,11 +1209,6 @@ const checkIfStorefrontOpen = () => {
   return now < (close * 100);
 }
 
-/* TO DO
-const getDaysOfOp = () => {
-  // check if storefront is open today
-} */
-
 // move this to utilities
 const getHoursOfOp = (store, type) => {
   const labels = window.labels;
@@ -1262,8 +1257,6 @@ const getHoursOfOp = (store, type) => {
   }
   
 }
-
-
 
 /*==========================================================
 CHECKOUT FUNCTIONALITY
@@ -1365,7 +1358,6 @@ const submitOrder = async (store, formData) => {
         } 
       })
     })
-  
   }
 
   const orderObj = await fetch(credentials.endpoint + "?" + qs, {
@@ -1458,6 +1450,9 @@ const getShippingItem = (type) => {
       return "IV37HQ6227WQAOS3HOCNTPXN"; // near
     case "tier 3":
       return "P2WZUWA7HTJ7G76QTKJ27Y5V"; // far
+    case "national":
+      // TODO: switch to shipping + handling variation
+      return "IXW4EL572SVTNENOWOBRT6OF"; // national 
     case "free":
     default:
       return "GTMQCMXMAHX4X6NFKDX5AYQC"; // free
@@ -1842,18 +1837,47 @@ const customizeToolforClub = (target) => {
   const $shippingOpt = document.getElementById("shipping");
   const $pickupOpt = document.getElementById("pickup");
 
+  const $customBody = document.querySelector(".customize-table-body");
+
   // disable shipping for now
-  const $shippingParent = $shippingOpt.parentNode;
-    $shippingParent.prepend("coming soon! - ");
-    $shippingOpt.disabled = true;
+  // const $shippingParent = $shippingOpt.parentNode;
+  //   $shippingParent.prepend("coming soon! - ");
+  //   $shippingOpt.disabled = true;
   ///////////////////////////
 
-  $shippingOpt.onclick = async (e) => {
-    const $customBody = document.querySelector(".customize-table-body");
-    const $addrFields = $customBody.querySelectorAll("[data-fieldtype=address]");
+  const $giftOpt = document.getElementById("yes");
 
+  $giftOpt.addEventListener('change', (e) => {
+    const giftOption = e.target.checked;
+    const $recipientFields = $customBody.querySelectorAll("[data-fieldtype=club-gift-recipient]");
+
+    if (giftOption) {
+      // giving as a gift
+      if (!$recipientFields.length) {
+        let fields = getFields([ 'pint-club-gift' ]);
+        fields.forEach((f) => {
+          $customBody.append(buildFields("customize", f));
+        })
+      }
+      const $addrFields = $customBody.querySelectorAll("[data-fieldtype=address]");
+      if ($addrFields) {
+        $addrFields.forEach((af) => {
+          const placeholder = af.getAttribute('placeholder');
+          af.setAttribute('placeholder', placeholder.replace('your', 'recipient'));
+        });
+      }
+    } else {
+      // not giving as a gift anymore
+      $recipientFields.forEach((f) => {
+        f.remove();
+      })
+    }
+  });
+
+  $shippingOpt.onclick = async (e) => {
+    const $addrFields = $customBody.querySelectorAll("[data-fieldtype=address]");
     if (!$addrFields.length) {
-      let fields = getFields([ "address" ]);
+      let fields = getFields([ "address-national" ]);
       fields.forEach((f) => {
         $customBody.append(buildFields("customize", f));
       });
@@ -1864,9 +1888,25 @@ const customizeToolforClub = (target) => {
       const zipArr = deliveryZips.map((z) => z.zip);        
       populateOptions($zipDropdown, zipArr);
     }
+
+    const $giftOpt = document.getElementById("yes");
+    if ($giftOpt.checked) {
+      const $addrFields = $customBody.querySelectorAll("[data-fieldtype=address]");
+      $addrFields.forEach((af) => {
+        const placeholder = af.getAttribute('placeholder');
+        af.setAttribute('placeholder', placeholder.replace('your', 'recipient'));
+      });
+    } else {
+      const $addrFields = $customBody.querySelectorAll("[data-fieldtype=address]");
+      $addrFields.forEach((af) => {
+        const placeholder = af.getAttribute('placeholder');
+        af.setAttribute('placeholder', placeholder.replace('recipient', 'your'));
+      });
+    }
   }
 
   $pickupOpt.onclick = (e) => {
+    cart.removeShipping();
     const $customBody = document.querySelector(".customize-table-body");
     const $addrFields = $customBody.querySelectorAll("[data-fieldtype=address]");
     if ($addrFields.length) {
@@ -1881,19 +1921,28 @@ const customizeToolforClub = (target) => {
 
 const addClubToCart = (formData) => {
   const paymentOption = formData["payment-option"];
+  const deliveryOption = formData["delivery-option"];
   const monthsToPay = formData["prepay-months"] || "1";
+  const monthlyShip = (paymentOption === "monthly") && (deliveryOption === 'shipping') ? true : false;
 
   const clubObj = catalog.byId["DONYA6SLBFMWSSJIPK5YRK32"];
   const clubVars = clubObj.item_data.variations;
 
   const clubItem = clubVars.filter((v) => {
-    if (v.item_variation_data.name.includes(monthsToPay)) {
+    if (monthlyShip && v.item_variation_data.name.includes("ship")) {
+      return v;
+    } else if (!monthlyShip && v.item_variation_data.name.includes(monthsToPay)) {
       return v;
     }
   })[0];
 
   cart.clear();
   cart.add(clubItem.id);
+  if (paymentOption === "prepay" && deliveryOption === 'shipping') {
+    const shipping = getShippingItem("national");
+    cart.addShipping(shipping, monthsToPay);
+  }
+
   updateCart();
 }
 
@@ -1910,9 +1959,27 @@ const addClubToCartDesc = (formData) => {
       $clubRow.setAttribute("data-prepay-term", formData["prepay-months"]); // set this to num from formData
       packInfo += ` ${formData["payment-option"]} ${clubOption.term}`;
     }
+    if (formData["gift-option"]) {
+      $clubRow.setAttribute("data-gift-option", true);
+      $clubRow.setAttribute("data-recipient-name", formData["recipientname"]);
+      $clubRow.setAttribute("data-recipient-cell", formData["recipientcell"]);
+      $clubRow.setAttribute("data-recipient-email", formData["recipientemail"]);
+      packInfo += ` gift for ${formData["recipientname"]}`
+    }
     if (formData["delivery-option"]) {
       $clubRow.setAttribute("data-delivery", formData["delivery-option"]);
       packInfo += `, ${formData["delivery-option"]}`;
+    }
+    if (formData["delivery-option"] === 'shipping') {
+      if (formData["addr2"]) {
+        $clubRow.setAttribute("data-address", 
+          `${formData['addr1']}, ${formData['addr2']}, ${formData['city']}, ${formData['state']} ${formData['zip']}`
+        );
+      } else {
+        $clubRow.setAttribute("data-address", 
+          `${formData['addr1']}, ${formData['city']}, ${formData['state']} ${formData['zip']}`
+        );
+      }
     }
     if (formData["customize-pints"]) {
       $clubRow.setAttribute("data-customizations", formData["customize-pints"].toString());
@@ -1942,26 +2009,22 @@ const findClubOption = () => {
   return {
     fp: clubItem.fp,
     variation: variation.id,
+    price: clubItem.price,
     item: item.id,
     term: variationName
   }
 }
 
 const checkRecurringClubInCart = () => {
+  const recurringIds = ["OUWZBAC4OKNWSP5VYPJGTZXS", "MM3E66XXHJQL6TYTLGOI6KV2"];
   let clubInCart = false;
-  const recurringSub = catalog.byId["DONYA6SLBFMWSSJIPK5YRK32"].item_data.variations.filter((v) => {
-    if (v.item_variation_data.name === "1 month" || v.item_variation_data.name === "one month") {
-      return v;
-    }
-  })[0];
-  const recurringSubId = recurringSub.id;
   const cartItems = cart.line_items;
   cartItems.forEach((i) => {
-    if (i.fp.includes(recurringSubId)) {
+    if (recurringIds.includes(i.fp)) {
       clubInCart = true;
       return clubInCart;
     }
-  })
+  });
   return clubInCart;
 }
 
@@ -3434,7 +3497,15 @@ const getFields = (fields) => {
           { title: "payment-option", type: "radio", label: "select payment option", options: [ "prepay", "monthly" ], required: true },
           { title: "customize-pints", type: "checkbox", label: "customize your pints (select any that apply)", src: "packs", options: [ "keep it normal®", "vegan", "half-vegan", "nut free", "gluten free" ] },
           { title: "allergies", type: "text", placeholder: "any allergies? even shellfish, seriously! ya never know!" },
-          { title: "delivery-option", type: "radio", label: "how do you want to get your pints?", options: [ "pickup", "shipping" ], required: true }
+          { title: "delivery-option", type: "radio", label: "how do you want to get your pints?", options: [ "pickup", "shipping" ], required: true },
+          { title: "gift-option", type: "checkbox", label: "give as a gift?", options: [ "yes!" ] }
+        );
+        break;
+      case "pint-club-gift":
+        allFields.push(
+          { data: { fieldtype: "club-gift-recipient" }, title: "recipient-name", type: "text", placeholder: "recipient name", required: true },
+          { data: { fieldtype: "club-gift-recipient" }, title: "recipient-cell", type: "tel", placeholder: "recipient cell", required: true },
+          { data: { fieldtype: "club-gift-recipient" }, title: "recipient-email", type: "email", placeholder: "recipient email", required: true }
         );
         break;
       case "prepay-months": 
@@ -3684,6 +3755,10 @@ const buildCheckoutTool = () => {
 
   $checkoutTable.append($checkoutHead, $checkoutBody, $checkoutFoot);
 
+  // this is the ADD ON ITEMS
+  const $addOnContainer = document.createElement("div");
+    $addOnContainer.classList.add("checkout-addon", "hide");
+
   // this is the CHECKOUT FORM CONTAINER
   const $checkoutFormContainer = document.createElement("div");
     $checkoutFormContainer.classList.add("checkoutform-container", "hide");
@@ -3738,10 +3813,15 @@ const buildCheckoutTool = () => {
         await saveToLocalStorage($form);
         const formData = await getSubmissionData($form);
         let pintMonthlySub = false;
+        let clubOption = {};
         // PINT CLUB SETUP
         if (currentStore === "pint-club") {
-          const clubOption = await findClubOption();
-          if (clubOption.term.includes("1 month") || clubOption.term.includes("one month")) {
+          clubOption = await findClubOption();
+          if (
+            clubOption.term.includes("1 month") || 
+            clubOption.term.includes("one month") ||
+            clubOption.term.includes("prepay ship")
+          ) {
             pintMonthlySub = true;
           }
         }
@@ -3783,7 +3863,6 @@ const buildCheckoutTool = () => {
           }
           /////////////////////////////////////////////////////
         } else if (pintMonthlySub) { // monthly pint-club
-
           // create customer
           const customerData = await createCustomer(formData);
           if (customerData.customer) {
@@ -3792,6 +3871,7 @@ const buildCheckoutTool = () => {
             const $name = document.querySelector("#name");
               $name.setAttribute("data-id", customerData.customer.id);
             await disableCartEdits();
+            await displaySubscriptionObjInfo(clubOption);
             await hideCheckoutForm();
             await buildSquarePaymentForm();
             removeScreensaver();
@@ -3916,6 +3996,43 @@ const displayOrderObjInfo = (orderObj, formData) => {
   }
 }
 
+const displaySubscriptionObjInfo = (clubInfo) => {  
+  const $checkoutTableFooter = document.querySelector(".checkout-table-foot");
+    $checkoutTableFooter.innerHTML = ""; // clear on display
+
+  // TIP INFO
+  const $tipRow = document.createElement("tr");
+
+  const $tipTitle = document.createElement("td");
+    $tipTitle.colSpan = 2;
+    $tipTitle.textContent = "tip";
+
+  const $tipAmount = document.createElement("td");
+    $tipAmount.id = "checkout-foot-tip";
+    $tipAmount.textContent = `$${formatMoney(0)}`;
+
+  $tipRow.append($tipTitle, $tipAmount);  
+
+  // TOTAL ROW
+  const $totalRow = document.createElement("tr");
+    $totalRow.classList.add("highlight");
+
+  const $totalTitle = document.createElement("td");
+    $totalTitle.colSpan = 2;
+    $totalTitle.textContent = "total";
+
+  const $totalAmount = document.createElement("td");
+    $totalAmount.id = "checkout-foot-total";
+    $totalAmount.setAttribute("data-total", clubInfo.price);
+    $totalAmount.textContent = `$${formatMoney(clubInfo.price)}`;
+
+  $totalRow.append($totalTitle, $totalAmount);
+
+  //////////////////////////////////////////////////////////////
+  $checkoutTableFooter.prepend($tipRow, $totalRow);
+  
+}
+
 const buildSquarePaymentForm = () => {
   const $checkoutContainer = document.querySelector(".checkout-container");
   if ($checkoutContainer) {
@@ -4031,7 +4148,9 @@ const buildSquarePaymentForm = () => {
     const recurring = checkRecurringClubInCart();
     
     if (currentStore !== "shipping" && currentStore !== "pint-club") {
-      setDefaultTip();
+      setDefaultTip(20);
+    } else {
+      setDefaultTip(0);
     }
 
     if (currentStore === "merch") {
@@ -4049,12 +4168,12 @@ const buildSquarePaymentForm = () => {
   }
 }
 
-const setDefaultTip = () => {
+const setDefaultTip = (value) => {
   const $tipDropdown = document.querySelector("#tip");
   if ($tipDropdown) {
-    $tipDropdown.value = "20";
+    $tipDropdown.value = value;
     const currentTotal = parseInt(document.querySelector("#checkout-foot-total").getAttribute("data-total"));
-    const tipPercentage = 20;
+    const tipPercentage = value;
     const tipAmount = Math.round(currentTotal * (tipPercentage / 100));
     const tipValue = formatMoney(tipAmount);
     // update tip field
@@ -4241,7 +4360,7 @@ const createCustomer = async (formData) => {
     params += prop + "=" + encodeURIComponent(formData[prop]);
     params += "&";
   }
-  const url = `https://script.google.com/macros/s/AKfycbzkPtpjiyo-AQcSTqSs1kj2kF83Pv5NdQvAZk4fd5g_hM2WSnlY3XFkXA/exec?${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbyKgdhQ_ek7Q5Z7fPNz5nsbc--BJBmSb4UjQKhhrWtF7iPaplZZq9bvxExeKOmW25dY2Q/exec?${params}`;
   let resp = await fetch(url);
   let data = await resp.json();
   return data;
@@ -4278,6 +4397,7 @@ const sendStoreText = async (num) => {
 const addClubToSheet = async () => {
   const $checkoutForm = document.querySelector(".checkout-form");
   const formData = getSubmissionData($checkoutForm);
+
   const clubOption = findClubOption();
   const $clubRow = document.querySelector(`[data-id=${clubOption.fp}]`);
   let packData = {}; 
@@ -4286,15 +4406,25 @@ const addClubToSheet = async () => {
     packData.delivery = $clubRow.getAttribute("data-delivery");
     packData.packType = $clubRow.getAttribute("data-customizations");
     packData.allergies = $clubRow.getAttribute("data-allergies");
+  let giftData = {};
+  if ($clubRow.getAttribute("data-gift-option") === "true") {
+    giftData.recipientName = $clubRow.getAttribute("data-recipient-name");
+    giftData.recipientCell = $clubRow.getAttribute("data-recipient-cell");
+    giftData.recipientEmail = $clubRow.getAttribute("data-recipient-email");
+  }
+  if ($clubRow.getAttribute("data-address")) {
+    formData.address = $clubRow.getAttribute("data-address");
+  }
 
-  const allData = { ...formData, ...packData };
+  const allData = { ...formData, ...packData, ...giftData };
+
   let params = "?";
   for (prop in allData) {
     if (allData[prop]) {
       params += `${prop}=${encodeURIComponent(allData[prop])}&`;
     }
   }
-  const url = `https://script.google.com/macros/s/AKfycbzkPtpjiyo-AQcSTqSs1kj2kF83Pv5NdQvAZk4fd5g_hM2WSnlY3XFkXA/exec${params}`;
+  const url = `https://script.google.com/macros/s/AKfycbyKgdhQ_ek7Q5Z7fPNz5nsbc--BJBmSb4UjQKhhrWtF7iPaplZZq9bvxExeKOmW25dY2Q/exec${params}`;
   let resp = await fetch(url, { method: "POST", mode: "no-cors" });
   return resp;
 }
@@ -4649,14 +4779,14 @@ var cart = {
     }
     cart.store();
   },
-  addShipping: (variation) => {
+  addShipping: (variation, quantity = 1) => {
     var fp = variation;
     var price = catalog.byId[variation].item_variation_data.price_money.amount;
     cart.shipping_item = {
       fp: fp,
       variation: variation,
       mods: [],
-      quantity: 1,
+      quantity: quantity,
       price: price,
     };
   },
@@ -4689,7 +4819,7 @@ var cart = {
   totalAmountWithShipping: () => {
     let total = cart.totalAmount();
     if (cart.shipping_item.price) {
-      total += cart.shipping_item.price;
+      total += (cart.shipping_item.price * cart.shipping_item.quantity);
     }
     return total;
   },
@@ -5125,11 +5255,16 @@ function initPaymentForm(paymentType, currentStore, recurring) {
             return;
           }
 
-          const url = `https://script.google.com/macros/s/AKfycbzkPtpjiyo-AQcSTqSs1kj2kF83Pv5NdQvAZk4fd5g_hM2WSnlY3XFkXA/exec`
+          const url = `https://script.google.com/macros/s/AKfycbyKgdhQ_ek7Q5Z7fPNz5nsbc--BJBmSb4UjQKhhrWtF7iPaplZZq9bvxExeKOmW25dY2Q/exec`
           const customerId = document.querySelector("#name").getAttribute("data-id");
+          const giftOption = document.querySelector('tr[data-gift-option]');
 
-          const qs = `nonce=${nonce}` + 
+          let qs = `nonce=${nonce}` + 
             `&id=${encodeURIComponent(customerId)}`;
+
+          if (giftOption) {
+            qs += `&gift=${giftOption.getAttribute('data-gift-option')}`
+          }
 
           const thisFetch = fetch(url + "?" + qs, {
             method: "GET",
@@ -5227,11 +5362,16 @@ function initPaymentForm(paymentType, currentStore, recurring) {
             return;
           }
 
-          const url = `https://script.google.com/macros/s/AKfycbzkPtpjiyo-AQcSTqSs1kj2kF83Pv5NdQvAZk4fd5g_hM2WSnlY3XFkXA/exec`
+          const url = `https://script.google.com/macros/s/AKfycbyKgdhQ_ek7Q5Z7fPNz5nsbc--BJBmSb4UjQKhhrWtF7iPaplZZq9bvxExeKOmW25dY2Q/exec`
           const customerId = document.querySelector("#name").getAttribute("data-id");
+          const giftOption = document.querySelector('tr[data-gift-option]');
 
-          const qs = `nonce=${nonce}` + 
+          let qs = `nonce=${nonce}` + 
             `&id=${encodeURIComponent(customerId)}`;
+
+          if (giftOption) {
+            qs += `&gift=${giftOption.getAttribute('data-gift-option')}`
+          }
 
           const thisFetch = fetch(url + "?" + qs, {
             method: "GET",

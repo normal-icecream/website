@@ -432,10 +432,12 @@ a {
       border-left: 1px solid currentColor;
       border-right: 1px solid currentColor; }
     .checkout-form .checkout-table-body-selectwrapper,
-    .checkout-form input#zip {
+    .checkout-form input#zip,
+    .customize-form input#zip {
       display: inline-block; }
       .checkout-form .checkout-table-body-selectwrapper[data-fieldtype=address],
-      .checkout-form input#zip[data-fieldtype=address] {
+      .checkout-form input#zip[data-fieldtype=address],
+      .customize-form input#zip[data-fieldtype=address] {
         width: calc(100% / 3); }
   .checkout-table-body-field, .checkout-table-body-selectwrapper, .checkout-table-body-radio, .checkout-table-body-checkbox {
     text-align: left;
@@ -510,7 +512,8 @@ a {
   .checkout-form #state {
     width: 20%; }
   .checkout-form .checkout-table-body-selectwrapper[data-fieldtype=address],
-  .checkout-form input#zip[data-fieldtype=address] {
+  .checkout-form input#zip[data-fieldtype=address],
+  .customize-form input#zip[data-fieldtype=address] {
     width: 40%; } }
 
 @media only screen and (max-width: 46.4rem) {
@@ -547,7 +550,8 @@ a {
     width: 50%;
     border-left: 0; }
   .checkout-form .checkout-table-body-selectwrapper[data-fieldtype=address],
-  .checkout-form input#zip[data-fieldtype=address] {
+  .checkout-form input#zip[data-fieldtype=address],
+  .customize-form input#zip[data-fieldtype=address] {
     width: 50%; } }
 
 .quantity {
