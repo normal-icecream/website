@@ -994,7 +994,7 @@ const getOrderDays = (store, openObj) => {
     i = 0;
   }
 
-  for (i; i < 7; i++) {
+  for (i; i < 8; i++) {
     const temp = new Date();
     const next = temp.setDate(today.getDate() + i);
     const nextObj = new Date(next);
@@ -1041,16 +1041,6 @@ const getOrderHours = (store) => {
   let startTimeObj;
 
   const selectedDate = new Date(document.getElementById('pickupdate').value);
-  const newDate = new Date(date);
-  
-  const selectedYear = selectedDate.getFullYear();
-  newDate.setFullYear(selectedYear);
-  
-  const selectedMonth = selectedDate.getMonth();
-  newDate.setMonth(selectedMonth)
-  
-  const selectedDay = selectedDate.getDate();
-  newDate.setDate(selectedDay);
 
   if (now < openObj.string || date < selectedDate) { // BEFORE OPENING
     startTimeObj = new Date(selectedDate.setHours(openObj.hour, openObj.minute, 0));
