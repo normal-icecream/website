@@ -1123,10 +1123,12 @@ svg {
     height: 18rem; }
 
 #about svg.icon-arrow-down, #aboutstarburst svg.icon-arrow-down,
+main svg.icon-arrow-down,
 #pintclub svg.icon-arrow-down, #pintclubstarburst svg.icon-arrow-down {
   cursor: pointer;
   transition: 0.1s all; }
   #about svg.icon-arrow-down:hover, #aboutstarburst svg.icon-arrow-down:hover,
+  main svg.icon-arrow-down:hover,
   #pintclub svg.icon-arrow-down:hover, #pintclubstarburst svg.icon-arrow-down:hover {
     transform: scaleY(1.2) translateY(0.6rem); }
 
@@ -1656,28 +1658,46 @@ h2#soft-serve ~ h3 {
       display: block;
       max-width: 100%;
       margin-bottom: 4rem; }
-
-.menu {
+.recipe h3 {
+  font-weight: var(--weight-bold);
+  font-size: 200%;
+  margin-bottom: 3rem;
+}
+.recipe ul {
+  list-style: none;
+  line-height: 1.2;
+}
+.recipe ul li {
+  margin: .5rem 0;
+}
+.recipe ol {
+  text-align: left;
+  line-height: 1.2;
+}
+.recipe ol li {
+  margin: 1rem 0;
+}
+.menu, .recipe {
   position: relative;
   margin-top: 4rem;
   padding: 2rem 0; }
-  .menu img {
+  .menu img, .recipe img {
     height: 20rem;
     max-width: 100%;
     object-fit: contain; }
-  .menu-filled > * {
+  .menu-filled > *, .recipe-filled > * {
     padding-left: 33%;
     padding-right: 33%; }
   .menu-carousel {
     padding: 0.5rem 0 1rem; }
-  .menu p {
+  .menu p, .recipe p  {
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-style: normal;
     font-size: 60%;
     line-height: 1.4;
     margin-top: 0.4rem; }
-    .menu p img {
+    .menu p img, .recipe p img {
       margin-top: 1rem;
       height: 20rem;
       max-width: 100%;
@@ -1685,9 +1705,10 @@ h2#soft-serve ~ h3 {
       transition: 0.2s all;
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden; }
-      .menu p img:hover, .menu p img:focus {
+      .menu p img:hover, .menu p img:focus,
+      .recipe p img:hover, .recipe p img:focus {
         transform: translateY(0.5rem) scale(1.2) rotate(-3deg); }
-  .menu a {
+  .menu a, .recipe a {
     font-family: acumin-pro-extra-condensed, sans-serif;
     font-weight: 600;
     font-style: normal;
@@ -1712,12 +1733,12 @@ h2#soft-serve ~ h3 {
   color: #FFFCF3; }
 
 @media only screen and (max-width: 76.8rem) {
-  .menu-filled > * {
+  .menu-filled > *, .recipe-filled > * {
     padding-left: 25%;
     padding-right: 25%; } }
 
 @media only screen and (max-width: 46.4rem) {
-  .menu-filled > * {
+  .menu-filled > *, .recipe-filled > * {
     padding-left: 2rem;
     padding-right: 2rem; } }
 
@@ -1889,11 +1910,11 @@ div#meettheteam img {
       margin-right: 0;
       text-align: center; } }
 
-.embed-internal-pintbanner {
+.embed-full-carousel {
   position: absolute;
   left: 0;
   width: calc(100vw - (100vw - 100%)); }
-  .embed-internal-pintbanner > div p {
+  .embed-full-carousel > div p {
     position: relative;
     height: 60rem;
     display: flex;
@@ -1901,14 +1922,14 @@ div#meettheteam img {
     overflow-x: scroll;
     overflow-y: hidden;
     scroll-behavior: smooth; }
-    .embed-internal-pintbanner > div p::-webkit-scrollbar {
+    .embed-full-carousel > div p::-webkit-scrollbar {
       width: 1rem; }
-    .embed-internal-pintbanner > div p::-webkit-scrollbar-track, .embed-internal-pintbanner > div p::-webkit-scrollbar-thumb {
+    .embed-full-carousel > div p::-webkit-scrollbar-track, .embed-full-carousel > div p::-webkit-scrollbar-thumb {
       background: #FFFCF3; }
-    .embed-internal-pintbanner > div p img, .embed-internal-pintbanner > div p source {
+    .embed-full-carousel > div p img, .embed-full-carousel > div p source {
       height: 60rem;
       object-fit: cover; }
-      .embed-internal-pintbanner > div p img:not(:last-child), .embed-internal-pintbanner > div p source:not(:last-child) {
+      .embed-full-carousel > div p img:not(:last-child), .embed-full-carousel > div p source:not(:last-child) {
         margin-right: 1rem; }
 
 h2#welcome-to-normal-pint-club, h2#welcome-to-normalreg-pint-club {
@@ -1996,11 +2017,13 @@ h2#normal-pint-club-faq, h2#normal-pint-club-faqs, h2#normalreg-pint-club-faq, h
   h2#options ~ ul > li {
     width: 100%; } }
 
-#pintclub .pintclub-logo, #pintclubstarburst .pintclub-logo {
+#pintclub .pintclub-logo, #pintclubstarburst .pintclub-logo,
+main .floated-logo {
   position: absolute;
   z-index: 2;
   right: 12%; }
-  #pintclub .pintclub-logo svg, #pintclubstarburst .pintclub-logo svg {
+  #pintclub .pintclub-logo svg, #pintclubstarburst .pintclub-logo svg,
+  main .floated-logo svg {
     transform: translateY(-11rem); }
 
 #pintclub .p-options, #pintclubstarburst .p-options {
@@ -2032,9 +2055,11 @@ h2#normal-pint-club-faq, h2#normal-pint-club-faqs, h2#normalreg-pint-club-faq, h
       display: none; }
 
 @media only screen and (max-width: 76.8rem) {
-  #pintclub h1#normalreg, #pintclubstarburst h1#normalreg {
+  #pintclub h1#normalreg, #pintclubstarburst h1#normalreg,
+  #recipesbloodorangetart h1#normalreg {
     margin-bottom: 10rem; }
-  #pintclub h2.welcometonormalpintclub, #pintclubstarburst h2.welcometonormalpintclub {
+  #pintclub h2.welcometonormalpintclub, #pintclubstarburst h2.welcometonormalpintclub,
+  h2.welcometonormalrecipes {
     margin-top: calc(60rem + 4rem + 10rem); } }
 
 @media only screen and (max-width: 46.4rem) {
@@ -2268,13 +2293,13 @@ h2#normal-pint-club-faq, h2#normal-pint-club-faqs, h2#normalreg-pint-club-faq, h
     .theme-bluewhite .checkout-table-body-quantity .quantity {
       background: #0D26F9;
       color: #FFFCF3; }
-  .theme-bluewhite .menu-filled {
+  .theme-bluewhite .menu-filled, .theme-bluewhite .recipe-filled {
     background: #FFFCF3;
     color: #0D26F9; }
-    .theme-bluewhite .menu-filled:nth-child(odd) {
+    .theme-bluewhite .menu-filled:nth-child(odd), .theme-bluewhite .recipe-filled:nth-child(odd) {
       background: #FFD4CC;
       color: #0D26F9; }
-    .theme-bluewhite .menu-filled .btn-rect {
+    .theme-bluewhite .menu-filled .btn-rect, .theme-bluewhite .recipe-filled .btn-rect  {
       background: #0D26F9 !important;
       color: #FFFCF3 !important; }
   .theme-bluewhite .menu-carousel-btn {
@@ -2441,10 +2466,10 @@ h2#normal-pint-club-faq, h2#normal-pint-club-faqs, h2#normalreg-pint-club-faq, h
         color: #0D26F9; }
   .theme-white .checkout-table-foot-total {
     background: #F7FF25; }
-  .theme-white .menu-filled {
+  .theme-white .menu-filled, .theme-white .recipe-filled {
     background: #0D26F9;
     color: #FFFCF3; }
-    .theme-white .menu-filled .btn-rect {
+    .theme-white .menu-filled .btn-rect, .theme-white .recipe-filled .btn-rect {
       background: #FFFCF3;
       color: #0D26F9; }
   .theme-white .menu-carousel-btn {

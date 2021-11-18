@@ -1,0 +1,22 @@
+.columns > div {
+  margin: 4rem 0;
+}
+
+.columns > div > *:not(:first-child) {
+  margin-top: 4rem;
+}
+
+@media (min-width: 786px) {
+  .columns > div {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .columns > div.columns-2 > * {
+    width: calc((100% / 2) - 2rem);
+  }
+
+  .columns > div > *:not(:first-child) {
+    margin-top: 0;
+  }
+}

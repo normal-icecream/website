@@ -103,7 +103,10 @@ export function readBlockConfig(block) {
   document
     .querySelectorAll('div.block')
     .forEach(async(block) => {
-      if ([...block.classList].includes('popup')) {
+      if (
+        [...block.classList].includes('popup') ||
+        [...block.classList].includes('columns')
+      ) {
         loadBlock(block);
       }
     });
@@ -136,7 +139,7 @@ export function readBlockConfig(block) {
  */
 function decorateBlock(block) {
   const name = block.classList[0];
-  if (name === 'popup') {
+  if (name === 'popup' || name === 'columns') {
     block.classList.add('block');
     block.setAttribute('data-block-name', name);
     const clone = block.cloneNode(true)

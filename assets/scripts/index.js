@@ -31,6 +31,8 @@ const getPage = () => {
     return "cone-builder";
   } else if (path.includes("merch")) {
     return "merch";
+  } else if (path.includes("recipes")) {
+    return "recipes";
   } else if (path.includes("catering")) {
     return "catering";
   } else if (path.includes("wholesale")) {
@@ -99,6 +101,13 @@ const setPage = () => {
       buildClubFAQ();
       fixCart();
       buildCustomizationTool();
+      setupDownAnchors();
+      break;
+    case "recipes":
+      console.log('recipes page');
+      floatPintLogo();
+      buildPintBanner();
+      styleRecipes();
       setupDownAnchors();
       break;
     case "cone-builder":
@@ -784,6 +793,21 @@ const styleMenus = () => {
         } else {
           d.classList.add("menu-filled", "theme-filled");
         }
+      }
+    }
+  })
+}
+
+const styleRecipes = () => {
+  const $main = document.querySelector("main");
+  const $divs = [ ...$main.querySelectorAll("div")];
+  $divs.forEach((d) => {
+    if (d.firstElementChild) {
+      if (
+          d.firstElementChild.nodeName === "H3" 
+      ) {
+        d.classList.add("recipe");
+        d.classList.add("recipe-filled", "theme-filled");
       }
     }
   })
@@ -1836,16 +1860,20 @@ const buildLocationBlock = (location) => {
 PINT CLUB PAGE
 ==========================================================*/
 const floatPintLogo = () => {
-  const $pintLogo = document.querySelector("svg.icon-pint-club");
-  if ($pintLogo) {
-    const $parent = $pintLogo.parentNode;
+  console.log('float logo runnin');
+  const main = document.querySelector('main');
+  const $logo = main.querySelector('svg.icon:not(.icon-reg)');
+  if ($logo) {
+    const $parent = $logo.parentNode;
     $parent.classList.add("pintclub-logo");
+    $parent.classList.add("floated-logo");
   }
 }
 
 const buildPintBanner = () => {
-  const $pintbanner = document.querySelector(".embed-internal-pintbanner div p");
+  const $pintbanner = document.querySelector(".embed-internal div p");
   if ($pintbanner) {
+    $pintbanner.parentNode.parentNode.classList.add('embed-full-carousel');
     // set horizonal scroll on banner
     $pintbanner.onwheel = (e) => {
       if (e.wheelDelta < 0) {
