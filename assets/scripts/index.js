@@ -104,7 +104,6 @@ const setPage = () => {
       setupDownAnchors();
       break;
     case "recipes":
-      console.log('recipes page');
       floatPintLogo();
       buildPintBanner();
       styleRecipes();
@@ -1860,7 +1859,6 @@ const buildLocationBlock = (location) => {
 PINT CLUB PAGE
 ==========================================================*/
 const floatPintLogo = () => {
-  console.log('float logo runnin');
   const main = document.querySelector('main');
   const $logo = main.querySelector('svg.icon:not(.icon-reg)');
   if ($logo) {
