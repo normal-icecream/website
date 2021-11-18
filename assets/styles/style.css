@@ -153,7 +153,10 @@ ol {
   margin-left: 2.6rem; }
 
 ol li::marker {
-  font-family: monospace; }
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-size: 70%;
+  font-style: normal; }
 
 ul {
   margin-left: 1.8rem; }
@@ -1932,7 +1935,8 @@ div#meettheteam img {
       .embed-full-carousel > div p img:not(:last-child), .embed-full-carousel > div p source:not(:last-child) {
         margin-right: 1rem; }
 
-h2#welcome-to-normal-pint-club, h2#welcome-to-normalreg-pint-club {
+h2#welcome-to-normal-pint-club, h2#welcome-to-normalreg-pint-club,
+h2#welcome-to-normal-recipes, h2#welcome-to-normalreg-recipes {
   margin-top: calc(60rem + 4rem); }
 
 h2#how-it-works {
@@ -2056,7 +2060,7 @@ main .floated-logo {
 
 @media only screen and (max-width: 76.8rem) {
   #pintclub h1#normalreg, #pintclubstarburst h1#normalreg,
-  #recipesbloodorangetart h1#normalreg {
+  #recipesbloodorangetart {
     margin-bottom: 10rem; }
   #pintclub h2.welcometonormalpintclub, #pintclubstarburst h2.welcometonormalpintclub,
   h2.welcometonormalrecipes {
