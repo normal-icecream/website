@@ -2060,10 +2060,10 @@ main .floated-logo {
 
 @media only screen and (max-width: 76.8rem) {
   #pintclub h1#normalreg, #pintclubstarburst h1#normalreg,
-  #recipesbloodorangetart {
+  #recipesbloodorangetart h1#normalreg {
     margin-bottom: 10rem; }
   #pintclub h2.welcometonormalpintclub, #pintclubstarburst h2.welcometonormalpintclub,
-  h2.welcometonormalrecipes {
+  #recipesbloodorangetart h2.welcometonormalrecipes {
     margin-top: calc(60rem + 4rem + 10rem); } }
 
 @media only screen and (max-width: 46.4rem) {
