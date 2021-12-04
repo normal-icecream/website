@@ -105,7 +105,8 @@ export function readBlockConfig(block) {
     .forEach(async(block) => {
       if (
         [...block.classList].includes('popup') ||
-        [...block.classList].includes('columns')
+        [...block.classList].includes('columns') ||
+        [...block.classList].includes('carousel-builder')
       ) {
         loadBlock(block);
       }
@@ -116,7 +117,7 @@ export function readBlockConfig(block) {
  * Loads JS and CSS for a single block.
  * @param {Element} block The block element
  */
- async function loadBlock(block) {
+async function loadBlock(block) {
   if (!block.getAttribute('data-block-loaded')) {
     block.setAttribute('data-block-loaded', true);
     const name = block.getAttribute('data-block-name');
@@ -139,7 +140,7 @@ export function readBlockConfig(block) {
  */
 function decorateBlock(block) {
   const name = block.classList[0];
-  if (name === 'popup' || name === 'columns') {
+  if (name === 'popup' || name === 'columns' || name === 'carousel-builder') {
     block.classList.add('block');
     block.setAttribute('data-block-name', name);
     const clone = block.cloneNode(true)
