@@ -554,10 +554,50 @@ const fetchShippingPacks = async () => {
 /*==========================================================
 INDEX PAGE
 ==========================================================*/
-const buildIndexCarousel = () => {
+const fetchCarouselMedia = async () => {
+  const resp = await fetch('/_admin/carousel-builder.json', { cache: 'no-cache' });
+  const json = await resp.json();
+  const data = json.data.sort((a, b) => (a.order > b.order) ? 1 : -1)
+  return data;
+}
+
+function buildMedia(media) {
+  let med;
+  if (media.type === 'VIDEO') {
+    med = document.createElement('video');
+    med.setAttribute('type', 'video/mp4');
+    med.playsinline = true;
+    med.autoplay = true;
+    med.loop = true;
+    med.muted = true;
+    const postSrc = document.createElement('source');
+    postSrc.src = media.url;
+    med.append(postSrc);
+  } else {
+    med = document.createElement('picture');
+    const postSrc = document.createElement('img');
+    postSrc.src = media.url;
+    med.append(postSrc);
+  }
+  return med;
+}
+
+const buildIndexCarousel = async () => {
   const $carousel = document.querySelector(".embed-internal-indexcarousel");
-  
+  $carousel.innerHTML = '';
+
   if ($carousel) {
+
+    const media = await fetchCarouselMedia();
+    media.forEach((m) => {
+      const a = document.createElement('a');
+      a.href = m.link;
+      a.setAttribute('target', '_blank');
+      const med = buildMedia(m);
+      a.append(med);
+      $carousel.append(a);
+    });
+
     $carousel.onwheel = (e) => {     // set horizonal scroll on carousel
       if (e.wheelDelta < 0) {
         $carousel.scrollLeft += 468;

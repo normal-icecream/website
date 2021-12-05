@@ -1497,7 +1497,22 @@ h2#carousel + div.embed {
       h2#carousel + div.embed div p img {
         height: 30rem;
         max-width: 100%; } }
-
+div.embed-internal-indexcarousel a video,
+div.embed-internal-indexcarousel a img {
+  width: 100%;
+}
+@media (min-width: 46.4rem) {
+  div.embed-internal-indexcarousel {
+    display: flex;
+    overflow-x: hidden;
+  }
+  div.embed-internal-indexcarousel a video,
+  div.embed-internal-indexcarousel a img {
+    height: 80vh;
+    width: auto;
+    margin-right: 2rem;
+  }
+}
 div.embed-internal-indexcarousel + p {
   position: relative;
   text-align: left; }
