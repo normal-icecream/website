@@ -1471,7 +1471,9 @@ h2#carousel + div.embed {
   margin: 0;
   padding: 0;
   overflow-x: scroll;
-  scroll-behavior: smooth; }
+  scroll-behavior: smooth; 
+  padding-left: 10%;
+}
   h2#carousel + div.embed::-webkit-scrollbar {
     width: 1rem; }
   h2#carousel + div.embed::-webkit-scrollbar-track, h2#carousel + div.embed::-webkit-scrollbar-thumb {
@@ -1550,10 +1552,11 @@ div.p-carousel {
 #index {
   display: flex;
   flex-flow: column wrap;
-  width: 1200px;
-  max-width: 80%;
-  margin: 0 auto;
-  padding: 1.8rem 0; }
+  /* width: 1200px; */
+  /* max-width: 80%; */
+  /* margin: 0 auto; */
+  /* padding: 1.8rem 0;  */
+}
   #index h1 {
     text-align: left; }
 

@@ -587,6 +587,8 @@ const buildIndexCarousel = async () => {
   $carousel.innerHTML = '';
 
   if ($carousel) {
+    const $h1 = document.querySelector('h1');
+    const $nav = document.querySelector('#nav + ul');
 
     const media = await fetchCarouselMedia();
     media.forEach((m) => {
@@ -594,6 +596,11 @@ const buildIndexCarousel = async () => {
       a.href = m.link;
       a.setAttribute('target', '_blank');
       const med = buildMedia(m);
+      if (med.querySelector('img')) {
+        med.querySelector('img')
+          .setAttribute('height', $h1.offsetHeight + $nav.offsetHeight);
+      }
+      med.firstChild.style.height = $h1.offsetHeight + $nav.offsetHeight + 'px';
       a.append(med);
       $carousel.append(a);
     });
