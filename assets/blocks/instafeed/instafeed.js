@@ -23,7 +23,7 @@ import {
   removeScreensaver,
 } from '../../utils/screensaver/screensaver.js';
 
-const INSTAFEED_ID = 'AKfycbz7IGXP3CWKxfZ6hZbhv3Z-ttJHpKj5IXwW1ZuIpeSXlNgQXzKgYpDuzG5j3UNH9ahAWg';
+const INSTAFEED_ID = 'AKfycbxYj2ahCJexVmZt8Pe0_WXCGuWN6CbBFvpvJ0H1MmNMa7T7RpGnvug4hMOG2GtQS5r6';
 
 async function addToCarousel(btn) {
   buildScreensaver('adding image to carousel...');

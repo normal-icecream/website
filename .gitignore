@@ -1,2 +1,4 @@
-node_modules/
-.DS_Store
+.DS_STORE
+.hlx/*
+logs/*
+node_modules/*
