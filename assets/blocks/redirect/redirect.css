@@ -1,4 +1,4 @@
-.redirect-container, .redirect {
+.redirect-container, .redirect-container .redirect {
   visibility: hidden;
   display: none;
 }
