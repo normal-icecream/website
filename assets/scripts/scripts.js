@@ -406,7 +406,7 @@ export function normalizeHeadings(el, allowedHeadings) {
  * Decorates the picture elements.
  * @param {Element} main The container element
  */
-function decoratePictures(main) {
+export function decoratePictures(main) {
   main.querySelectorAll('img[src*="/media_"').forEach((img, i) => {
     const newPicture = createOptimizedPicture(img.src, img.alt, !i);
     const picture = img.closest('picture');
@@ -585,11 +585,11 @@ function decorateSquareLink(a) {
   const squarePrefix = 'https://squareup.com/dashboard/items/library/';
   const giftcardPrefix = 'https://squareup.com/gift/';
   const href = a.getAttribute('href');
-  if (href.startsWith(squarePrefix)) {
+  if (href && href.startsWith(squarePrefix)) {
     const id = href.substr(squarePrefix.length);
     a.setAttribute('data-id', id);
     a.removeAttribute('href');
-  } else if (href.includes(giftcardPrefix)) {
+  } else if (href && href.includes(giftcardPrefix)) {
     a.target = '_blank';
   }
 }
@@ -717,7 +717,6 @@ function removeEmptySections(main) {
 export function decorateMain(main) {
   classify(main);
   loadHeader();
-  squarify(main);
   replaceSVGs(main);
   // forward compatible pictures redecoration
   decoratePictures(main);
@@ -861,6 +860,7 @@ async function loadLazy(doc) {
   loadCSS('/assets/styles/lazy-styles.css');
   loadBlocks(main);
   buildAutoBlocks(main);
+  squarify(main);
 }
 
 export async function fetchFormFields() {

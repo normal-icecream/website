@@ -7,6 +7,7 @@ import {
   buildGQs,
   createEl,
   createSVG,
+  decoratePictures,
   fetchCatalog,
   fetchMenu,
   getCurrentStore,
@@ -283,7 +284,7 @@ function writeLabelText(str, vari) {
   if (text === 'soft serve') {
     text += ' flavor (select 1)';
   } else if (text === 'topping') {
-    text += 's (select up to 3';
+    text += 's (select up to 3)';
   } else if ((vari && vari.includes(' size'))
     || (vari && vari.includes(' oz'))) {
     text = 'select a size';
@@ -664,6 +665,7 @@ export async function configShippingItem(item) {
     text: 'add to cart',
   });
   await populateShippingBody(item);
+  decoratePictures(document.querySelector('main'));
   populateShippingFoot();
   await showCustomize();
   removeScreensaver();
