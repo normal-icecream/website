@@ -68,7 +68,7 @@ function buildLabel(field, option) {
 function buildSquareLabel(field, option) {
   const label = createEl('label', {
     class: `form-${field.type}-option`,
-    for: (option.name.toString().includes(' ') ? toClassName(option.name) : option.name),
+    for: toClassName(`${option.name} ${field.title}`),
     text: option.price > 0 ? `${option.name} (+$${option.price})` : option.name,
   });
   const bubble = createEl('span', {
@@ -76,7 +76,7 @@ function buildSquareLabel(field, option) {
   });
   const optionEl = createEl('input', {
     class: `form-${field.type}-default`,
-    id: (option.name.toString().includes(' ') ? toClassName(option.name) : option.name),
+    id: toClassName(`${option.name} ${field.title}`),
     name: field.title,
     type: field.type,
   });
