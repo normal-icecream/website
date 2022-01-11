@@ -22,10 +22,24 @@
 }
 
 .auth .auth-form {
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   border: 1px solid;
   font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-size: var(--heading-size-xs);
+}
+
+.auth .auth-form #login {
+  order: 1;
+}
+
+.auth .auth-form #password {
+  order: 2;
+}
+
+.auth .auth-form button {
+  order: 3;
 }
 
 @media (min-width: 464px) {

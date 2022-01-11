@@ -239,7 +239,7 @@ THREAD
   margin: 0 auto;
   padding-top: var(--pad-m);
   padding-bottom: var(--pad-xxl);
-  margin-bottom: calc(var(--pad-m) + env(safe-area-inset-bottom, var(--pad-m)));
+  margin-bottom: calc(var(--pad-m) + env(safe-area-inset-bottom, var(--pad-xxl)));
 }
 
 .messages-thread .messages-thread-foot form {
