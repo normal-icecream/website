@@ -10,7 +10,7 @@ input, label, select, textarea {
   vertical-align: middle;
   white-space: normal;
   background: none;
-  font-family: acumin-pro-extra-condensed;
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-weight: var(--weight-bold);
   transition: font-size 0.2s;
 }

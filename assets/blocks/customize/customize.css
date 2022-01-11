@@ -69,8 +69,7 @@ FOOT
 CAROUSEL BUTTONS
 ----------------------- */
 .customize .customize-btn-wrapper {
-  /* background: gold; */
-  font-family: acumin-pro-extra-condensed;
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-weight: var(--weight-bold);
   font-size: var(--heading-size-xs);
 }

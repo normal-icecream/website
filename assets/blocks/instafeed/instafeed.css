@@ -7,7 +7,7 @@ BUTTON WRAPPER & BUTTONS
   padding: var(--pad-l);
   border: 1px solid var(--color-blue);
   background: var(--color-lt-gray);
-  font-family: 'acumin-pro-extra-condensed';
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-size: var(--heading-size-xs);
   font-weight: var(--weight-bold);
   text-align: center;
@@ -56,7 +56,7 @@ CAROUSEL
   display: flex;
   width: 100%;
   max-width: 100%;
-  font-family: 'acumin-pro-extra-condensed';
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-size: var(--heading-size-xs);
 }
 
@@ -120,7 +120,7 @@ FEED
   align-items: center;
   justify-content: center;
   min-height: 48px;
-  font-family: 'acumin-pro-extra-condensed';
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-size: var(--heading-size-xs);
   font-weight: var(--weight-bold);
 }

@@ -24,7 +24,7 @@
 .auth .auth-form {
   margin: 0 auto;
   border: 1px solid;
-  font-family: 'acumin-pro-extra-condensed';
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-size: var(--heading-size-xs);
 }
 

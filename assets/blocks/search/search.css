@@ -1,24 +1,7 @@
-/* @media (min-width: 464px) {
-  .search .search-form {
-    border-top: 1rem solid var(--color-green);
-  }
-}
-@media (min-width: 768px) {
-  .search .search-form {
-    border-top: 1rem solid var(--color-yellow);
-  }
-}
-@media (min-width: 1200px) {
-  .search .search-form {
-    border-top: 1rem solid var(--color-red);
-  }
-} */
-
-
 .search .search-form {
   display: flex;
   flex-wrap: wrap;
-  font-family: 'acumin-pro-extra-condensed';
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-size: var(--heading-size-xs);
 }
 

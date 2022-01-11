@@ -139,7 +139,7 @@
   padding: var(--pad-m) var(--pad-l);
   color: var(--color-white);
   background-color: var(--color-blue);
-  font-family: 'acumin-pro-extra-condensed';
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-weight: var(--weight-bold);
   font-size: calc(var(--body-size-l) * 1.1);
   cursor: pointer;
@@ -167,7 +167,7 @@
   padding-bottom: var(--pad-l);
   min-height: 48px;
   visibility: hidden;
-  font-family: 'acumin-pro-extra-condensed';
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-size: var(--heading-size-s);
   font-weight: var(--weight-bold);
 }

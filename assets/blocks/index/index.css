@@ -49,7 +49,7 @@ NAV
 
 .index-wrapper .index-nav ul li,
 .index-wrapper .index-carousel .index-carousel-attr {
-  font-family: 'acumin-pro-extra-condensed';
+  font-family: 'acumin-pro-extra-condensed', 'Arial Narrow', sans-serif;
   font-weight: var(--weight-bold);
   font-size: var(--heading-size-s);
   border-bottom: 1px solid currentColor;
