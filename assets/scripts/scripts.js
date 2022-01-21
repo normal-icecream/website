@@ -736,11 +736,10 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     await pagify(main);
-    doc.querySelector('body').classList.add('appear');
-
     const block = doc.querySelector('.block');
     const hasLCPBlock = (block && LCP_BLOCKS.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
+    doc.querySelector('body').classList.add('appear');
     const lcpCandidate = doc.querySelector('main img');
     const loaded = {
       then: (resolve) => {

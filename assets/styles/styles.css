@@ -89,6 +89,14 @@ html, body {
   font-weight: 500;
 }
 
+body {
+  visibility: hidden;
+}
+
+body.appear {
+  visibility: unset;
+}
+
 h1, h2, h3, h4, h5 {
   font-family: 'Arial Narrow', sans-serif;
   line-height: 1;
