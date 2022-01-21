@@ -599,7 +599,7 @@ async function squarify(main) {
   if (!metaHide || !metaHide.includes('cart')) {
     const squareLink = main.querySelector('a[href^="https://squareup"');
     if (squareLink) {
-      main.querySelectorAll('a').forEach((a) => {
+      main.querySelectorAll('a[href^="https://squareup"').forEach((a) => {
         decorateSquareLink(a);
       });
     }

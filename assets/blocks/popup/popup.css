@@ -51,6 +51,11 @@ main .popup {
   color: var(--color-white);
 }
 
+.popup.popup-red .btn.btn-rect {
+  background: var(--color-yellow);
+  color: var(--color-red);
+}
+
 .popup.popup-red .btn.btn-close:hover,
 .popup.popup-red .btn.btn-close:focus {
   background: var(--color-white);
