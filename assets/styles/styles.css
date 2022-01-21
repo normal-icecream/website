@@ -95,6 +95,9 @@ body {
 
 body.appear {
   visibility: unset;
+  animation-name: fadeIn;
+  animation-timing-function: ease-in;
+  animation-duration: 0.4s;
 }
 
 h1, h2, h3, h4, h5 {
