@@ -15,7 +15,7 @@ function getGId(type) {
     case 'shipping':
       return 'AKfycbzsC2PCET2DvZk9UFG5L591i0nUS_DGrzHSmQoQGCc6tgI5FQ3RQ2AeP_0kJeCD5MOmQQ';
     case 'club': // see square.js
-      return 'AKfycbxQSGSH3hT7vkujzXPVme2EN5Ux_DMczr67svPbcCw8aCcXeE_7TSYdgV5jRixaJEV5';
+      return 'AKfycbxGamyac1gglM4_aKBkozYF8KeK4cCz4ah9ISQKZP_EjLqpWqrUEIiS5C1hrHXn4riL';
     default:
       return false;
   }
