@@ -771,7 +771,7 @@ export function getOrderCredentials(store) {
     window.location_id = 'WPBKJEG0HRQ9F';
     return {
       name: store,
-      endpoint: 'AKfycbxQSGSH3hT7vkujzXPVme2EN5Ux_DMczr67svPbcCw8aCcXeE_7TSYdgV5jRixaJEV5', // see admin.js, club
+      endpoint: 'AKfycbxGamyac1gglM4_aKBkozYF8KeK4cCz4ah9ISQKZP_EjLqpWqrUEIiS5C1hrHXn4riL', // see admin.js, club
       location: 'WPBKJEG0HRQ9F',
     };
   }

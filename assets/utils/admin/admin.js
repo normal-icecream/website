@@ -9,7 +9,7 @@ function getGId(type) {
     case 'auth':
       return 'AKfycbxX6iCeru2Y3sS5z-GHT-a3lzsAGLGz_6SbNjdDL1lz2mBKfCfytL8RPTnKtntf7--D';
     case 'email':
-      return 'AKfycbwgQ3cEgPfJvDk_AEhntT-Loedg-LMYStzuNVRtMI9V_K9cdYlntTRpwaefyQq0QYO4KA';
+      return 'AKfycbxGNL3GAxNF4OzJiCOqbJB_8LzsZOgl9GuAbUo5J8ZDiu9opbgsGPrpmD8pCX5LCBcygw';
     case 'text': // see messages.js
       return 'AKfycbyj25ygCc6SvxJ9KCzdQSmiqz3emxuIJdNVzTXKjw3F88gdxClNLtq3PyNGgB2ca7FELA';
     case 'shipping':
