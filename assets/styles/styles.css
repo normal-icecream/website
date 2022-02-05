@@ -75,6 +75,7 @@ RESET
 html {
   font-size: 62.5% !important; /* setting 1rem to 10px */
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* --------------------

@@ -888,6 +888,16 @@ export async function fetchFormFields() {
   return window.formFields;
 }
 
+function externalizeLinks() {
+  document.querySelectorAll('a[href]').forEach((a) => {
+    console.log('a:', a);
+    const { origin } = new URL(a.href);
+    if (!origin.includes('normal')) {
+      a.setAttribute('target', '_blank');
+    }
+  });
+}
+
 /**
  * loads everything that happens a lot later, without impacting
  * the user experience.
@@ -895,6 +905,7 @@ export async function fetchFormFields() {
 function loadDelayed() {
   // load anything that can be postponed to the latest here
   loadFooter();
+  externalizeLinks();
   fetchFormFields();
   loadCSS('/assets/utils/forms/forms.css');
   fetchCatalog();
@@ -907,7 +918,9 @@ function loadDelayed() {
 async function decoratePage(doc) {
   await loadEager(doc);
   loadLazy(doc);
-  loadDelayed(doc);
+  setTimeout(() => {
+    loadDelayed(doc);
+  }, 3 * 1000);
 }
 
 decoratePage(document);
