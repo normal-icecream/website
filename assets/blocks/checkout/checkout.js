@@ -331,6 +331,14 @@ export async function populateCheckoutTable() {
         foot.append(tr);
         // populate checkout items
         await populateCheckoutItems();
+        const coFoot = document.querySelector('.checkout .checkout-foot');
+        if (coFoot) {
+          const a = coFoot.querySelector('a');
+          if (a) {
+            a.classList.remove('btn-disable');
+          }
+        }
+        showCheckoutForm();
       } else {
         // nothing in cart
         const labels = await fetchLabels();
