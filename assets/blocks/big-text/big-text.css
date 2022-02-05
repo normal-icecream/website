@@ -9,3 +9,8 @@ main .section-wrapper .big-text {
   line-height: 1.1;
   padding-bottom: var(--pad-l);
 }
+
+.big-text div a.btn.btn-rect {
+  background: var(--color-blue);
+  color: var(--color-white);
+}
