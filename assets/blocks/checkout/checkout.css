@@ -172,12 +172,15 @@ ITEMS
 }
 
 .checkout .checkout-items h2 {
-  padding: 3rem 0 2rem;
+  padding: var(--pad-xl) 0 var(--pad-l);
 }
 
 .checkout .checkout-items > div {
+  margin: 0 auto;
+  padding-bottom: var(--pad-l);
   border-bottom: 0;
-  padding-bottom: 1rem;
+  width: 90%;
+  max-width: var(--block-s);
 }
 
 /* --------------------
