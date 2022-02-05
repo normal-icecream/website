@@ -449,6 +449,7 @@ function buildCheckoutBlock(main) {
       '<aside class="btn btn-back">',
       '<div class="checkout-head"><h2>',
       '<table class="checkout-table"><tbody class="checkout-table-body"><tfoot class="checkout-table-foot">',
+      '<form class="checkout-items"><h2>',
       '<form class="checkout-form">',
       '<div class="checkout-foot"><a class="btn btn-rect">',
     ],

@@ -19,6 +19,7 @@ import {
 
 import {
   buildForm,
+  buildSquareForm,
   buildPaymentForm,
   getFromLocalStorage,
   getSubmissionData,
@@ -47,9 +48,9 @@ export function clearCheckoutTable() {
 
 async function checkoutBtn(e) {
   const op = e.target.closest('.checkout-btn').getAttribute('data-op');
-  const fp = e.target.closest('tr').getAttribute('data-fp');
-  const item = window.cart.line_items.find((li) => fp === li.fp);
   if (op) {
+    const fp = e.target.closest('tr').getAttribute('data-fp');
+    const item = window.cart.line_items.find((li) => fp === li.fp);
     await setupCart();
     if (op === 'plus') {
       window.cart.setQuantity(fp, item.quantity + 1);
@@ -93,9 +94,84 @@ export function disableCartEdits() {
       btn.remove();
     });
   }
+  const checkoutItems = document.querySelector('.checkout-items');
+  if (checkoutItems) {
+    checkoutItems.setAttribute('aria-expanded', false);
+  }
   const total = document.querySelector('.checkout-foot-total');
   if (total) {
     total.parentNode.classList.add('checkout-total-highlight');
+  }
+}
+
+async function checkoutItemBtn(e) {
+  const id = e.target.getAttribute('name');
+  const { checked } = e.target;
+  const catalog = await fetchCatalog();
+  const obj = catalog.byId[id];
+  await setupCart;
+  if (obj) {
+    if (checked) { // if checked, add to cart
+      await window.cart.add(obj.item_data.variations[0].id);
+    } else { // if unchecked, remove from cart
+      await window.cart.remove(obj.item_data.variations[0].id);
+    }
+    await populateCheckoutTable();
+    updateCartItems();
+  }
+}
+
+async function populateCheckoutItems() {
+  const el = document.querySelector('.checkout .checkout-items');
+  const store = getCurrentStore();
+  const catalog = await fetchCatalog();
+  // eslint-disable-next-line arrow-body-style
+  const category = catalog.categories.find((cat) => {
+    return cat.category_data.name === `checkout items ${store}`;
+  });
+  if (category) {
+    // eslint-disable-next-line arrow-body-style
+    const items = catalog.items.filter((item) => {
+      return item.item_data.category_id === category.id;
+    });
+    if (items && items.length) {
+      const title = el.querySelector('h2');
+      title.textContent = 'add to cart';
+      el.querySelectorAll('div').forEach((div) => div.remove()); // clear existing
+      const fields = [];
+      items.forEach((item) => {
+        const field = {
+          category: 'checkout-item',
+          label: `${item.item_data.name} 
+            (+$${formatMoney(item.item_data.variations[0].item_variation_data.price_money.amount)})`,
+          options: [true],
+          required: false,
+          store: false,
+          title: item.id,
+          type: 'checkbox-single',
+        };
+        fields.push(field);
+      });
+      // build square form
+      await buildSquareForm(el, fields);
+      await setupCart;
+      el.querySelectorAll('input').forEach((input) => {
+        const id = input.getAttribute('name');
+        const obj = catalog.byId[id];
+        if (obj) {
+          const fp = catalog.byId[id].item_data.variations[0].id;
+          const inCart = window.cart.find(fp);
+          if (inCart) { // already in cart, mark it
+            input.checked = true;
+          }
+        }
+        input.addEventListener('change', checkoutItemBtn);
+      });
+    } else {
+      el.setAttribute('aria-expanded', false); // no checkout items, remove el
+    }
+  } else { // no checkout items, remove el
+    el.setAttribute('aria-expanded', false);
   }
 }
 
@@ -253,6 +329,8 @@ export async function populateCheckoutTable() {
         });
         tr.append(tdt, tda);
         foot.append(tr);
+        // populate checkout items
+        await populateCheckoutItems();
       } else {
         // nothing in cart
         const labels = await fetchLabels();
@@ -497,6 +575,14 @@ export default async function decorateCheckout(block) {
     });
     newTable.append(tableBody, tableFoot);
     wrapper.append(newTable);
+  }
+  const items = wrapper.querySelector('.checkout-items');
+  if (!items) {
+    const newItems = createEl('form', {
+      class: 'checkout-items',
+      html: '<h2>add to cart</h2>',
+    });
+    wrapper.append(newItems);
   }
   const form = wrapper.querySelector('.checkout-form');
   const formFields = ['contact', 'discount'];
