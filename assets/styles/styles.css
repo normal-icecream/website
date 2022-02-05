@@ -464,7 +464,7 @@ CAROUSEL NAV
 /* --------------------
 CLS STUFF 
 ----------------------- */
-.block-metadata, .popup, .redirect {
+.anchor, .block-metadata, .popup, .redirect {
   visibility: hidden;
   display: none;
 }
