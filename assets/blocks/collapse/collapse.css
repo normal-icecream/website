@@ -21,7 +21,7 @@ STARBURST
   height: var(--btn-xl);
   width: var(--btn-xl);
   fill: var(--color-pink);
-  animation-name: star-spin;
+  animation-name: svg-spin;
   animation-duration: 24s;
   animation-iteration-count: infinite;
   animation-timing-function: linear; 
@@ -121,14 +121,4 @@ VISIBILITY
 .collapse-btn[aria-expanded=false] + div .collapse {
   visibility: hidden;
   display: none;
-}
-
-
-@keyframes star-spin {
-  from {
-    transform:rotate(0deg);
-  }
-  to {
-    transform:rotate(360deg);
-  }
 }

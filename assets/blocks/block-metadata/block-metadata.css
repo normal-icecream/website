@@ -1,8 +1,10 @@
 /* --------------------
 ALIGNMENT 
 ----------------------- */
-[data-block-meta].align-content-bottom > div {
-  align-items: flex-end;
+@media (min-width: 768px) {
+  [data-block-meta].align-content-bottom > div {
+    align-items: flex-end;
+  }
 }
 
 /* --------------------

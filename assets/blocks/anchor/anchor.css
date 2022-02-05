@@ -1,0 +1,132 @@
+.block .anchor-container,
+.section-wrapper .anchor-container {
+  padding: var(--pad-l) 0;
+  text-align: center;
+  display: unset;
+}
+
+.anchor-container .anchor-wrapper {
+  position: relative;
+  transition: transform 0.2s linear;
+}
+
+.anchor-container .anchor-wrapper:hover,
+.anchor-container .anchor-wrapper:focus {
+  transform: scale(1.4) rotate(-6deg);
+}
+
+@media (min-width: 768px) {
+  .anchor-container.section-anchor,
+  .anchor-container.block-anchor {
+    position: relative;
+    display: block;
+    width: var(--block-m);
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 0;
+    height: calc(var(--btn-xl) / 2.5);
+  }
+
+  .anchor-container.block-anchor {
+    max-width: 100%;
+  }
+
+  .anchor-container.section-anchor .anchor-wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .anchor-container.section-anchor .anchor-wrapper:hover,
+  .anchor-container.section-anchor .anchor-wrapper:focus {
+    transform: translateY(-50%) scale(1.4) rotate(-6deg);
+  }
+
+  .anchor-container.block-anchor .anchor-wrapper {
+    position: absolute;
+    top: calc(-1 * var(--pad-xl));
+  }
+  
+  .anchor-container.block-anchor .anchor-wrapper.anchor-position-left,
+  .anchor-container.section-anchor .anchor-wrapper.anchor-position-left {
+    left: calc(-1 * var(--pad-xl));
+  }
+
+  .anchor-container.block-anchor .anchor-wrapper.anchor-position-right,
+  .anchor-container.section-anchor .anchor-wrapper.anchor-position-right {
+    right: calc(-1 * var(--pad-xl));
+  }
+}
+
+@media (min-width: 1200px) {
+  .anchor-container.block-anchor .anchor-wrapper.anchor-position-left,
+  .anchor-container.section-anchor .anchor-wrapper.anchor-position-left {
+    left: calc(-4 * var(--pad-xl));
+  }
+
+  .anchor-container.block-anchor .anchor-wrapper.anchor-position-right,
+  .anchor-container.section-anchor .anchor-wrapper.anchor-position-right {
+    right: calc(-4 * var(--pad-xl));
+  }
+}
+
+@media (min-width: 1824px) {
+  .anchor-container.block-anchor .anchor-wrapper.anchor-position-left,
+  .anchor-container.section-anchor .anchor-wrapper.anchor-position-left {
+    left: calc(-6 * var(--pad-xl));
+  }
+
+  .anchor-container.block-anchor .anchor-wrapper.anchor-position-right,
+  .anchor-container.section-anchor .anchor-wrapper.anchor-position-right {
+    right: calc(-6 * var(--pad-xl));
+  }
+}
+
+.anchor-wrapper .anchor-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: var(--btn-l);
+  width: var(--btn-l);
+  padding: var(--pad-s);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  z-index: 2;
+  transform: translate(-50%, -50%) rotate(3deg);
+}
+
+.anchor-wrapper svg.icon-starburst {
+  height: var(--btn-xl);
+  width: var(--btn-xl);
+  animation-name: svg-spin;
+  animation-duration: 24s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.anchor-wrapper:hover svg,
+.anchor-wrapper:focus svg {
+  animation-duration: 8s;
+}
+
+/* --------------------
+ANCHOR COLORS
+----------------------- */
+.anchor-wrapper.anchor-color-yellow-alt {
+  color: var(--color-blue);
+}
+
+.anchor-wrapper.anchor-color-yellow-alt svg {
+  fill: var(--color-yellow-alt);
+}
+
+.anchor-wrapper.anchor-color-red {
+  color: var(--color-white);
+}
+
+.anchor-wrapper.anchor-color-red svg {
+  fill: var(--color-red);
+}
