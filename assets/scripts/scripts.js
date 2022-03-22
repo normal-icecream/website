@@ -289,13 +289,10 @@ function loadFooter() {
 export function readBlockConfig(block) {
   const config = {};
   block.querySelectorAll(':scope>div').forEach((row) => {
-    console.log('row:', row);
     if (row.children) {
       const cols = [...row.children];
-      console.log('  cols:', cols);
       if (cols[1]) {
         const valueEl = cols[1];
-        console.log('    valueEl:', valueEl);
         const name = toClassName(cols[0].textContent);
         let value = '';
         if (valueEl.querySelector('a')) {
@@ -313,7 +310,6 @@ export function readBlockConfig(block) {
             value = ps.map((p) => p.textContent);
           }
         } else value = row.children[1].textContent;
-        console.log('      value:', value);
         config[name] = value;
       }
     }
