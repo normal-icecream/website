@@ -158,6 +158,32 @@ TABLE
 }
 
 /* --------------------
+ITEMS
+----------------------- */
+.checkout .checkout-items {
+  margin-top: var(--pad-xl);
+  background: var(--color-pink);
+  color: var(--color-blue);
+}
+
+.checkout .checkout-items[aria-expanded=false] {
+  display: none;
+  visibility: hidden;
+}
+
+.checkout .checkout-items h2 {
+  padding: var(--pad-xl) 0 var(--pad-l);
+}
+
+.checkout .checkout-items > div {
+  margin: 0 auto;
+  padding-bottom: var(--pad-l);
+  border-bottom: 0;
+  width: 90%;
+  max-width: var(--block-s);
+}
+
+/* --------------------
 FORM
 ----------------------- */
 .checkout .checkout-form {
