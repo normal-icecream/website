@@ -35,6 +35,10 @@ import {
   removeScreensaver,
 } from '../../utils/screensaver/screensaver.js';
 
+import {
+  createCustomer,
+} from '../../utils/admin/admin.js';
+
 export function clearCheckoutTable() {
   const body = document.querySelector('.checkout .checkout-table .checkout-table-body');
   if (body) {
@@ -492,7 +496,8 @@ export function populateCheckoutFoot(btnText = 'place order') {
           buildScreensaver(`placing your ${getCurrentStore()} order...`);
           const data = getSubmissionData(form);
           saveToLocalStorage(form);
-          const order = await submitOrder(data);
+          const customer = await createCustomer(data);
+          const order = await submitOrder(data, customer);
           if (order) {
             await disableCartEdits();
             await hideCheckoutForm();

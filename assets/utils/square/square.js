@@ -747,7 +747,7 @@ export function getOrderCredentials(store) {
     window.location_id = '6EXJXZ644ND0E';
     return {
       name: store,
-      endpoint: 'AKfycbwJ0dVqTMxEeQzgig0HjEMHnv7qnTEXOkU-Cx34fy2LBP2h25Gv-uddrhfb4EhtuJxs',
+      endpoint: 'AKfycbwA6oayJBfiOkfOdeyzBTilBHfkJ8oCX8WNAMmu3uFZ0PiJjHIVmj9rrbZd_AMxTerb',
       location: '6EXJXZ644ND0E',
     };
   }
@@ -755,7 +755,7 @@ export function getOrderCredentials(store) {
     window.location_id = '3HQZPV73H8BHM';
     return {
       name: store,
-      endpoint: 'AKfycbzkoBbEjpuGjyC5OOKMSBoYhVJtHr41NJXib2JmvZoCirYCBdWjDUU8KJe836I80Ihk',
+      endpoint: 'AKfycbzExA0Iw7LIpEd7Ezx3vfczTdqitY4aAysF6pWhVi1niY6CJg9PwXBLP2erPlO8NL1t',
       location: '3HQZPV73H8BHM',
     };
   }
@@ -763,7 +763,7 @@ export function getOrderCredentials(store) {
     window.location_id = 'WPBKJEG0HRQ9F';
     return {
       name: store,
-      endpoint: 'AKfycbwvQgotisCVo9XpkhVstWXRonQsUx0zqP2ykikZLyMQuFTl4lIzK2KeKJU_0kgpNy_C7w',
+      endpoint: 'AKfycbzphql8woAvYRhtjMR0t19FPQjvIX6iZkhGN566bp_n23vd7neqvwEw7d6wiwVO00Y2IA',
       location: 'WPBKJEG0HRQ9F',
     };
   }
@@ -778,7 +778,7 @@ export function getOrderCredentials(store) {
   return false;
 }
 
-async function buildOrderParams(data) {
+async function buildOrderParams(data, customer) {
   const params = {};
   if (data.name) {
     params.display_name = data.name;
@@ -815,6 +815,13 @@ async function buildOrderParams(data) {
     if (valid.name && valid.id) {
       params.discount_name = valid.name;
       params.discount = valid.id;
+    }
+  }
+  if (customer) {
+    if (customer.id) {
+      params.customer_id = customer.id;
+    } else if (customer.customer.id) {
+      params.customer_id = customer.customer.id;
     }
   }
   params.reference_id = generateId(data);
@@ -856,8 +863,8 @@ async function buildOrderParams(data) {
   return params;
 }
 
-export async function submitOrder(data) {
-  const params = await buildOrderParams(data);
+export async function submitOrder(data, customer) {
+  const params = await buildOrderParams(data, customer);
   const qs = buildGQs(params);
   const cred = getOrderCredentials(window.cart.current_store);
   const url = buildGScriptLink(cred.endpoint);

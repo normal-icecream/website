@@ -16,6 +16,8 @@ function getGId(type) {
       return 'AKfycbzsC2PCET2DvZk9UFG5L591i0nUS_DGrzHSmQoQGCc6tgI5FQ3RQ2AeP_0kJeCD5MOmQQ';
     case 'club': // see square.js
       return 'AKfycbxGamyac1gglM4_aKBkozYF8KeK4cCz4ah9ISQKZP_EjLqpWqrUEIiS5C1hrHXn4riL';
+    case 'customer':
+      return 'AKfycbxi1EqTIFvv5bV3dAf_2zTVSENYUtEVTFX0xVFnUKlckUORJ8HypCKc8PxLHVA5gV2Z';
     default:
       return false;
   }
@@ -177,7 +179,7 @@ export async function addToShippingSheet(info, receiptNum, cart) {
   }
 }
 
-export async function createCustomer(data, info) {
+export async function createPintCustomer(data, info) {
   const id = getGId('club');
   const url = buildGScriptLink(id);
   const qs = buildGQs({ ...data, ...info });
@@ -189,6 +191,22 @@ export async function createCustomer(data, info) {
       console.error(json);
     }
     return { ...json, ...data, ...info };
+  }
+  return false;
+}
+
+export async function createCustomer(data) {
+  const id = getGId('customer');
+  const url = buildGScriptLink(id);
+  const qs = buildGQs(data);
+  const resp = await await fetch(`${url}?${qs}`, { method: 'GET' });
+  if (resp.ok) {
+    const json = await resp.json();
+    if (json['error-text']) {
+      // eslint-disable-next-line no-console
+      console.error(json);
+    }
+    return { ...json, ...data };
   }
   return false;
 }

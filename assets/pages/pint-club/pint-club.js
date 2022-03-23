@@ -32,7 +32,7 @@ import {
 } from '../../utils/forms/forms.js';
 
 import {
-  createCustomer,
+  createPintCustomer,
 } from '../../utils/admin/admin.js';
 
 import {
@@ -167,7 +167,7 @@ async function enrollInSubscription(data, type) {
   // enroll in subscription!
   const form = document.querySelector('form.checkout-form');
   const formData = getSubmissionData(form);
-  const customer = await createCustomer(data, formData);
+  const customer = await createPintCustomer(data, formData);
   if (customer) {
     window.cart.setStoreParams({
       customer_id: customer.customer.id,
