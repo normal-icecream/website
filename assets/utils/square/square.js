@@ -269,9 +269,9 @@ export function formatMoney(num) {
 }
 
 export function removeStoreFromString(str) {
-  const stores = ['lab', 'store', 'composed cone'];
+  const stores = ['lab', 'store', 'composed cone', 'pack'];
   stores.forEach((store) => {
-    if (str.toLowerCase().startsWith(store)) {
+    if (str.toLowerCase().startsWith(store) || str.toLowerCase().endsWith(store)) {
       // eslint-disable-next-line no-param-reassign
       str = str.toLowerCase().replace(store, '').trim();
     }
@@ -506,7 +506,7 @@ export async function populateShippingBody(item) {
       // build carousel title row
       const wrapper = createEl('div');
       const h2 = createEl('div', {
-        html: `<div><h2>select ${limits[modName]} ${modName}</h2></div>`,
+        html: `<div><h2>select ${limits[modName] || 1} ${modName}</h2></div>`,
       });
       wrapper.append(h2);
       // populate elems for buildBlock
@@ -559,10 +559,10 @@ export async function populateShippingBody(item) {
       carousel.classList.add('carousel', 'block');
       carousel.setAttribute('data-block-name', 'carousel');
       carousel.setAttribute('data-item-type', modName);
-      carousel.setAttribute('data-limit', limits[modName]);
+      carousel.setAttribute('data-limit', limits[modName] || 1);
       body.append(carousel);
       await loadBlock(carousel);
-      buildHeadCounter(carousel, limits[modName]);
+      buildHeadCounter(carousel, limits[modName] || 1);
       buildShippingBtns(carousel);
     });
   }
