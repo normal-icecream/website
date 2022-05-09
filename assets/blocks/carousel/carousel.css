@@ -129,7 +129,7 @@ DEFAULT CAROUSEL
   margin-top: auto;
 }
 
-.carousel .carousel-slides .carousel-slide > *:last-child a.btn {
+.carousel .carousel-slides .carousel-slide > *:last-child .btn {
   margin-bottom: var(--pad-xs);
 }
 
