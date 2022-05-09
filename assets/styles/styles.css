@@ -301,8 +301,8 @@ BUTTONS
   background: var(--color-blue);
   color: var(--color-white);
   margin-top: var(--pad-s);
-  padding: var(--pad-m) var(--pad-l);
-  font-size: var(--body-size-l);
+  padding: var(--pad-s) var(--pad-l);
+  font-size: var(--body-size-m);
   font-style: normal;
   text-decoration: none;
   transition: letter-spacing 0.2s;
@@ -313,6 +313,10 @@ BUTTONS
 .btn.btn-pill:hover,
 .btn.btn-pill:focus {
   letter-spacing: 1px;
+}
+
+.btn.btn-rect {
+  border-radius: var(--pad-s);
 }
 
 .btn.btn-pill {
