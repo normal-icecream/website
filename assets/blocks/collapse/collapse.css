@@ -111,6 +111,7 @@ VISIBILITY
   animation-name: fadeIn;
   animation-timing-function: ease-in;
   animation-duration: 0.4s;
+  z-index: 1;
 }
 
 .collapse-btn[aria-expanded=true] {

@@ -77,6 +77,8 @@ DEFAULT CAROUSEL
 
 .carousel .carousel-slides .carousel-slide {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 100%;
   padding: var(--pad-xl) var(--btn-s);
@@ -121,6 +123,14 @@ DEFAULT CAROUSEL
 .carousel .carousel-slides .carousel-slide:nth-child(even) img:hover,
 .carousel .carousel-slides .carousel-slide:nth-child(even) img:focus {
   transform: scale(1.1) rotate(-3deg);
+}
+
+.carousel .carousel-slides .carousel-slide > *:last-child {
+  margin-top: auto;
+}
+
+.carousel .carousel-slides .carousel-slide > *:last-child .btn {
+  margin-bottom: var(--pad-xs);
 }
 
 /* --------------------
