@@ -237,6 +237,21 @@ async function updatePickupTimes(e) {
   }
 }
 
+function checkToppingLimit(e) {
+  const wrapper = e.target.parentNode.parentNode;
+  const boxes = wrapper.querySelectorAll('input');
+  const numChecked = [...boxes].filter((b) => b.checked).length;
+  if (numChecked >= 3) { // disable
+    boxes.forEach((box) => {
+      if (!box.checked) box.disabled = true;
+    });
+  } else { // enable
+    boxes.forEach((box) => {
+      box.disabled = false;
+    });
+  }
+}
+
 export async function buildField(field) {
   let fieldEl;
   // radio & checkbox
@@ -323,6 +338,11 @@ export async function buildField(field) {
     if (field.required) {
       fieldEl.required = field.required;
     }
+  }
+  if (field.label.includes('topping')) { // limit 3 toppings
+    fieldEl.querySelectorAll('input').forEach((input) => {
+      input.addEventListener('change', checkToppingLimit);
+    });
   }
   return fieldEl;
 }
