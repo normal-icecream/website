@@ -288,6 +288,8 @@ function writeLabelText(str, vari) {
   } else if ((vari && vari.includes(' size'))
     || (vari && vari.includes(' oz'))) {
     text = 'select a size';
+  } else if (text.endsWith('-')) {
+    text = text.replace('-', '').trim();
   }
   return text;
 }
@@ -344,6 +346,7 @@ export async function populateSquareBody(item) {
         const modData = catalog.byId[mod.modifier_list_id].modifier_list_data;
         const modName = modData.name;
         const modLabel = writeLabelText(modName);
+
         const fieldType = modName.includes('topping') ? 'checkbox' : 'radio';
         const field = {
           category: 'square-modifier',
