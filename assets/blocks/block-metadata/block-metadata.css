@@ -16,6 +16,11 @@ BACKGROUND
   padding-bottom: 0;
 }
 
+[data-block-meta].background-pink {
+  background: var(--color-pink);
+  padding-bottom: 0;
+}
+
 /* --------------------
 COLOR 
 ----------------------- */
@@ -28,4 +33,14 @@ COLOR
 [data-block-meta].color-white .btn.btn-rect {
   background: var(--color-white);
   color: var(--color-blue);
+}
+
+/* --------------------
+IMAGES 
+----------------------- */
+[data-block-meta].images-circle img {
+  border-radius: 50%;
+  height: 16rem;
+  width: 16rem;
+  object-fit: cover;
 }

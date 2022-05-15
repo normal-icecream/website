@@ -67,6 +67,23 @@ async function fetchCarouselImages(url) {
   return false;
 }
 
+function toggle(e) {
+  let id;
+  let target = e.target.closest('[id^="collapse--"]');
+  if (target) {
+    id = target.id;
+  } else {
+    target = e.target.closest('[aria-labelledby^="collapse--"]');
+    id = target.getAttribute('aria-labelledby');
+  }
+  const expanded = document.getElementById(id).getAttribute('aria-expanded');
+  if (expanded === 'true') {
+    document.getElementById(id).setAttribute('aria-expanded', false);
+  } else {
+    document.getElementById(id).setAttribute('aria-expanded', true);
+  }
+}
+
 export default async function decorateCarousel(block) {
   const children = [...block.querySelectorAll(':scope > div')];
   if ([...block.classList].includes('carousel-images')) {
@@ -90,6 +107,36 @@ export default async function decorateCarousel(block) {
     block.querySelectorAll('img').forEach((img) => {
       img.setAttribute('height', 160);
     });
+    // setup collapse
+    if ([...block.classList].includes('carousel-collapse')) {
+      const collapseText = children[0].textContent;
+      children.shift();
+
+      // build starburst wrapper
+      const wrapper = createEl('aside', {
+        class: 'collapse-wrapper collapse-btn',
+        id: `collapse--${toClassName(collapseText)}`,
+        'aria-haspopup': true,
+        'aria-expanded': false,
+        role: 'button',
+      });
+      // build starburst
+      const text = createEl('p', {
+        class: 'starburst-text',
+        text: collapseText,
+      });
+      const starburst = createSVG('starburst');
+      starburst.classList.add('starburst');
+
+      // build
+      wrapper.append(text, starburst);
+      wrapper.addEventListener('click', toggle);
+      const parent = block.parentNode;
+      parent.parentElement.insertBefore(wrapper, parent);
+      block.setAttribute('aria-labelledby', `collapse--${toClassName(collapseText)}`);
+      block.setAttribute('role', 'menu');
+      block.classList.add('collapse-menu');
+    }
     // setup carousel head
     const head = children[0].firstChild;
     head.classList.add('carousel-head');
