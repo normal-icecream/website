@@ -143,6 +143,12 @@ RADIO & CHECKBOX
   background: currentColor;
 }
 
+.form-checkbox-default[disabled] ~ span {
+  border-color: var(--color-md-gray);
+  background: var(--color-lt-gray);
+  cursor: not-allowed;
+} 
+
 /* --------------------
 SELECTS
 ----------------------- */
