@@ -269,7 +269,7 @@ export function formatMoney(num) {
 }
 
 export function removeStoreFromString(str) {
-  const stores = ['lab', 'store', 'composed cone', 'pack'];
+  const stores = ['lab', 'truck', 'store', 'composed cone', 'pack'];
   stores.forEach((store) => {
     if (str.toLowerCase().startsWith(store) || str.toLowerCase().endsWith(store)) {
       // eslint-disable-next-line no-param-reassign
