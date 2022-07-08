@@ -335,7 +335,8 @@ export async function buildField(field) {
     if (field.default) {
       fieldEl.value = field.default;
     }
-    if (field.required) {
+    if (field.required && field.required === 'true') {
+      console.log('field-required:', field.required);
       fieldEl.required = field.required;
     }
   }
