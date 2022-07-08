@@ -126,7 +126,7 @@ function buildBubble(field) {
     });
   } else {
     // eslint-disable-next-line no-console
-    console.log('populate external options');
+    // console.log('populate external options');
   }
   fieldEl.append(optionsWrapper);
   return fieldEl;
@@ -336,7 +336,6 @@ export async function buildField(field) {
       fieldEl.value = field.default;
     }
     if (field.required && field.required === 'true') {
-      console.log('field-required:', field.required);
       fieldEl.required = field.required;
     }
   }
