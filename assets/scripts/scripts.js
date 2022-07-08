@@ -443,7 +443,7 @@ function buildAuthBlock(main) {
  * Builds checkout block.
  * @param {Element} main The container element
  */
-function buildCheckoutBlock(main) {
+export function buildCheckoutBlock(main) {
   const checkoutBlock = buildBlock('checkout', {
     elems: [
       '<aside class="btn btn-back">',

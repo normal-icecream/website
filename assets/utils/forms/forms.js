@@ -335,7 +335,7 @@ export async function buildField(field) {
     if (field.default) {
       fieldEl.value = field.default;
     }
-    if (field.required) {
+    if (field.required && field.required.toLowerCase() === 'true') {
       fieldEl.required = field.required;
     }
   }
@@ -409,6 +409,7 @@ export function validateForm(form) {
     });
   }
   const allInvalid = [...invalidFieldsById, ...invalidRadiosByName];
+  console.log('all invalid:', allInvalid);
 
   if (allInvalid.length <= 0) {
     return true;
@@ -516,6 +517,24 @@ export function getSubmissionData(form) {
       } else if (f.type === 'radio') {
         if (f.checked) { // only add selected radio option
           data[f.name] = f.value;
+        }
+      } else if ([...f.classList].includes('wholesale-input-quantity')) { // exclude 0 wholesale
+        if (f.value > 0) {
+          if (data.wholesale_items) { // property exists
+            data.wholesale_items.push({
+              id: f.id,
+              quantity: parseInt(f.value, 10),
+              name: f.getAttribute('data-name'),
+              type: f.getAttribute('data-type'),
+            });
+          } else { // property does not yet exist
+            data.wholesale_items = [{
+              id: f.id,
+              quantity: parseInt(f.value, 10),
+              name: f.getAttribute('data-name'),
+              type: f.getAttribute('data-type'),
+            }];
+          }
         }
       } else if (f.value) { // exclude empty fields
         data[f.name] = f.value;

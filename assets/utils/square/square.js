@@ -781,7 +781,7 @@ export function getOrderCredentials(store) {
   return false;
 }
 
-async function buildOrderParams(data) {
+export async function buildOrderParams(data) {
   const params = {};
   if (data.name) {
     params.display_name = data.name;
@@ -791,6 +791,15 @@ async function buildOrderParams(data) {
   }
   if (data.email) {
     params.email_address = data.email;
+  }
+  if (data['business-name']) {
+    params.business_name = data['business-name'];
+  }
+  if (data['business-method']) {
+    params.business_method = data['business-method'];
+  }
+  if (data['business-requests']) {
+    params.business_note = data['business-requests'];
   }
   if (data.addr1) {
     params.address_line_1 = data.addr1;
@@ -855,6 +864,11 @@ async function buildOrderParams(data) {
   // if no mod_qs, remove from params
   if (params.mod_qs === '') {
     delete params.mod_qs;
+  }
+  // if wholesale, replace line items
+  if (data.wholesale_items) {
+    delete params.line_items;
+    params.line_items = data.wholesale_items;
   }
   return params;
 }

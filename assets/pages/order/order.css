@@ -161,3 +161,46 @@ html.order .btn.btn-rect {
   background: var(--color-white);
   color: var(--color-blue);
 }
+
+/* --------------------
+ORDER WHOLESALE
+----------------------- */
+html.order .checkout.wholesale-checkout .wholesale-table-body {
+  background: unset;
+  color: var(--color-blue);
+}
+
+html.order .checkout.wholesale-checkout .wholesale-table-body .wholesale-type-heading {
+  background: var(--color-pink);
+  color: var(--color-blue);
+  text-transform: uppercase;
+}
+
+html.order .checkout.wholesale-checkout .wholesale-table-body tr td {
+  border-left: 1px solid;
+}
+
+html.order .checkout.wholesale-checkout .wholesale-table-body tr td:first-of-type {
+  text-align: left;
+}
+
+html.order .checkout.wholesale-checkout .wholesale-table-body tr td.wholesale-input {
+  padding: 0;
+}
+
+html.order .checkout.wholesale-checkout .wholesale-table-body tr td.wholesale-input #city,
+html.order .checkout.wholesale-checkout .wholesale-table-body tr td.wholesale-input #state,
+html.order .checkout.wholesale-checkout .wholesale-table-body tr td.wholesale-input #zip {
+  width: 100%;
+  border: 0;
+}
+
+html.order .checkout.wholesale-checkout .wholesale-table-body tr td .wholesale-input-quantity {
+  background: var(--color-yellow);
+  text-align: center;
+}
+
+html.order .checkout.wholesale-checkout .wholesale-table-body tr td input {
+  width: 100%;
+  border-bottom: 0;
+}
