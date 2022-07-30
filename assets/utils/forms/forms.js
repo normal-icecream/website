@@ -126,7 +126,7 @@ function buildBubble(field) {
     });
   } else {
     // eslint-disable-next-line no-console
-    console.log('populate external options');
+    // console.log('populate external options');
   }
   fieldEl.append(optionsWrapper);
   return fieldEl;
@@ -363,6 +363,7 @@ export function validateForm(form) {
   const required = form.querySelectorAll('[required]:not(.form-field-hide)');
   const radios = form.querySelectorAll('[type=radio]:not(.form-field-hide)');
   const selects = form.querySelectorAll('select');
+  const numberInputs = form.querySelectorAll('input[type="number"]');
 
   const invalidFieldsById = []; // inputs and selects go here
   const invalidRadiosByName = [];
@@ -408,8 +409,17 @@ export function validateForm(form) {
       }
     });
   }
+  if (numberInputs) { // can't exceed max or be lower than min
+    numberInputs.forEach((num) => {
+      if (num.max && parseInt(num.value, 10) > parseInt(num.max, 10)) {
+        num.value = num.max;
+      }
+      if (num.min && parseInt(num.value, 10) < parseInt(num.min, 10)) {
+        num.value = num.min;
+      }
+    });
+  }
   const allInvalid = [...invalidFieldsById, ...invalidRadiosByName];
-  console.log('all invalid:', allInvalid);
 
   if (allInvalid.length <= 0) {
     return true;
