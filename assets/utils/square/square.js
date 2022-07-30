@@ -737,8 +737,8 @@ export function updateCartItems() {
 function generateId(data) {
   const now = new Date().toISOString();
   const day = new Date().toString().substring(0, 1); // first char of today's date
-  const a = data.name.substring(0, 1); // first char of name
-  const b = data.email.match(/@./)[0].replace('@', day); // first char of email domain
+  const a = data.name?.substring(0, 1) || 'W'; // first char of name
+  const b = data.email?.match(/@./)[0].replace('@', day) || 'S'; // first char of email domain
   const c = now.match(/T[0-9]{1,}/)[0].replace('T', a); // digits from date
   const d = now.match(/[0-9]{1,}Z/)[0].replace('Z', b); // digits from time
   const id = `${c}${d}`.toUpperCase().replace(/[^0-9a-z]/gi, 'N'); // replace nonalphanumeric with N
