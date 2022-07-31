@@ -264,6 +264,7 @@ function setupWholesaleForm(a, main) {
 
 async function checkIfWholesaleOpen(main) {
   const now = new Date();
+  const day = now.getDay(); // 0 = sunday, 1 = monday, etc
   const open = new Date();
   const close = new Date();
   // eslint-disable-next-line no-mixed-operators
@@ -272,7 +273,7 @@ async function checkIfWholesaleOpen(main) {
   // eslint-disable-next-line no-mixed-operators
   close.setDate(close.getDate() + ((7 - close.getDay()) % 7 + 2) % 7); // 2 = tuesday
   close.setHours((12 + 3), 5, 0); // 3:05 pm
-  if (now > open && now < close) { // ordering is open
+  if (day <= 1 || (now >= open && now <= close)) { // ordering is open
     main.querySelectorAll('a[href*="#order"]').forEach((a) => setupWholesaleForm(a, main));
   } else {
     const labels = await fetchLabels();
