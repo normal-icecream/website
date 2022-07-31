@@ -737,8 +737,8 @@ export function updateCartItems() {
 function generateId(data) {
   const now = new Date().toISOString();
   const day = new Date().toString().substring(0, 1); // first char of today's date
-  const a = data.name.substring(0, 1); // first char of name
-  const b = data.email.match(/@./)[0].replace('@', day); // first char of email domain
+  const a = data.name?.substring(0, 1) || 'W'; // first char of name
+  const b = data.email?.match(/@./)[0].replace('@', day) || 'S'; // first char of email domain
   const c = now.match(/T[0-9]{1,}/)[0].replace('T', a); // digits from date
   const d = now.match(/[0-9]{1,}Z/)[0].replace('Z', b); // digits from time
   const id = `${c}${d}`.toUpperCase().replace(/[^0-9a-z]/gi, 'N'); // replace nonalphanumeric with N
@@ -781,7 +781,7 @@ export function getOrderCredentials(store) {
   return false;
 }
 
-async function buildOrderParams(data) {
+export async function buildOrderParams(data) {
   const params = {};
   if (data.name) {
     params.display_name = data.name;
@@ -791,6 +791,15 @@ async function buildOrderParams(data) {
   }
   if (data.email) {
     params.email_address = data.email;
+  }
+  if (data['business-name']) {
+    params.business_name = data['business-name'];
+  }
+  if (data['business-method']) {
+    params.business_method = data['business-method'];
+  }
+  if (data['business-requests']) {
+    params.business_note = data['business-requests'];
   }
   if (data.addr1) {
     params.address_line_1 = data.addr1;
@@ -855,6 +864,11 @@ async function buildOrderParams(data) {
   // if no mod_qs, remove from params
   if (params.mod_qs === '') {
     delete params.mod_qs;
+  }
+  // if wholesale, replace line items
+  if (data.wholesale_items) {
+    delete params.line_items;
+    params.line_items = data.wholesale_items;
   }
   return params;
 }

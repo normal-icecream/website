@@ -335,7 +335,7 @@ export async function buildField(field) {
     if (field.default) {
       fieldEl.value = field.default;
     }
-    if (field.required && field.required === 'true') {
+    if (field.required && field.required.toLowerCase() === 'true') {
       fieldEl.required = field.required;
     }
   }
@@ -363,6 +363,7 @@ export function validateForm(form) {
   const required = form.querySelectorAll('[required]:not(.form-field-hide)');
   const radios = form.querySelectorAll('[type=radio]:not(.form-field-hide)');
   const selects = form.querySelectorAll('select');
+  const numberInputs = form.querySelectorAll('input[type="number"]');
 
   const invalidFieldsById = []; // inputs and selects go here
   const invalidRadiosByName = [];
@@ -405,6 +406,16 @@ export function validateForm(form) {
         if (s.value === '') {
           invalidFieldsById.push(s.id);
         }
+      }
+    });
+  }
+  if (numberInputs) { // can't exceed max or be lower than min
+    numberInputs.forEach((num) => {
+      if (num.max && parseInt(num.value, 10) > parseInt(num.max, 10)) {
+        num.value = num.max;
+      }
+      if (num.min && parseInt(num.value, 10) < parseInt(num.min, 10)) {
+        num.value = num.min;
       }
     });
   }
@@ -516,6 +527,24 @@ export function getSubmissionData(form) {
       } else if (f.type === 'radio') {
         if (f.checked) { // only add selected radio option
           data[f.name] = f.value;
+        }
+      } else if ([...f.classList].includes('wholesale-input-quantity')) { // exclude 0 wholesale
+        if (f.value > 0) {
+          if (data.wholesale_items) { // property exists
+            data.wholesale_items.push({
+              id: f.id,
+              quantity: parseInt(f.value, 10),
+              name: f.getAttribute('data-name'),
+              type: f.getAttribute('data-type'),
+            });
+          } else { // property does not yet exist
+            data.wholesale_items = [{
+              id: f.id,
+              quantity: parseInt(f.value, 10),
+              name: f.getAttribute('data-name'),
+              type: f.getAttribute('data-type'),
+            }];
+          }
         }
       } else if (f.value) { // exclude empty fields
         data[f.name] = f.value;
