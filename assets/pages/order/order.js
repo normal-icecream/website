@@ -273,15 +273,18 @@ async function checkIfWholesaleOpen(main) {
   // eslint-disable-next-line no-mixed-operators
   close.setDate(close.getDate() + ((7 - close.getDay()) % 7 + 2) % 7); // 2 = tuesday
   close.setHours((12 + 3), 5, 0); // 3:05 pm
-  if (day <= 1 || (now >= open && now <= close)) { // ordering is open
+  // console.log('now:', now);
+  // console.log('open:', open);
+  // console.log('close:', close);
+  // if (day <= 1 || (now >= open && now <= close)) { // ordering is open
     main.querySelectorAll('a[href*="#order"]').forEach((a) => setupWholesaleForm(a, main));
-  } else {
-    const labels = await fetchLabels();
-    main.querySelectorAll('a[href*="#order"]').forEach((a) => {
-      const msg = createEl('p', { text: labels.wholesale_closed });
-      a.replaceWith(msg);
-    });
-  }
+  // } else {
+  //   const labels = await fetchLabels();
+  //   main.querySelectorAll('a[href*="#order"]').forEach((a) => {
+  //     const msg = createEl('p', { text: labels.wholesale_closed });
+  //     a.replaceWith(msg);
+  //   });
+  // }
 }
 
 export default async function decorateOrder(main) {
