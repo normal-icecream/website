@@ -31,7 +31,7 @@ import {
   removeScreensaver,
 } from '../../utils/screensaver/screensaver.js';
 
-const WHOLESALE_KEY = 'AKfycbwp-V9KppEYT1GjXmr59_Lk3wSmKSnlDeOWuggEC_DmyVptfRl2MpiQn9FDowzzQdQE';
+const WHOLESALE_KEY = 'AKfycbyquwOChGVk2YA0BNkrQsBFj_W00Y2DZA721pgyQ1hVR0DNscmSHEYjdrRt7sdPF31RAw';
 
 function buildBackBtn(menu) {
   menu.classList.add('relative');
