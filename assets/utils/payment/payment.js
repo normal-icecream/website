@@ -28,7 +28,6 @@ import {
   addToClubSheet,
   addToShippingSheet,
   sendEmail,
-  sendText,
 } from '../admin/admin.js';
 
 function getStyles(style) {
@@ -226,8 +225,6 @@ async function storeSpecificResults(info, results, cart) {
   const store = getCurrentStore();
   switch (store) {
     case 'store':
-      // send text
-      await sendText({ num: `+1${info.cell}`, store, confirmation: true });
       // send email
       await sendEmail(info, results);
       break;
@@ -247,8 +244,6 @@ async function storeSpecificResults(info, results, cart) {
       break;
     case 'merch':
       if (info['pickup-time']) { // store-like
-        // send text
-        await sendText({ num: `+1${info.cell}`, store, confirmation: true });
         // send email
         await sendEmail(info, results);
         await displayMerchMessage('pickup');
