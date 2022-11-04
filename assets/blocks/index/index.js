@@ -15,11 +15,11 @@ export function buildTitle(nav) {
     class: 'title',
     text: title,
   });
-  let svg = titleBlock.querySelector('svg');
-  if (!svg) {
-    svg = createSVG('reg');
-  }
-  span.append(svg);
+  // let svg = titleBlock.querySelector('svg');
+  // if (!svg) {
+  //   svg = createSVG('reg');
+  // }
+  // span.append(svg);
   titleBlock.innerHTML = '';
   titleBlock.append(span);
 }
