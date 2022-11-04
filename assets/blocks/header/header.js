@@ -46,9 +46,11 @@ function buildHeader(block, content) {
       href: window.location.origin,
     });
     const logo = findSVGName(logoBlock.textContent);
-    const svg = createSVG(logo);
-    svg.classList.add('header-logo');
-    a.append(svg);
+    if (logo) {
+      const svg = createSVG(logo);
+      svg.classList.add('header-logo');
+      a.append(svg);
+    }
     headWrapper.append(a);
   }
 
