@@ -170,19 +170,25 @@ async function getPickupTimes(selectedDay = new Date()) {
     selectedDay.setHours(selectedDayOperation.close.hour, selectedDayOperation.close.minute, 0),
   );
   let currentTimeObj = new Date(startTimeObj.setSeconds(0, 0));
-
-  while (currentTimeObj <= closeTimeObj) {
-    const currentTimeHourFull = currentTimeObj.getHours(); // 24 hr time
-    const currentTimeHour = currentTimeHourFull > 12
-      ? currentTimeHourFull - 12 : currentTimeHourFull; // 12 hr time
-    const currentTimeMinutes = currentTimeObj.getMinutes().toString().padStart(2, '0');
-    const currentTimePeriod = currentTimeHourFull < 12 ? 'am' : 'pm';
-    const currentTimePrint = `${currentTimeHour}:${currentTimeMinutes}${currentTimePeriod}`;
+  if (selectedDayOperation.open.hour !== 0 && selectedDayOperation.close.hour !== 0) {
+    while (currentTimeObj <= closeTimeObj) {
+      const currentTimeHourFull = currentTimeObj.getHours(); // 24 hr time
+      const currentTimeHour = currentTimeHourFull > 12
+        ? currentTimeHourFull - 12 : currentTimeHourFull; // 12 hr time
+      const currentTimeMinutes = currentTimeObj.getMinutes().toString().padStart(2, '0');
+      const currentTimePeriod = currentTimeHourFull < 12 ? 'am' : 'pm';
+      const currentTimePrint = `${currentTimeHour}:${currentTimeMinutes}${currentTimePeriod}`;
+      pickupTimes.push({
+        text: currentTimePrint,
+        value: currentTimeObj.toISOString(),
+      });
+      currentTimeObj = new Date(currentTimeObj.getTime() + 10 * 60000); // add ten minutes
+    }
+  } else {
     pickupTimes.push({
-      text: currentTimePrint,
-      value: currentTimeObj.toISOString(),
+      text: 'online orders closed today!',
+      value: null,
     });
-    currentTimeObj = new Date(currentTimeObj.getTime() + 10 * 60000); // add ten minutes
   }
   return pickupTimes;
 }
@@ -232,6 +238,9 @@ async function updatePickupTimes(e) {
         text: time.text,
       });
       oEl.value = time.value;
+      if (!time.value) {
+        oEl.disabled = true;
+      }
       pickupDropdown.append(oEl);
     });
   }
