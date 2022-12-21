@@ -896,7 +896,6 @@ export async function submitOrder(data) {
       return resp.text();
     }).then((text) => {
       const obj = JSON.parse(text);
-      console.log('obj:', obj);
       if (typeof obj.order !== 'undefined') {
         return obj.order;
       }
