@@ -117,7 +117,7 @@ class Cart {
       this.store();
     }
   };
-
+ 
   setShipping = (vari, mods = []) => {
     const li = this.find(vari, mods);
     if (li) {
@@ -750,7 +750,7 @@ export function getOrderCredentials(store) {
     window.location_id = '6EXJXZ644ND0E';
     return {
       name: store,
-      endpoint: 'AKfycbwJ0dVqTMxEeQzgig0HjEMHnv7qnTEXOkU-Cx34fy2LBP2h25Gv-uddrhfb4EhtuJxs',
+      endpoint: 'AKfycbyHkF1ZhidgOFokjoaWbQZhqDU57WTpxda2g-K5ZU920jHNDhwEH6GyZ2OnwV_MbmX4',
       location: '6EXJXZ644ND0E',
     };
   }
@@ -896,6 +896,7 @@ export async function submitOrder(data) {
       return resp.text();
     }).then((text) => {
       const obj = JSON.parse(text);
+      console.log('obj:', obj);
       if (typeof obj.order !== 'undefined') {
         return obj.order;
       }
