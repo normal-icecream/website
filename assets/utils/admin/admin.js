@@ -13,7 +13,7 @@ function getGId(type) {
     case 'text': // see messages.js
       return 'AKfycbyj25ygCc6SvxJ9KCzdQSmiqz3emxuIJdNVzTXKjw3F88gdxClNLtq3PyNGgB2ca7FELA';
     case 'shipping':
-      return 'AKfycbyHkF1ZhidgOFokjoaWbQZhqDU57WTpxda2g-K5ZU920jHNDhwEH6GyZ2OnwV_MbmX4';
+      return 'AKfycbzsC2PCET2DvZk9UFG5L591i0nUS_DGrzHSmQoQGCc6tgI5FQ3RQ2AeP_0kJeCD5MOmQQ';
     case 'club': // see square.js
       return 'AKfycbxGamyac1gglM4_aKBkozYF8KeK4cCz4ah9ISQKZP_EjLqpWqrUEIiS5C1hrHXn4riL';
     default:
