@@ -85,7 +85,7 @@ function toggle(e) {
 }
 
 export default async function decorateCarousel(block) {
-  const children = [...block.querySelectorAll(':scope > div')];
+  const children = [...block.children];
   if ([...block.classList].includes('carousel-images')) {
     // fetch carousel images
     const { pathname } = new URL(block.querySelector('a').href);
@@ -138,33 +138,30 @@ export default async function decorateCarousel(block) {
       block.classList.add('collapse-menu');
     }
     // setup carousel head
-    const head = children[0].firstChild;
+    const head = children[0];
     head.classList.add('carousel-head');
     const title = toClassName(head.textContent);
     block.classList.add(`${title}-carousel`);
     // setup carousel slides
     children.shift();
-    const slides = children.map((child) => child.firstChild);
     // build new carousel
     block.innerHTML = '';
     const wrapper = createEl('div', {
       class: 'carousel-slides',
     });
-    slides.forEach((slide) => {
+    children.forEach((slide) => {
       // remove deleted content
-      let deleted = false;
-      slide.querySelectorAll('del').forEach((del) => {
-        if (del.textContent.trim() === del.parentNode.textContent.trim()) {
-          del.parentNode.remove();
-          deleted = true;
-        } else {
-          del.remove();
-          deleted = true;
-        }
-      });
-      // content was deleted and only slide remaining is an image
-      if (deleted && slide.childNodes.length === 1 && slide.querySelector('img')) {
+      const visibleContent = [...slide.firstElementChild.children].filter((el) => !el.querySelector('del'));
+      if (visibleContent.length === 0) { // no content
         slide.remove();
+      } else if (visibleContent.length === 1) {
+        const isImg = visibleContent[0].querySelector('img');
+        if (isImg) { // only img content
+          slide.remove();
+        } else {
+          slide.classList.add('carousel-slide');
+          wrapper.append(slide);
+        }
       } else {
         slide.classList.add('carousel-slide');
         wrapper.append(slide);
