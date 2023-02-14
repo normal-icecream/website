@@ -117,7 +117,7 @@ class Cart {
       this.store();
     }
   };
- 
+
   setShipping = (vari, mods = []) => {
     const li = this.find(vari, mods);
     if (li) {
@@ -603,7 +603,7 @@ async function addShippingConfigToCart(data, form) {
   const selectedMods = form.querySelectorAll('[data-mod-selected="true"]');
   const modData = {};
   selectedMods.forEach((mod) => {
-    const id = mod.getAttribute('data-mod-id');
+    const id = mod.querySelector('[data-mod-id]').getAttribute('data-mod-id');
     const name = mod.querySelector('h3').textContent;
     const quantity = Number(mod.querySelector('.customize-item-quantity').textContent);
     modData[id] = {
@@ -639,9 +639,12 @@ function populateShippingFoot() {
     if (btn) {
       btn.addEventListener('click', async () => {
         const form = document.querySelector('form.customize-body');
+        console.log('shipping form:', form);
         const valid = validateShippingForm(form);
+        console.log('shipping form valid:', valid);
         if (valid) {
           const data = getShippingData(form);
+          console.log('shipping data:', data);
           await addConfigToCart(data);
           await addShippingConfigToCart(data, form);
           hideCustomize();

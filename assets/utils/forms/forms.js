@@ -511,8 +511,8 @@ export function getShippingData(form) {
   data[name] = id;
   const selectedMods = form.querySelectorAll('[data-mod-selected="true"]');
   selectedMods.forEach((mod) => {
-    const modId = mod.getAttribute('data-mod-id');
-    const modName = mod.getAttribute('data-mod-name');
+    const modId = mod.querySelector('[data-mod-id]').getAttribute('data-mod-id');
+    const modName = mod.querySelector('[data-mod-name]').getAttribute('data-mod-name');
     data[modName] = modId;
   });
   return data;
