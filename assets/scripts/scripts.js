@@ -809,7 +809,8 @@ function convertHour(timestamp) {
 
 export async function getHoursOfOperation() {
   const labels = await fetchLabels();
-  const store = getCurrentStore();
+  let store = getCurrentStore();
+  if (store === 'merch') store = 'store';
   const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   const timesObj = {};
   if (!labels[`${store}_onlinehoursopen`] && !labels[`${store}_onlinehoursclose`]) {
