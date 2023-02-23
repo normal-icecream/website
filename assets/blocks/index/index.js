@@ -99,8 +99,8 @@ async function buildCarousel(el) {
     if (data.length > 1) {
       buildCarouselNav(wrapper);
     }
-    el.parentNode.replaceChild(wrapper, el);
-    wrapper.parentNode.classList.add('index-carousel-wrapper', 'carousel');
+    el.parentElement.replaceChild(wrapper, el);
+    wrapper.parentElement.classList.add('index-carousel-wrapper', 'carousel');
   } else {
     el.remove();
   }
@@ -108,17 +108,17 @@ async function buildCarousel(el) {
 
 async function buildCarouselBlock(block) {
   const [media, attr] = block.querySelectorAll('a');
-  attr.parentNode.remove();
-  await buildCarousel(media.parentNode, media.href);
+  attr.parentElement.remove();
+  await buildCarousel(media.parentElement, media.href);
 }
 
 export default async function decorateIndex(block) {
-  const wrapper = block.firstChild;
+  const wrapper = block.firstElementChild;
   wrapper.classList.add('index-wrapper');
-  const nav = block.firstChild.firstChild;
+  const nav = block.firstElementChild.firstElementChild;
   nav.classList.add('index-column');
   buildTitle(nav);
   buildNav(nav);
-  const carousel = block.firstChild.lastChild;
+  const carousel = block.firstElementChild.lastElementChild;
   await buildCarouselBlock(carousel);
 }
