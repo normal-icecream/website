@@ -7,6 +7,7 @@ import {
   loadCSS,
   noScroll,
   fetchLabels,
+  getMetadata,
 } from '../../scripts/scripts.js';
 
 import {
@@ -31,7 +32,7 @@ import {
   removeScreensaver,
 } from '../../utils/screensaver/screensaver.js';
 
-const WHOLESALE_KEY = 'AKfycbyquwOChGVk2YA0BNkrQsBFj_W00Y2DZA721pgyQ1hVR0DNscmSHEYjdrRt7sdPF31RAw';
+const WHOLESALE_KEY = getMetadata('wholesale-id') || 'AKfycbyquwOChGVk2YA0BNkrQsBFj_W00Y2DZA721pgyQ1hVR0DNscmSHEYjdrRt7sdPF31RAw';
 
 function buildBackBtn(menu) {
   menu.classList.add('relative');
@@ -274,7 +275,8 @@ async function checkIfWholesaleOpen(main) {
   // eslint-disable-next-line no-mixed-operators
   close.setDate(close.getDate() + ((7 - close.getDay()) % 7 + 2) % 7); // 2 = tuesday
   close.setHours((12 + 3), 5, 0); // 3:05 pm
-  if (day <= 1 || (now >= open && now <= close)) { // ordering is open
+  const params =  new URLSearchParams(window.location.search);
+  if ((day <= 1 || (now >= open && now <= close)) || params.get('wholesale') === 'open') { // ordering is open
     main.querySelectorAll('a[href*="#order"]').forEach((a) => setupWholesaleForm(a, main));
   } else {
     const labels = await fetchLabels();
