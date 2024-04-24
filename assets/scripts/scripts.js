@@ -916,6 +916,9 @@ function loadDelayed() {
  * Decorates the page.
  */
 async function decoratePage(doc) {
+  const cb = (e) => import(e.target.src).then((f) => { if (f) f.sampleRUM(); });
+  loadScript('https://rum.hlx.page/.rum/@adobe/helix-rum-js@^2/src/index.js', cb, 'module');
+
   await loadEager(doc);
   loadLazy(doc);
   setTimeout(() => {
