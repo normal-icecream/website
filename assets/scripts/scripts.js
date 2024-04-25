@@ -196,7 +196,7 @@ function sampleRUM(checkpoint, data = {}) {
           // use classic script to avoid CORS issues
           const script = document.createElement('script');
           script.src = new URL(
-            '.rum/@adobe/helix-rum-enhancer@^2/src/index.js',
+            '.rum/@adobe/helix-rum-enhancer@^1/src/index.js',
             sampleRUM.baseURL,
           ).href;
           document.head.appendChild(script);
