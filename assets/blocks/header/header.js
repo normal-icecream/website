@@ -26,6 +26,7 @@ async function fetchHeaderContent(url) {
 }
 
 function findSVGName(text) {
+  console.log('text:', text);
   const svgName = text
     .match(/<[a-zA-z-]{1,}>/)[0]
     .split('<')[1]
@@ -75,18 +76,20 @@ function buildHeader(block, content) {
   if (titleBlock && !metaHide.includes('title')) {
     const fullTitle = titleBlock.querySelector('h1').textContent;
     const title = fullTitle.split('<')[0];
-    const reg = findSVGName(fullTitle);
-    const svg = createSVG(reg);
-    const span = createEl('span', {
-      class: 'title',
-      text: title,
-    });
-    span.append(svg);
-    const wrapper = createEl('div', {
-      class: 'title-wrapper',
-    });
-    wrapper.append(span);
-    block.append(wrapper);
+    if (title !== fullTitle) {
+      const reg = findSVGName(fullTitle);
+      const svg = createSVG(reg);
+      const span = createEl('span', {
+        class: 'title',
+        text: title,
+      });
+      span.append(svg);
+      const wrapper = createEl('div', {
+        class: 'title-wrapper',
+      });
+      wrapper.append(span);
+      block.append(wrapper);
+    }
   }
 }
 
