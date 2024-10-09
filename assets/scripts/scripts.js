@@ -716,24 +716,24 @@ export function buildGScriptLink(id) {
  */
 function decorateSquareLink(a) {
   a.classList.add('btn', 'btn-rect', 'btn-cart');
-  const squarePrefix = 'https://squareup.com/dashboard/items/library/';
   const giftcardPrefix = 'https://squareup.com/gift/';
   const href = a.getAttribute('href');
-  if (href && href.startsWith(squarePrefix)) {
-    const id = href.substr(squarePrefix.length);
+  if (href && href.includes(giftcardPrefix)) {
+    a.target = '_blank';
+  } else if (href) {
+    const pathSegments = new URL(a.href).pathname.split('/');
+    const id = pathSegments[pathSegments.length - 1];
     a.setAttribute('data-id', id);
     a.removeAttribute('href');
-  } else if (href && href.includes(giftcardPrefix)) {
-    a.target = '_blank';
   }
 }
 
 async function squarify(main) {
   const metaHide = getMetadata('hide');
   if (!metaHide || !metaHide.includes('cart')) {
-    const squareLink = main.querySelector('a[href^="https://squareup"');
+    const squareLink = main.querySelector('a[href*="squareup"');
     if (squareLink) {
-      main.querySelectorAll('a[href^="https://squareup"').forEach((a) => {
+      main.querySelectorAll('a[href*="squareup"').forEach((a) => {
         decorateSquareLink(a);
       });
     }
