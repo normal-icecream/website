@@ -300,7 +300,9 @@ export async function populateSquareBody(item) {
   if (body) {
     const catalog = await fetchCatalog();
     const data = item.item_data;
+    console.log('LOG: > populateSquareBody > data:', data);
     const { name, variations } = data;
+    console.log('LOG: > populateSquareBody > variations:', variations);
     const label = writeLabelText(name, variations[0].item_variation_data.name);
     const fields = [];
     if (variations.length > 1) {
@@ -343,16 +345,20 @@ export async function populateSquareBody(item) {
     const modifiers = data.modifier_list_info;
     if (modifiers) {
       modifiers.forEach((mod) => {
+        console.log('LOG: > modifiers.forEach > mod:', mod);
+        console.log('> catalog:', catalog);
+        console.log('> catalog.byId[mod.modifier_list_id]:', catalog.byId[mod.modifier_list_id]);
+        console.log('> catalog.byId[mod.modifier_list_id].modifier_list_data:', catalog.byId[mod.modifier_list_id].modifier_list_data);
         const modData = catalog.byId[mod.modifier_list_id].modifier_list_data;
         const modName = modData.name;
         const modLabel = writeLabelText(modName);
 
-        const fieldType = modName.includes('topping') ? 'checkbox' : 'radio';
+        const fieldType = modName.includes('topping') || modName.includes('pack options') ? 'checkbox' : 'radio';
         const field = {
           category: 'square-modifier',
           label: modLabel,
           options: [],
-          required: (fieldType === 'radio'),
+          required: (fieldType === 'radio') || modName.includes('pack options'),
           store: false,
           title: toClassName(modName),
           type: fieldType,
