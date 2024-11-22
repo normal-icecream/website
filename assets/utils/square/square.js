@@ -300,9 +300,7 @@ export async function populateSquareBody(item) {
   if (body) {
     const catalog = await fetchCatalog();
     const data = item.item_data;
-    console.log('LOG: > populateSquareBody > data:', data);
     const { name, variations } = data;
-    console.log('LOG: > populateSquareBody > variations:', variations);
     const label = writeLabelText(name, variations[0].item_variation_data.name);
     const fields = [];
     if (variations.length > 1) {
@@ -345,10 +343,6 @@ export async function populateSquareBody(item) {
     const modifiers = data.modifier_list_info;
     if (modifiers) {
       modifiers.forEach((mod) => {
-        console.log('LOG: > modifiers.forEach > mod:', mod);
-        console.log('> catalog:', catalog);
-        console.log('> catalog.byId[mod.modifier_list_id]:', catalog.byId[mod.modifier_list_id]);
-        console.log('> catalog.byId[mod.modifier_list_id].modifier_list_data:', catalog.byId[mod.modifier_list_id].modifier_list_data);
         const modData = catalog.byId[mod.modifier_list_id].modifier_list_data;
         const modName = modData.name;
         const modLabel = writeLabelText(modName);
@@ -645,12 +639,9 @@ function populateShippingFoot() {
     if (btn) {
       btn.addEventListener('click', async () => {
         const form = document.querySelector('form.customize-body');
-        console.log('shipping form:', form);
         const valid = validateShippingForm(form);
-        console.log('shipping form valid:', valid);
         if (valid) {
           const data = getShippingData(form);
-          console.log('shipping data:', data);
           await addConfigToCart(data);
           await addShippingConfigToCart(data, form);
           hideCustomize();
